@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Peach rounded square background (matches splash) -->
+    <path
+        android:fillColor="#E8A87C"
+        android:pathData="M26,26 C26,19.4 31.4,14 38,14 L70,14 C76.6,14 82,19.4 82,26 L82,82 C82,88.6 76.6,94 70,94 L38,94 C31.4,94 26,88.6 26,82 Z"/>
+    <!-- Yoga person: head -->
+    <path
+        android:fillColor="#1A1B2E"
+        android:pathData="M54,32 m-5,0 a5,5 0,1 1,10 0 a5,5 0,1 1,-10 0"/>
+    <!-- Body -->
+    <path
+        android:strokeColor="#1A1B2E"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M54,37 L54,56"/>
+    <!-- Left arm raised up-left -->
+    <path
+        android:strokeColor="#1A1B2E"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M54,43 L44,35"/>
+    <!-- Right arm raised up-right -->
+    <path
+        android:strokeColor="#1A1B2E"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M54,43 L64,35"/>
+    <!-- Left leg in lotus -->
+    <path
+        android:strokeColor="#1A1B2E"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M54,56 C48,60 44,64 42,66"/>
+    <!-- Right leg in lotus -->
+    <path
+        android:strokeColor="#1A1B2E"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:pathData="M54,56 C60,60 64,64 66,66"/>
+    <!-- Lotus feet connection -->
+    <path
+        android:strokeColor="#1A1B2E"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M42,66 L66,66"/>
+</vector>
