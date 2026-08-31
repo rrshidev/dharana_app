@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
-import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
-import 'package:dharana_app/features/admin/widgets/period_selector.dart';
 
 class AdminPaymentsScreen extends StatefulWidget {
   const AdminPaymentsScreen({super.key});
@@ -14,12 +12,9 @@ class AdminPaymentsScreen extends StatefulWidget {
 class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   final _api = ApiClient();
   List<Map<String, dynamic>> _payments = [];
-  Map<String, dynamic>? _series;
   bool _isLoading = true;
   bool _isBusy = false;
   String _filter = 'all';
-
-  int _rangeDays = 30;
 
   @override
   void initState() {
@@ -31,13 +26,11 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     setState(() => _isLoading = true);
     try {
       final data = await _api.getAdminPayments();
-      final series = await _api.getAdminPaymentsSeries(days: _rangeDays);
       if (mounted) {
         setState(() {
           _payments = (data['payments'] as List)
               .map((e) => Map<String, dynamic>.from(e as Map))
               .toList();
-          _series = series;
           _isLoading = false;
         });
       }
@@ -52,12 +45,6 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   List<Map<String, dynamic>> get _filtered {
     if (_filter == 'all') return _payments;
     return _payments.where((p) => p['status'] == _filter).toList();
-  }
-
-  List<double> _ints(String key) {
-    final raw = _series?[key];
-    if (raw is List) return raw.map((e) => (e as num).toDouble()).toList();
-    return [];
   }
 
   int _countStatus(String status) => _payments.where((p) => p['status'] == status).length;
@@ -75,8 +62,6 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               children: [
                 _buildSummaryRow(),
-                const SizedBox(height: 12),
-                _buildTrendChart(),
                 const SizedBox(height: 16),
                 _buildFilterRow(),
                 const SizedBox(height: 4),
@@ -128,36 +113,6 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTrendChart() {
-    final days = _series?['days'] is List ? (_series!['days'] as List).cast<String>() : <String>[];
-    return ChartCard(
-      title: 'Заявки по дням',
-      subtitle: PeriodSelector(days: _rangeDays, onChanged: (d) {
-        setState(() => _rangeDays = d);
-        _load();
-      }),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          StackedBarChart(
-            series: [
-              ChartSeries(name: 'Ожидают', color: AppTheme.accent, data: _ints('pending')),
-              ChartSeries(name: 'Одобрено', color: AppTheme.accentGreen, data: _ints('confirmed')),
-              ChartSeries(name: 'Отклонено', color: AppTheme.danger, data: _ints('rejected')),
-            ],
-            labels: days,
-          ),
-          const SizedBox(height: 10),
-          const ChartLegend(series: [
-            ChartSeries(name: 'Ожидают', color: AppTheme.accent, data: []),
-            ChartSeries(name: 'Одобрено', color: AppTheme.accentGreen, data: []),
-            ChartSeries(name: 'Отклонено', color: AppTheme.danger, data: []),
-          ]),
-        ],
       ),
     );
   }
