@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
-import 'package:dharana_app/features/admin/widgets/date_range_filter.dart';
+import 'package:dharana_app/features/admin/widgets/period_selector.dart';
 
 class AdminPaymentsScreen extends StatefulWidget {
   const AdminPaymentsScreen({super.key});
@@ -19,15 +19,11 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   bool _isBusy = false;
   String _filter = 'all';
 
-  DateTime? _start;
-  DateTime? _end;
+  int _rangeDays = 30;
 
   @override
   void initState() {
     super.initState();
-    final end = DateTime.now();
-    _start = end.subtract(const Duration(days: 29));
-    _end = end;
     _load();
   }
 
@@ -35,7 +31,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     setState(() => _isLoading = true);
     try {
       final data = await _api.getAdminPayments();
-      final series = await _api.getAdminPaymentsSeries(start: _start, end: _end);
+      final series = await _api.getAdminPaymentsSeries(days: _rangeDays);
       if (mounted) {
         setState(() {
           _payments = (data['payments'] as List)
@@ -63,8 +59,6 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     if (raw is List) return raw.map((e) => (e as num).toDouble()).toList();
     return [];
   }
-
-  List<String>? get _days => _series?['days'] is List ? (_series!['days'] as List).cast<String>() : null;
 
   int _countStatus(String status) => _payments.where((p) => p['status'] == status).length;
 
@@ -139,33 +133,23 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   }
 
   Widget _buildTrendChart() {
+    final days = _series?['days'] is List ? (_series!['days'] as List).cast<String>() : <String>[];
     return ChartCard(
       title: 'Заявки по дням',
+      subtitle: PeriodSelector(days: _rangeDays, onChanged: (d) {
+        setState(() => _rangeDays = d);
+        _load();
+      }),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: double.infinity,
-            child: DateRangeFilter(
-              start: _start,
-              end: _end,
-              onChanged: (sel) {
-                setState(() {
-                  _start = sel.start;
-                  _end = sel.end;
-                });
-                _load();
-              },
-            ),
-          ),
-          const SizedBox(height: 12),
-          ZoomableStackedBarChart(
+          StackedBarChart(
             series: [
               ChartSeries(name: 'Ожидают', color: AppTheme.accent, data: _ints('pending')),
               ChartSeries(name: 'Одобрено', color: AppTheme.accentGreen, data: _ints('confirmed')),
               ChartSeries(name: 'Отклонено', color: AppTheme.danger, data: _ints('rejected')),
             ],
-            labels: _days ?? [],
+            labels: days,
           ),
           const SizedBox(height: 10),
           const ChartLegend(series: [

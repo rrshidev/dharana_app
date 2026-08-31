@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
-import 'package:dharana_app/features/admin/widgets/date_range_filter.dart';
+import 'package:dharana_app/features/admin/widgets/period_selector.dart';
 
 class AdminBroadcastScreen extends StatefulWidget {
   const AdminBroadcastScreen({super.key});
@@ -23,15 +23,11 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   Map<String, dynamic>? _series;
   bool _seriesLoading = true;
 
-  DateTime? _start;
-  DateTime? _end;
+  int _rangeDays = 30;
 
   @override
   void initState() {
     super.initState();
-    final end = DateTime.now();
-    _start = end.subtract(const Duration(days: 29));
-    _end = end;
     _loadSeries();
   }
 
@@ -44,7 +40,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   Future<void> _loadSeries() async {
     setState(() => _seriesLoading = true);
     try {
-      final data = await _api.getAdminBroadcastSeries(start: _start, end: _end);
+      final data = await _api.getAdminBroadcastSeries(days: _rangeDays);
       if (mounted) setState(() { _series = data; _seriesLoading = false; });
     } catch (_) {
       if (mounted) setState(() => _seriesLoading = false);
@@ -56,8 +52,6 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
     if (raw is List) return raw.map((e) => (e as num).toDouble()).toList();
     return [];
   }
-
-  List<String>? get _days => _series?['days'] is List ? (_series!['days'] as List).cast<String>() : null;
 
   @override
   Widget build(BuildContext context) {
@@ -121,29 +115,19 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   }
 
   Widget _buildTrendChart() {
+    final days = _series?['days'] is List ? (_series!['days'] as List).cast<String>() : <String>[];
     return ChartCard(
       title: 'Рассылки по дням',
+      subtitle: PeriodSelector(days: _rangeDays, onChanged: (d) {
+        setState(() => _rangeDays = d);
+        _loadSeries();
+      }),
       child: _seriesLoading
           ? const SizedBox(height: 160, child: Center(child: CircularProgressIndicator(color: AppTheme.accent)))
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: DateRangeFilter(
-                    start: _start,
-                    end: _end,
-                    onChanged: (sel) {
-                      setState(() {
-                        _start = sel.start;
-                        _end = sel.end;
-                      });
-                      _loadSeries();
-                    },
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ZoomableBarChart(data: _ints('campaigns'), labels: _days ?? [], color: AppTheme.accent),
+                BarChartSimple(data: _ints('campaigns'), labels: days, color: AppTheme.accent),
                 const SizedBox(height: 8),
                 Text(
                   'Получателей: ${_ints('recipients').isEmpty ? '—' : _ints('recipients').fold<double>(0, (a, b) => a + b).round()}',

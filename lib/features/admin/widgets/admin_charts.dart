@@ -1,9 +1,9 @@
-import 'package:fl_chart/fl_chart.dart';
+﻿import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 
-/// Общие анимированные компоненты графиков для админ-панели.
-/// Все чарты плавно "вырастают" при смене данных (TweenAnimationBuilder).
+/// РћР±С‰РёРµ Р°РЅРёРјРёСЂРѕРІР°РЅРЅС‹Рµ РєРѕРјРїРѕРЅРµРЅС‚С‹ РіСЂР°С„РёРєРѕРІ РґР»СЏ Р°РґРјРёРЅ-РїР°РЅРµР»Рё.
+/// Р’СЃРµ С‡Р°СЂС‚С‹ РїР»Р°РІРЅРѕ "РІС‹СЂР°СЃС‚Р°СЋС‚" РїСЂРё СЃРјРµРЅРµ РґР°РЅРЅС‹С… (TweenAnimationBuilder).
 
 class ChartCard extends StatelessWidget {
   final String title;
@@ -60,7 +60,7 @@ class ChartCard extends StatelessWidget {
   }
 }
 
-/// Мини-линия (sparkline) для карточек обзора.
+/// РњРёРЅРё-Р»РёРЅРёСЏ (sparkline) РґР»СЏ РєР°СЂС‚РѕС‡РµРє РѕР±Р·РѕСЂР°.
 class Sparkline extends StatelessWidget {
   final List<double> data;
   final Color color;
@@ -82,7 +82,7 @@ class Sparkline extends StatelessWidget {
         width: width,
         height: height,
         child: const Center(
-          child: Text('—', style: TextStyle(color: AppTheme.textSecondary)),
+          child: Text('вЂ”', style: TextStyle(color: AppTheme.textSecondary)),
         ),
       );
     }
@@ -131,7 +131,7 @@ class _SparklinePainter extends CustomPainter {
       old.data != data || old.color != color || old.minV != minV || old.range != range;
 }
 
-/// Обёртка для анимации роста значения (0→full).
+/// РћР±С‘СЂС‚РєР° РґР»СЏ Р°РЅРёРјР°С†РёРё СЂРѕСЃС‚Р° Р·РЅР°С‡РµРЅРёСЏ (0в†’full).
 class _Grow extends StatelessWidget {
   final Widget Function(double t) builder;
   const _Grow({required this.builder});
@@ -147,7 +147,7 @@ class _Grow extends StatelessWidget {
   }
 }
 
-/// Area-чарт: заполненная область (одна серия).
+/// Area-С‡Р°СЂС‚: Р·Р°РїРѕР»РЅРµРЅРЅР°СЏ РѕР±Р»Р°СЃС‚СЊ (РѕРґРЅР° СЃРµСЂРёСЏ).
 class AreaTrendChart extends StatelessWidget {
   final List<double> data;
   final List<String> labels;
@@ -246,7 +246,7 @@ class AreaTrendChart extends StatelessWidget {
   }
 }
 
-/// Линейный чарт с несколькими сериями.
+/// Р›РёРЅРµР№РЅС‹Р№ С‡Р°СЂС‚ СЃ РЅРµСЃРєРѕР»СЊРєРёРјРё СЃРµСЂРёСЏРјРё.
 class MultiLineChart extends StatelessWidget {
   final List<ChartSeries> series;
   final List<String> labels;
@@ -333,7 +333,7 @@ class MultiLineChart extends StatelessWidget {
   }
 }
 
-/// Стек-чарт (столбцы со слоями) — напр. заявки pending/confirmed/rejected.
+/// РЎС‚РµРє-С‡Р°СЂС‚ (СЃС‚РѕР»Р±С†С‹ СЃРѕ СЃР»РѕСЏРјРё) вЂ” РЅР°РїСЂ. Р·Р°СЏРІРєРё pending/confirmed/rejected.
 class StackedBarChart extends StatelessWidget {
   final List<ChartSeries> series;
   final List<String> labels;
@@ -430,7 +430,7 @@ class StackedBarChart extends StatelessWidget {
   }
 }
 
-/// Простой столбчатый чарт (одна серия).
+/// РџСЂРѕСЃС‚РѕР№ СЃС‚РѕР»Р±С‡Р°С‚С‹Р№ С‡Р°СЂС‚ (РѕРґРЅР° СЃРµСЂРёСЏ).
 class BarChartSimple extends StatelessWidget {
   final List<double> data;
   final List<String> labels;
@@ -515,7 +515,7 @@ class BarChartSimple extends StatelessWidget {
   }
 }
 
-/// Круговая/кольцевая доля (например конверсия).
+/// РљСЂСѓРіРѕРІР°СЏ/РєРѕР»СЊС†РµРІР°СЏ РґРѕР»СЏ (РЅР°РїСЂРёРјРµСЂ РєРѕРЅРІРµСЂСЃРёСЏ).
 class DonutRate extends StatelessWidget {
   final double value; // 0..100
   final String centerLabel;
@@ -599,7 +599,7 @@ class ChartEmpty extends StatelessWidget {
       height: height,
       child: const Center(
         child: Text(
-          'Нет данных за период',
+          'РќРµС‚ РґР°РЅРЅС‹С… Р·Р° РїРµСЂРёРѕРґ',
           style: TextStyle(color: AppTheme.textSecondary),
         ),
       ),
@@ -607,7 +607,7 @@ class ChartEmpty extends StatelessWidget {
   }
 }
 
-/// Серия данных для многосерийных чартов.
+/// РЎРµСЂРёСЏ РґР°РЅРЅС‹С… РґР»СЏ РјРЅРѕРіРѕСЃРµСЂРёР№РЅС‹С… С‡Р°СЂС‚РѕРІ.
 class ChartSeries {
   final String name;
   final Color color;
@@ -616,7 +616,7 @@ class ChartSeries {
   const ChartSeries({required this.name, required this.color, required this.data});
 }
 
-/// Горизонтальная легенда с точками.
+/// Р“РѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅР°СЏ Р»РµРіРµРЅРґР° СЃ С‚РѕС‡РєР°РјРё.
 class ChartLegend extends StatelessWidget {
   final List<ChartSeries> series;
 
@@ -649,601 +649,23 @@ class ChartLegend extends StatelessWidget {
 }
 
 double _labelInterval(int n) {
-  if (n >= 90) return 14;
-  if (n >= 31) return 5;
-  if (n >= 15) return 3;
-  if (n >= 7) return 1;
-  return 1;
+  if (n <= 14) return 1;
+  final step = (n / 6).ceil();
+  return step.toDouble();
 }
 
 double _barWidth(int n) {
-  if (n >= 90) return 2;
-  if (n >= 31) return 4;
-  if (n >= 15) return 6;
-  return 14;
+  if (n >= 90) return 3;
+  if (n >= 31) return 5;
+  if (n >= 15) return 8;
+  return 16;
 }
 
-/// Короткая подпись даты вида «дд.мм».
+/// РљРѕСЂРѕС‚РєР°СЏ РїРѕРґРїРёСЃСЊ РґР°С‚С‹ РІРёРґР° В«РґРґ.РјРјВ».
 String _short({required String label, required int n}) {
   if (label.length >= 10) {
-    return label.substring(5, 10); // "MM-DD"
+    // ISO "YYYY-MM-DD" -> "РґРґ.РјРј"
+    return '${label.substring(8, 10)}.${label.substring(5, 7)}';
   }
   return label;
-}
-
-/// Оборачивает ось X в жесты: пинч двумя пальцами зуммирует,
-/// свайп одним пальцем пролистывает — «как картинку».
-class ZoomableX extends StatefulWidget {
-  final double maxX;
-  final Widget Function(double minX, double maxX) builder;
-  final double minSpan;
-  final String? hint;
-
-  const ZoomableX({
-    super.key,
-    required this.maxX,
-    required this.builder,
-    this.minSpan = 4,
-    this.hint,
-  });
-
-  @override
-  State<ZoomableX> createState() => _ZoomableXState();
-}
-
-class _ZoomableXState extends State<ZoomableX> {
-  late double _minX;
-  late double _maxX;
-  double _lastScale = 1;
-  double _lastFocalX = 0;
-  int _lastCount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _minX = 0;
-    _maxX = widget.maxX;
-  }
-
-  @override
-  void didUpdateWidget(covariant ZoomableX old) {
-    super.didUpdateWidget(old);
-    if (old.maxX != widget.maxX) {
-      _minX = 0;
-      _maxX = widget.maxX;
-    }
-  }
-
-  double _width() => context.size?.width ?? MediaQuery.of(context).size.width;
-
-  double _indexAtX(double localX, double w) {
-    final t = (localX / w).clamp(0.0, 1.0);
-    return _minX + t * (_maxX - _minX);
-  }
-
-  void _onScaleStart(ScaleStartDetails d) {
-    _lastScale = 1;
-    _lastFocalX = d.focalPoint.dx;
-    _lastCount = d.pointerCount;
-  }
-
-  void _onScaleUpdate(ScaleUpdateDetails d) {
-    if (widget.maxX <= 0) return;
-    final w = _width();
-    if (w <= 0) return;
-    final span = _maxX - _minX;
-
-    // Сброс при смене числа пальцев, чтобы зумы не дёргались.
-    if (d.pointerCount != _lastCount) {
-      _lastCount = d.pointerCount;
-      _lastScale = 1;
-      _lastFocalX = d.focalPoint.dx;
-    }
-
-    if (d.pointerCount >= 2) {
-      // Пинч-зум вокруг точки фокуса.
-      final scale = d.scale / _lastScale;
-      _lastScale = d.scale;
-      if (scale == 1 || scale <= 0) return;
-      final focalIdx = _indexAtX(d.localFocalPoint.dx, w);
-      final minSpan = widget.minSpan.clamp(0, widget.maxX).toDouble();
-      final spanClamped = (span / scale).clamp(minSpan, widget.maxX).toDouble();
-      final frac = (focalIdx - _minX) / span;
-      var newMin = (focalIdx - spanClamped * frac).clamp(0.0, widget.maxX).toDouble();
-      var newMax = newMin + spanClamped;
-      if (newMax > widget.maxX) {
-        newMax = widget.maxX;
-        newMin = (newMax - spanClamped).clamp(0.0, widget.maxX).toDouble();
-      }
-      if (newMax - newMin < minSpan) {
-        newMin = (newMax - minSpan).clamp(0.0, widget.maxX).toDouble();
-      }
-      setState(() { _minX = newMin; _maxX = newMax; });
-    } else if (d.pointerCount == 1) {
-      // Свайп по горизонтали — пролистывание.
-      final dx = d.focalPoint.dx - _lastFocalX;
-      _lastFocalX = d.focalPoint.dx;
-      final panIdx = dx / w * span;
-      final safeMin = (widget.maxX - span).clamp(0.0, widget.maxX);
-      final newMin = ((_minX - panIdx).clamp(safeMin, widget.maxX)).toDouble();
-      setState(() { _minX = newMin; _maxX = newMin + span; });
-    }
-  }
-
-  double axisInterval(double span) {
-    if (span <= 0) return 1;
-    final step = span / 6;
-    if (step < 1) return 1;
-    return step.ceilToDouble();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final span = _maxX - _minX;
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onScaleStart: _onScaleStart,
-      onScaleUpdate: _onScaleUpdate,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          widget.builder(_minX, _maxX),
-          if (widget.hint != null && span < widget.maxX * 0.999)
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.swipe, size: 12, color: AppTheme.textSecondary),
-                  const SizedBox(width: 4),
-                  Text(
-                    widget.hint!,
-                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 10),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Зумабельный area-чарт одной серии.
-class ZoomableAreaChart extends StatelessWidget {
-  final List<double> data;
-  final List<String> labels;
-  final Color color;
-  final double height;
-
-  const ZoomableAreaChart({
-    super.key,
-    required this.data,
-    required this.labels,
-    this.color = AppTheme.accent,
-    this.height = 200,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (data.isEmpty) return ChartEmpty(height: height);
-    final maxIdx = (data.length - 1).toDouble();
-    return ZoomableX(
-      maxX: maxIdx,
-      minSpan: 4,
-      hint: labels.isNotEmpty ? 'пинч — зум, свайп — прокрутка' : null,
-      builder: (minX, maxX) {
-        return _Grow(
-          builder: (t) {
-            final scaled = data.map((e) => e * t).toList();
-            return SizedBox(
-              height: height,
-              child: LineChart(
-                LineChartData(
-                  minX: minX,
-                  maxX: maxX,
-                  minY: 0,
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    getDrawingHorizontalLine: (_) =>
-                        const FlLine(color: AppTheme.cardBorder, strokeWidth: 1),
-                  ),
-                  titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false, reservedSize: 4)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 22,
-                        interval: _zoomInterval(maxX - minX, data.length),
-                        getTitlesWidget: (value, meta) {
-                          final i = value.round();
-                          if (i < 0 || i >= labels.length) return const SizedBox.shrink();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              _short(label: labels[i], n: data.length),
-                              style: const TextStyle(
-                                  color: AppTheme.textSecondary, fontSize: 9),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  lineTouchData: LineTouchData(
-                    touchTooltipData: LineTouchTooltipData(
-                      getTooltipItems: (spots) => spots
-                          .map((s) => LineTooltipItem(
-                                '${s.y.toInt()}',
-                                const TextStyle(
-                                    color: AppTheme.background,
-                                    fontWeight: FontWeight.bold),
-                              ))
-                          .toList(),
-                      getTooltipColor: (_) => AppTheme.textPrimary,
-                    ),
-                  ),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: List.generate(
-                          scaled.length, (i) => FlSpot(i.toDouble(), scaled[i])),
-                      color: color,
-                      barWidth: 2.4,
-                      isCurved: true,
-                      dotData: FlDotData(show: (maxX - minX) <= 16),
-                      belowBarData: BarAreaData(
-                        show: true,
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            color.withValues(alpha: 0.35),
-                            color.withValues(alpha: 0.02),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-/// Зумабельный столбчатый чарт одной серии.
-class ZoomableBarChart extends StatelessWidget {
-  final List<double> data;
-  final List<String> labels;
-  final Color color;
-  final double height;
-
-  const ZoomableBarChart({
-    super.key,
-    required this.data,
-    required this.labels,
-    this.color = AppTheme.accent,
-    this.height = 200,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (data.isEmpty) return ChartEmpty(height: height);
-    final maxIdx = (data.length - 1).toDouble();
-    return ZoomableX(
-      maxX: maxIdx,
-      minSpan: 4,
-      hint: labels.isNotEmpty ? 'пинч — зум, свайп — прокрутка' : null,
-      builder: (minX, maxX) {
-        final start = minX.round().clamp(0, data.length - 1);
-        final end = maxX.round().clamp(start, data.length - 1);
-        final visibleCount = end - start + 1;
-        return _Grow(
-          builder: (t) {
-            return SizedBox(
-              height: height,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceBetween,
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    getDrawingHorizontalLine: (_) =>
-                        const FlLine(color: AppTheme.cardBorder, strokeWidth: 1),
-                  ),
-                  titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false, reservedSize: 4)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 22,
-                        interval: _zoomInterval((maxX - minX), data.length),
-                        getTitlesWidget: (value, meta) {
-                          final global = start + value.round();
-                          if (global < 0 || global >= labels.length) {
-                            return const SizedBox.shrink();
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              _short(label: labels[global], n: data.length),
-                              style: const TextStyle(
-                                  color: AppTheme.textSecondary, fontSize: 9),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  barTouchData: BarTouchData(
-                    touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (_) => AppTheme.textPrimary,
-                      getTooltipItem: (group, gi, rod, ri) => BarTooltipItem(
-                        '${rod.toY.toInt()}',
-                        const TextStyle(
-                            color: AppTheme.background, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  barGroups: List.generate(visibleCount, (j) {
-                    final i = start + j;
-                    return BarChartGroupData(
-                      x: j,
-                      barRods: [
-                        BarChartRodData(
-                          toY: data[i] * t,
-                          color: color,
-                          width: _zoomBarWidth(visibleCount),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-/// Зумабельный стек-чарт (несколько слоёв в одном столбце).
-class ZoomableStackedBarChart extends StatelessWidget {
-  final List<ChartSeries> series;
-  final List<String> labels;
-  final double height;
-
-  const ZoomableStackedBarChart({
-    super.key,
-    required this.series,
-    required this.labels,
-    this.height = 200,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (labels.isEmpty) return ChartEmpty(height: height);
-    final maxIdx = (labels.length - 1).toDouble();
-    return ZoomableX(
-      maxX: maxIdx,
-      minSpan: 4,
-      hint: labels.isNotEmpty ? 'пинч — зум, свайп — прокрутка' : null,
-      builder: (minX, maxX) {
-        final start = minX.round().clamp(0, labels.length - 1);
-        final end = maxX.round().clamp(start, labels.length - 1);
-        final visibleCount = end - start + 1;
-        return _Grow(
-          builder: (t) {
-            return SizedBox(
-              height: height,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceBetween,
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    getDrawingHorizontalLine: (_) =>
-                        const FlLine(color: AppTheme.cardBorder, strokeWidth: 1),
-                  ),
-                  titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false, reservedSize: 4)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 22,
-                        interval: _zoomInterval((maxX - minX), labels.length),
-                        getTitlesWidget: (value, meta) {
-                          final global = start + value.round();
-                          if (global < 0 || global >= labels.length) {
-                            return const SizedBox.shrink();
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              _short(label: labels[global], n: labels.length),
-                              style: const TextStyle(
-                                  color: AppTheme.textSecondary, fontSize: 9),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  barTouchData: BarTouchData(
-                    touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (_) => AppTheme.textPrimary,
-                      getTooltipItem: (group, gi, rod, ri) {
-                        final sum =
-                            group.barRods.fold<double>(0, (a, b) => a + b.toY);
-                        return BarTooltipItem(
-                          '${sum.toInt()}',
-                          const TextStyle(
-                              color: AppTheme.background, fontWeight: FontWeight.bold),
-                        );
-                      },
-                    ),
-                  ),
-                  barGroups: List.generate(visibleCount, (j) {
-                    return BarChartGroupData(
-                      x: j,
-                      barRods: _stackRods(start + j, t, series),
-                    );
-                  }),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  List<BarChartRodData> _stackRods(int index, double t, List<ChartSeries> series) {
-    final rods = <BarChartRodData>[];
-    double cumulative = 0;
-    for (final s in series) {
-      final v = index < s.data.length ? s.data[index] * t : 0.0;
-      rods.add(BarChartRodData(
-        toY: cumulative + v,
-        fromY: cumulative,
-        color: s.color,
-        width: 8,
-        borderRadius: BorderRadius.circular(0),
-      ));
-      cumulative += v;
-    }
-    return rods;
-  }
-}
-
-/// Зумабельный линейный чарт с несколькими сериями.
-class ZoomableMultiLineChart extends StatelessWidget {
-  final List<ChartSeries> series;
-  final List<String> labels;
-  final double height;
-
-  const ZoomableMultiLineChart({
-    super.key,
-    required this.series,
-    required this.labels,
-    this.height = 200,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final anyData = series.any((s) => s.data.isNotEmpty);
-    if (!anyData || labels.isEmpty) return ChartEmpty(height: height);
-    final maxIdx = (labels.length - 1).toDouble();
-    return ZoomableX(
-      maxX: maxIdx,
-      minSpan: 4,
-      hint: labels.isNotEmpty ? 'пинч — зум, свайп — прокрутка' : null,
-      builder: (minX, maxX) {
-        return _Grow(
-          builder: (t) {
-            return SizedBox(
-              height: height,
-              child: LineChart(
-                LineChartData(
-                  minX: minX,
-                  maxX: maxX,
-                  minY: 0,
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    getDrawingHorizontalLine: (_) =>
-                        const FlLine(color: AppTheme.cardBorder, strokeWidth: 1),
-                  ),
-                  titlesData: FlTitlesData(
-                    leftTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false, reservedSize: 4)),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 22,
-                        interval: _zoomInterval(maxX - minX, labels.length),
-                        getTitlesWidget: (value, meta) {
-                          final i = value.round();
-                          if (i < 0 || i >= labels.length) return const SizedBox.shrink();
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              _short(label: labels[i], n: labels.length),
-                              style: const TextStyle(
-                                  color: AppTheme.textSecondary, fontSize: 9),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  lineTouchData: LineTouchData(
-                    touchTooltipData: LineTouchTooltipData(
-                      getTooltipItems: (spots) => spots
-                          .map((s) => LineTooltipItem(
-                                '${s.y.toInt()}',
-                                const TextStyle(
-                                    color: AppTheme.background,
-                                    fontWeight: FontWeight.bold),
-                              ))
-                          .toList(),
-                      getTooltipColor: (_) => AppTheme.textPrimary,
-                    ),
-                  ),
-                  lineBarsData: series.map((s) {
-                    return LineChartBarData(
-                      spots: List.generate(
-                        s.data.length,
-                        (i) => FlSpot(i.toDouble(), s.data[i] * t),
-                      ),
-                      color: s.color,
-                      barWidth: 2.2,
-                      isCurved: true,
-                      dotData: FlDotData(show: (maxX - minX) <= 16),
-                      belowBarData: BarAreaData(show: false),
-                    );
-                  }).toList(),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-double _zoomInterval(double span, int total) {
-  if (span <= 0) return 1;
-  final step = span / 6;
-  if (step < 1) return 1;
-  return step.ceilToDouble();
-}
-
-double _zoomBarWidth(int visibleCount) {
-  if (visibleCount >= 90) return 4;
-  if (visibleCount >= 31) return 8;
-  if (visibleCount >= 15) return 14;
-  return 20;
 }

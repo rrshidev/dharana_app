@@ -7,6 +7,8 @@ import 'package:dharana_app/features/auth/services/auth_service.dart';
 import 'package:dharana_app/features/profile/screens/practice_history_screen.dart';
 import 'package:dharana_app/features/subscription/screens/subscription_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_dashboard_screen.dart';
+import 'package:dharana_app/features/admin/widgets/period_selector.dart';
+import 'package:dharana_app/features/profile/widgets/activity_chart.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/shared/widgets/notification_bell.dart';
 
@@ -24,6 +26,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<UserAvatar> _avatars = [];
   bool _isLoading = true;
   bool _isPremium = false;
+  List<ActivityDaily> _chartDays = [];
+  bool _chartLoading = true;
+  int _chartRange = 30;
 
   @override
   void initState() {
@@ -63,7 +68,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (mounted) setState(() => _isPremium = (sub['is_premium'] ?? false) == true);
     } catch (_) {}
 
+    _loadActivityChart();
     _checkNotifications();
+  }
+
+  Future<void> _loadActivityChart() async {
+    setState(() => _chartLoading = true);
+    try {
+      final data = await _api.getPracticeHistory(limit: 500, offset: 0);
+      final sessions = (data['sessions'] as List? ?? [])
+          .map<PracticeSession>((e) => PracticeSession.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
+      final agg = _aggregateByDay(sessions, _chartRange);
+      if (mounted) setState(() { _chartDays = List.of(agg); _chartLoading = false; });
+    } catch (_) {
+      if (mounted) setState(() { _chartDays = []; _chartLoading = false; });
+    }
+  }
+
+  List<ActivityDaily> _aggregateByDay(List<PracticeSession> sessions, int rangeDays) {
+    final now = DateTime.now();
+    final startDay = DateTime(now.year, now.month, now.day).subtract(Duration(days: rangeDays - 1));
+    final map = <DateTime, List<double>>{};
+    for (var i = 0; i < rangeDays; i++) {
+      map[startDay.add(Duration(days: i))] = [0, 0, 0];
+    }
+    for (final s in sessions) {
+      final ts = s.startedAt ?? s.completedAt;
+      if (ts == null) continue;
+      final parsed = DateTime.tryParse(ts)?.toLocal();
+      if (parsed == null) continue;
+      final day = DateTime(parsed.year, parsed.month, parsed.day);
+      if (!map.containsKey(day)) continue;
+      final m = map[day]!;
+      m[0] += s.totalDurationSeconds / 60.0;
+      m[1] += 1;
+      m[2] += s.asanasPracticed.length.toDouble();
+    }
+    final out = <ActivityDaily>[];
+    final keys = map.keys.toList()..sort();
+    for (final k in keys) {
+      out.add(ActivityDaily(
+        date: k,
+        minutes: map[k]![0],
+        sessions: map[k]![1],
+        asanas: map[k]![2],
+      ));
+    }
+    return out;
   }
 
   Future<void> _checkNotifications() async {
@@ -129,6 +181,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildUserInfo(),
                   const SizedBox(height: 24),
                   _buildStatsSection(),
+                  const SizedBox(height: 24),
+                  _buildChartSection(),
                   const SizedBox(height: 24),
                   _buildActionsSection(),
                 ],
@@ -289,6 +343,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
         ),
       ],
+    );
+  }
+
+  Widget _buildChartSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Активность', style: Theme.of(context).textTheme.titleLarge),
+                PeriodSelector(days: _chartRange, onChanged: (d) {
+                  setState(() => _chartRange = d);
+                  _loadActivityChart();
+                }),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _chartLoading
+                ? const SizedBox(
+                    height: 200,
+                    child: Center(child: CircularProgressIndicator(color: AppTheme.accent)),
+                  )
+                : ActivityChart(days: _chartDays),
+          ],
+        ),
+      ),
     );
   }
 

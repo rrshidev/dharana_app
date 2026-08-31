@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
-import 'package:dharana_app/features/admin/widgets/date_range_filter.dart';
+import 'package:dharana_app/features/admin/widgets/period_selector.dart';
 
 class AdminOverviewScreen extends StatefulWidget {
   const AdminOverviewScreen({super.key});
@@ -18,18 +18,11 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
   List<dynamic> _activity = [];
   bool _loading = true;
 
-  DateTime? _start;
-  DateTime? _end;
-  String _rangeLabel = '30 д';
-  bool _isCustom = false;
+  int _rangeDays = 30;
 
   @override
   void initState() {
     super.initState();
-    final end = DateTime.now();
-    final start = end.subtract(const Duration(days: 29));
-    _start = start;
-    _end = end;
     _loadAll();
   }
 
@@ -48,7 +41,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
     setState(() => _loading = true);
     try {
       final stats = await _api.getAdminStats();
-      final series = await _api.getAdminStatsSeries(start: _start, end: _end);
+      final series = await _api.getAdminStatsSeries(days: _rangeDays);
       final activity = await _api.getAdminActivity();
       if (mounted) {
         setState(() {
@@ -68,16 +61,6 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
     }
   }
 
-  void _onRange(DateRangeSelection sel) {
-    setState(() {
-      _start = sel.start;
-      _end = sel.end;
-      _rangeLabel = sel.label;
-      _isCustom = !(sel.label == '7 д' || sel.label == '30 д' || sel.label == '90 д');
-    });
-    _loadAll();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,11 +78,12 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                 children: [
-                  DateRangeFilter(
-                    start: _start,
-                    end: _end,
-                    customLabel: _isCustom ? _rangeLabel : 'Календарь',
-                    onChanged: _onRange,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: PeriodSelector(days: _rangeDays, onChanged: (d) {
+                      setState(() => _rangeDays = d);
+                      _loadAll();
+                    }),
                   ),
                   const SizedBox(height: 12),
                   _buildStatCards(),
@@ -239,8 +223,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
     final practices = _ints('practices');
     return ChartCard(
       title: 'Практики по дням',
-      subtitle: _rangeChip(),
-      child: ZoomableAreaChart(data: practices, labels: days),
+      child: AreaTrendChart(data: practices, labels: days),
     );
   }
 
@@ -251,7 +234,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ZoomableMultiLineChart(
+          MultiLineChart(
             series: [
               ChartSeries(name: 'Зарегистрировано', color: AppTheme.accent, data: _ints('new_users')),
               ChartSeries(name: 'Премиум', color: AppTheme.accentGreen, data: _ints('new_premium')),
@@ -304,20 +287,6 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
           Text(k, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
           Text(v, style: const TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w600)),
         ],
-      ),
-    );
-  }
-
-  Widget? _rangeChip() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceLight,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        _rangeLabel,
-        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11),
       ),
     );
   }

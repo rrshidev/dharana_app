@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
-import 'package:dharana_app/features/admin/widgets/date_range_filter.dart';
+import 'package:dharana_app/features/admin/widgets/period_selector.dart';
 
 class AdminUserDetailScreen extends StatefulWidget {
   final int userId;
@@ -20,15 +20,11 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   bool _isUpdating = false;
   bool _activityLoading = true;
 
-  DateTime? _start;
-  DateTime? _end;
+  int _rangeDays = 30;
 
   @override
   void initState() {
     super.initState();
-    final end = DateTime.now();
-    _start = end.subtract(const Duration(days: 29));
-    _end = end;
     _load();
     _loadActivity();
   }
@@ -45,7 +41,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   Future<void> _loadActivity() async {
     setState(() => _activityLoading = true);
     try {
-      final data = await _api.getAdminUserActivity(widget.userId, start: _start, end: _end);
+      final data = await _api.getAdminUserActivity(widget.userId, days: _rangeDays);
       if (mounted) setState(() { _activity = data; _activityLoading = false; });
     } catch (_) {
       if (mounted) setState(() => _activityLoading = false);
@@ -165,15 +161,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     final minutes = minutesSer is List ? minutesSer.map((e) => (e as num).toDouble()).toList() : <double>[];
     return ChartCard(
       title: 'Минут практики',
-      subtitle: DateRangeFilter(
-        start: _start,
-        end: _end,
-        showCustom: false,
-        onChanged: (sel) {
-          setState(() { _start = sel.start; _end = sel.end; });
-          _loadActivity();
-        },
-      ),
+      subtitle: PeriodSelector(days: _rangeDays, onChanged: (d) {
+        setState(() => _rangeDays = d);
+        _loadActivity();
+      }),
       child: _activityLoading
           ? const SizedBox(height: 160, child: Center(child: CircularProgressIndicator(color: AppTheme.accent)))
           : AreaTrendChart(data: minutes, labels: labels, color: AppTheme.accentGreen, showBottomLabels: true),
