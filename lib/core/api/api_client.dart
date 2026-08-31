@@ -233,6 +233,11 @@ class ApiClient {
     return resp.data as Map<String, dynamic>;
   }
 
+  Future<Map<String, dynamic>> getAdminStatsSeries({int days = 30}) async {
+    final resp = await _dio.get('/admin/stats/series', queryParameters: {'days': days});
+    return resp.data as Map<String, dynamic>;
+  }
+
   Future<Map<String, dynamic>> getAdminUsers({String? search}) async {
     final resp = await _dio.get('/admin/users', queryParameters: {
       if (search != null && search.isNotEmpty) 'search': search,

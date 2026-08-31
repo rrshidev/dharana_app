@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/screens/admin_payments_screen.dart';
+import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
 
 class AdminUser {
   final int id;
@@ -51,6 +52,8 @@ class AdminDashboardScreen extends StatefulWidget {
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   final _api = ApiClient();
   Map<String, dynamic>? _stats;
+  Map<String, dynamic>? _series;
+  int _seriesDays = 30;
   List<AdminUser> _users = [];
   List<dynamic> _activity = [];
   bool _isLoading = true;
@@ -81,6 +84,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       final stats = await _api.getAdminStats();
       final users = await _api.getAdminUsers();
       final activity = await _api.getAdminActivity();
+      final series = await _api.getAdminStatsSeries(days: _seriesDays);
       if (mounted) {
         setState(() {
           _stats = stats;
@@ -88,6 +92,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               .map((e) => AdminUser.fromJson(e as Map<String, dynamic>))
               .toList();
           _activity = activity;
+          _series = series;
           _isLoading = false;
         });
       }
@@ -96,6 +101,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка загрузки: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _loadSeries(int days) async {
+    setState(() => _seriesDays = days);
+    try {
+      final series = await _api.getAdminStatsSeries(days: days);
+      if (mounted) {
+        setState(() => _series = series);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка загрузки графиков: $e')),
         );
       }
     }
@@ -129,7 +150,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
           : DefaultTabController(
-              length: 5,
+              length: 6,
               child: Column(
                 children: [
                   const TabBar(
@@ -142,6 +163,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       Tab(text: 'Активность'),
                       Tab(text: 'Заявки'),
                       Tab(text: 'Рассылка'),
+                      Tab(text: 'Графики'),
                     ],
                   ),
                   Expanded(
@@ -152,6 +174,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         _buildActivityTab(),
                         const AdminPaymentsScreen(),
                         _buildBroadcastTab(),
+                        _buildChartsTab(),
                       ],
                     ),
                   ),
@@ -271,6 +294,15 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildChartsTab() {
+    return AdminCharts(
+      series: _series,
+      days: _seriesDays,
+      loading: _series == null,
+      onDaysChanged: _loadSeries,
     );
   }
 
