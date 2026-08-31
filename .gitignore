@@ -52,4 +52,5 @@ app.*.map.json
 .env
 .env.*
 run.ps1
+build_apk.ps1
 *.env.local
