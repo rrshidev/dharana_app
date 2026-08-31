@@ -47,3 +47,9 @@ app.*.map.json
 # Gradle build cache
 **/.gradle/
 /android/build/
+
+# Local environment / secrets (not committed)
+.env
+.env.*
+run.ps1
+*.env.local
