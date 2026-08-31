@@ -240,7 +240,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
     return ChartCard(
       title: 'Практики по дням',
       subtitle: _rangeChip(),
-      child: AreaTrendChart(data: practices, labels: days),
+      child: ZoomableAreaChart(data: practices, labels: days),
     );
   }
 
@@ -251,7 +251,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          MultiLineChart(
+          ZoomableMultiLineChart(
             series: [
               ChartSeries(name: 'Зарегистрировано', color: AppTheme.accent, data: _ints('new_users')),
               ChartSeries(name: 'Премиум', color: AppTheme.accentGreen, data: _ints('new_premium')),

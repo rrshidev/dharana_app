@@ -83,7 +83,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                 _buildSummaryRow(),
                 const SizedBox(height: 12),
                 _buildTrendChart(),
-                const SizedBox(height: 4),
+                const SizedBox(height: 16),
                 _buildFilterRow(),
                 const SizedBox(height: 4),
                 if (_filtered.isEmpty)
@@ -141,21 +141,25 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   Widget _buildTrendChart() {
     return ChartCard(
       title: 'Заявки по дням',
-      subtitle: DateRangeFilter(
-        start: _start,
-        end: _end,
-        onChanged: (sel) {
-          setState(() {
-            _start = sel.start;
-            _end = sel.end;
-          });
-          _load();
-        },
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          StackedBarChart(
+          SizedBox(
+            width: double.infinity,
+            child: DateRangeFilter(
+              start: _start,
+              end: _end,
+              onChanged: (sel) {
+                setState(() {
+                  _start = sel.start;
+                  _end = sel.end;
+                });
+                _load();
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
+          ZoomableStackedBarChart(
             series: [
               ChartSeries(name: 'Ожидают', color: AppTheme.accent, data: _ints('pending')),
               ChartSeries(name: 'Одобрено', color: AppTheme.accentGreen, data: _ints('confirmed')),

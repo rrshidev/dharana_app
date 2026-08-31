@@ -123,23 +123,27 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   Widget _buildTrendChart() {
     return ChartCard(
       title: 'Рассылки по дням',
-      subtitle: DateRangeFilter(
-        start: _start,
-        end: _end,
-        onChanged: (sel) {
-          setState(() {
-            _start = sel.start;
-            _end = sel.end;
-          });
-          _loadSeries();
-        },
-      ),
       child: _seriesLoading
           ? const SizedBox(height: 160, child: Center(child: CircularProgressIndicator(color: AppTheme.accent)))
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BarChartSimple(data: _ints('campaigns'), labels: _days ?? [], color: AppTheme.accent),
+                SizedBox(
+                  width: double.infinity,
+                  child: DateRangeFilter(
+                    start: _start,
+                    end: _end,
+                    onChanged: (sel) {
+                      setState(() {
+                        _start = sel.start;
+                        _end = sel.end;
+                      });
+                      _loadSeries();
+                    },
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ZoomableBarChart(data: _ints('campaigns'), labels: _days ?? [], color: AppTheme.accent),
                 const SizedBox(height: 8),
                 Text(
                   'Получателей: ${_ints('recipients').isEmpty ? '—' : _ints('recipients').fold<double>(0, (a, b) => a + b).round()}',
