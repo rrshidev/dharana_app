@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
+import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
+import 'package:dharana_app/features/admin/widgets/date_range_filter.dart';
 
 class AdminPaymentsScreen extends StatefulWidget {
   const AdminPaymentsScreen({super.key});
@@ -12,13 +14,20 @@ class AdminPaymentsScreen extends StatefulWidget {
 class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   final _api = ApiClient();
   List<Map<String, dynamic>> _payments = [];
+  Map<String, dynamic>? _series;
   bool _isLoading = true;
   bool _isBusy = false;
   String _filter = 'all';
 
+  DateTime? _start;
+  DateTime? _end;
+
   @override
   void initState() {
     super.initState();
+    final end = DateTime.now();
+    _start = end.subtract(const Duration(days: 29));
+    _end = end;
     _load();
   }
 
@@ -26,19 +35,20 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     setState(() => _isLoading = true);
     try {
       final data = await _api.getAdminPayments();
-      final list = data['payments'];
+      final series = await _api.getAdminPaymentsSeries(start: _start, end: _end);
       if (mounted) {
         setState(() {
-          _payments = (list as List).map((e) => Map<String, dynamic>.from(e as Map)).toList();
+          _payments = (data['payments'] as List)
+              .map((e) => Map<String, dynamic>.from(e as Map))
+              .toList();
+          _series = series;
           _isLoading = false;
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
       }
     }
   }
@@ -48,41 +58,133 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     return _payments.where((p) => p['status'] == _filter).toList();
   }
 
+  List<double> _ints(String key) {
+    final raw = _series?[key];
+    if (raw is List) return raw.map((e) => (e as num).toDouble()).toList();
+    return [];
+  }
+
+  List<String>? get _days => _series?['days'] is List ? (_series!['days'] as List).cast<String>() : null;
+
+  int _countStatus(String status) => _payments.where((p) => p['status'] == status).length;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Заявки на Premium'),
-        actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _load),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _load)],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
-          : Column(
+          : ListView(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
-                  child: Row(
-                    children: [
-                      _filterChip('all', 'Все'),
-                      _filterChip('pending', 'Ожидают'),
-                      _filterChip('confirmed', 'Одобрены'),
-                      _filterChip('rejected', 'Отклонены'),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: _filtered.isEmpty
-                      ? const Center(child: Text('Заявок нет'))
-                      : ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
-                          itemCount: _filtered.length,
-                          itemBuilder: (context, i) => _buildCard(_filtered[i]),
-                        ),
-                ),
+                _buildSummaryRow(),
+                const SizedBox(height: 12),
+                _buildTrendChart(),
+                const SizedBox(height: 4),
+                _buildFilterRow(),
+                const SizedBox(height: 4),
+                if (_filtered.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Center(child: Text('Заявок нет')),
+                  )
+                else
+                  ..._filtered.map(_buildCard),
               ],
             ),
+    );
+  }
+
+  Widget _buildSummaryRow() {
+    final pending = _countStatus('pending');
+    final confirmed = _countStatus('confirmed');
+    final rejected = _countStatus('rejected');
+    return Row(
+      children: [
+        _miniStat('${_payments.length}', 'Всего', AppTheme.accent),
+        const SizedBox(width: 8),
+        _miniStat('$pending', 'Ожидают', AppTheme.accent),
+        const SizedBox(width: 8),
+        _miniStat('$confirmed', 'Одобрено', AppTheme.accentGreen),
+        const SizedBox(width: 8),
+        _miniStat('$rejected', 'Отклонено', AppTheme.danger),
+      ],
+    );
+  }
+
+  Widget _miniStat(String value, String label, Color color) {
+    return Expanded(
+      child: Card(
+        margin: EdgeInsets.zero,
+        color: AppTheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: const BorderSide(color: AppTheme.cardBorder),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Column(
+            children: [
+              Text(value,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: color)),
+              Text(label, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTrendChart() {
+    return ChartCard(
+      title: 'Заявки по дням',
+      subtitle: DateRangeFilter(
+        start: _start,
+        end: _end,
+        onChanged: (sel) {
+          setState(() {
+            _start = sel.start;
+            _end = sel.end;
+          });
+          _load();
+        },
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          StackedBarChart(
+            series: [
+              ChartSeries(name: 'Ожидают', color: AppTheme.accent, data: _ints('pending')),
+              ChartSeries(name: 'Одобрено', color: AppTheme.accentGreen, data: _ints('confirmed')),
+              ChartSeries(name: 'Отклонено', color: AppTheme.danger, data: _ints('rejected')),
+            ],
+            labels: _days ?? [],
+          ),
+          const SizedBox(height: 10),
+          const ChartLegend(series: [
+            ChartSeries(name: 'Ожидают', color: AppTheme.accent, data: []),
+            ChartSeries(name: 'Одобрено', color: AppTheme.accentGreen, data: []),
+            ChartSeries(name: 'Отклонено', color: AppTheme.danger, data: []),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterRow() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6, bottom: 6),
+      child: Row(
+        children: [
+          _filterChip('all', 'Все'),
+          _filterChip('pending', 'Ожидают'),
+          _filterChip('confirmed', 'Одобрены'),
+          _filterChip('rejected', 'Отклонены'),
+        ],
+      ),
     );
   }
 
@@ -124,7 +226,12 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     final encoded = Uri.encodeFull(_api.resolveUrl(receipt));
 
     return Card(
+      color: AppTheme.surface,
       margin: const EdgeInsets.only(bottom: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: const BorderSide(color: AppTheme.cardBorder),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -135,6 +242,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                 Icon(
                   pending ? Icons.hourglass_top : Icons.credit_card,
                   color: pending ? AppTheme.accent : AppTheme.textSecondary,
+                  size: 20,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -155,6 +263,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                     ),
                   ),
                   backgroundColor: AppTheme.surfaceLight,
+                  visualDensity: VisualDensity.compact,
                 ),
               ],
             ),
@@ -172,22 +281,18 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
               GestureDetector(
                 onTap: () => _showReceipt(receipt),
                 child: Container(
-                  height: 150,
+                  height: 130,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: AppTheme.surfaceLight,
                     borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: NetworkImage(encoded),
-                      fit: BoxFit.cover,
-                    ),
+                    image: DecorationImage(image: NetworkImage(encoded), fit: BoxFit.cover),
                   ),
                   child: const Align(
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: EdgeInsets.all(6),
-                      child: Icon(Icons.zoom_in,
-                          color: AppTheme.textPrimary, size: 18),
+                      child: Icon(Icons.zoom_in, color: AppTheme.textPrimary, size: 18),
                     ),
                   ),
                 ),
@@ -238,13 +343,8 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            InteractiveViewer(
-              child: Image.network(encoded),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Закрыть'),
-            ),
+            InteractiveViewer(child: Image.network(encoded)),
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Закрыть')),
           ],
         ),
       ),
@@ -266,15 +366,9 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
             decoration: const InputDecoration(labelText: 'Кол-во дней Premium'),
           ),
           actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
             TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Отмена'),
-            ),
-            TextButton(
-              onPressed: () {
-                final n = int.tryParse(controller.text);
-                Navigator.pop(ctx, n ?? 30);
-              },
+              onPressed: () => Navigator.pop(ctx, int.tryParse(controller.text) ?? 30),
               child: const Text('Подтвердить'),
             ),
           ],
@@ -290,11 +384,9 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              status == 'confirmed'
-                  ? 'Оплата подтверждена${res['premium_granted'] == true ? ', Premium выдан' : ''}'
-                  : 'Оплата отклонена',
-            ),
+            content: Text(status == 'confirmed'
+                ? 'Оплата подтверждена${res['premium_granted'] == true ? ', Premium выдан' : ''}'
+                : 'Оплата отклонена'),
             backgroundColor: status == 'confirmed' ? AppTheme.accentGreen : AppTheme.danger,
           ),
         );
@@ -302,9 +394,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
       await _load();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger));
       }
     } finally {
       if (mounted) setState(() => _isBusy = false);

@@ -233,10 +233,60 @@ class ApiClient {
     return resp.data as Map<String, dynamic>;
   }
 
-  Future<Map<String, dynamic>> getAdminStatsSeries({int days = 30}) async {
-    final resp = await _dio.get('/admin/stats/series', queryParameters: {'days': days});
+  Future<Map<String, dynamic>> getAdminStatsSeries({
+    int? days,
+    DateTime? start,
+    DateTime? end,
+  }) async {
+    final resp = await _dio.get('/admin/stats/series', queryParameters: {
+      if (days != null) 'days': days,
+      if (start != null) 'start': _fmtDate(start),
+      if (end != null) 'end': _fmtDate(end),
+    });
     return resp.data as Map<String, dynamic>;
   }
+
+  Future<Map<String, dynamic>> getAdminPaymentsSeries({
+    int? days,
+    DateTime? start,
+    DateTime? end,
+  }) async {
+    final resp = await _dio.get('/admin/payments/series', queryParameters: {
+      if (days != null) 'days': days,
+      if (start != null) 'start': _fmtDate(start),
+      if (end != null) 'end': _fmtDate(end),
+    });
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> getAdminUserActivity(int userId, {
+    int? days,
+    DateTime? start,
+    DateTime? end,
+  }) async {
+    final resp = await _dio.get('/admin/users/$userId/activity', queryParameters: {
+      if (days != null) 'days': days,
+      if (start != null) 'start': _fmtDate(start),
+      if (end != null) 'end': _fmtDate(end),
+    });
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> getAdminBroadcastSeries({
+    int? days,
+    DateTime? start,
+    DateTime? end,
+  }) async {
+    final resp = await _dio.get('/admin/broadcast/series', queryParameters: {
+      if (days != null) 'days': days,
+      if (start != null) 'start': _fmtDate(start),
+      if (end != null) 'end': _fmtDate(end),
+    });
+    return resp.data as Map<String, dynamic>;
+  }
+
+  String _fmtDate(DateTime d) =>
+      '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
   Future<Map<String, dynamic>> getAdminUsers({String? search}) async {
     final resp = await _dio.get('/admin/users', queryParameters: {
