@@ -18,6 +18,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   Map<String, dynamic>? _activity;
   bool _isLoading = true;
   bool _isUpdating = false;
+  bool _isActionBusy = false;
   bool _activityLoading = true;
 
   int _rangeDays = 30;
@@ -68,6 +69,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                   _buildStatsCard(),
                   const SizedBox(height: 12),
                   _buildSubscriptionCard(),
+                  const SizedBox(height: 12),
+                  _buildActionsCard(),
                   const SizedBox(height: 12),
                   _buildActivityChart(),
                   const SizedBox(height: 12),
@@ -152,6 +155,286 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildActionsCard() {
+    final user = _data?['user'] as Map<String, dynamic>? ?? {};
+    final isBanned = (user['is_banned'] ?? false) == true;
+    final isDeleted = (user['is_deleted'] ?? false) == true;
+    return ChartCard(
+      title: 'Действия',
+      child: _isActionBusy
+          ? const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(
+                child: CircularProgressIndicator(color: AppTheme.accent),
+              ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: isDeleted ? null : _sendMessage,
+                  icon: const Icon(Icons.send, size: 18),
+                  label: const Text('Написать сообщение'),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: isDeleted ? null : () => _toggleBan(isBanned),
+                        icon: Icon(
+                          isBanned ? Icons.check_circle_outline : Icons.block,
+                          size: 18,
+                        ),
+                        label: Text(isBanned ? 'Разбанить' : 'Забанить'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              isBanned ? AppTheme.accentGreen : AppTheme.danger,
+                          foregroundColor: AppTheme.background,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _toggleDelete(isDeleted),
+                        icon: Icon(
+                          isDeleted ? Icons.restore : Icons.delete,
+                          size: 18,
+                        ),
+                        label: Text(isDeleted ? 'Восстановить' : 'Удалить'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.danger,
+                          foregroundColor: AppTheme.background,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+    );
+  }
+
+  Future<void> _sendMessage() async {
+    final user = _data?['user'] as Map<String, dynamic>? ?? {};
+    final userId = user['id'] ?? widget.userId;
+    final hasTelegram = user['telegram_id'] != null;
+    final textController = TextEditingController();
+    String channel = 'both';
+
+    final channelResult = await showDialog<String>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setLocal) => AlertDialog(
+          backgroundColor: AppTheme.surface,
+          title: const Text('Канал доставки'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                enabled: hasTelegram,
+                leading: Icon(
+                  channel == 'both'
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_off,
+                  size: 20,
+                ),
+                title: const Text('Telegram + приложение'),
+                onTap: hasTelegram ? () => setLocal(() => channel = 'both') : null,
+              ),
+              ListTile(
+                leading: Icon(
+                  channel == 'app'
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_off,
+                  size: 20,
+                ),
+                title: const Text('Только приложение (in-app)'),
+                onTap: () => setLocal(() => channel = 'app'),
+              ),
+              ListTile(
+                enabled: hasTelegram,
+                leading: Icon(
+                  channel == 'telegram'
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_off,
+                  size: 20,
+                ),
+                title: const Text('Только Telegram'),
+                onTap: hasTelegram ? () => setLocal(() => channel = 'telegram') : null,
+              ),
+              if (!hasTelegram)
+                const Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Text(
+                    'У пользователя нет Telegram ID',
+                    style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                  ),
+                ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, channel),
+              child: const Text('Далее'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (channelResult == null) return;
+    if (!mounted) return;
+
+    final textResult = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surface,
+        title: const Text('Сообщение пользователю'),
+        content: TextField(
+          controller: textController,
+          maxLines: 4,
+          maxLength: 2000,
+          decoration: const InputDecoration(hintText: 'Текст сообщения'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, textController.text),
+            child: const Text('Отправить'),
+          ),
+        ],
+      ),
+    );
+    if (textResult == null || textResult.trim().isEmpty) return;
+
+    setState(() => _isActionBusy = true);
+    try {
+      final data = await _api.sendAdminUserMessage(
+        userId,
+        message: textResult,
+        channel: channelResult,
+      );
+      final parts = <String>[
+        if (channelResult == 'both' || channelResult == 'app') _reportApp(data['app']),
+        if (channelResult == 'both' || channelResult == 'telegram') _reportTg(data['telegram']),
+      ];
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(parts.where((p) => p.isNotEmpty).join(' · ')),
+            backgroundColor: AppTheme.accentGreen,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isActionBusy = false);
+    }
+  }
+
+  String _reportApp(dynamic status) {
+    if (status == 'queued') return 'in-app: поставлено';
+    if (status == 'failed') return 'in-app: ошибка';
+    return 'in-app: $status';
+  }
+
+  String _reportTg(dynamic status) {
+    if (status == 'sent') return 'TG: отправлено';
+    if (status == 'no_telegram') return 'TG: нет ID';
+    if (status == 'failed') return 'TG: ошибка';
+    if (status == 'no_bot') return 'TG: бот не настроен';
+    return 'TG: $status';
+  }
+
+  Future<void> _toggleBan(bool current) async {
+    final user = _data?['user'] as Map<String, dynamic>? ?? {};
+    final userId = user['id'] ?? widget.userId;
+    final ban = !current;
+    final ok = await _confirm(
+      ban ? 'Забанить пользователя?' : 'Разбанить пользователя?',
+      ban ? 'Он потеряет доступ к приложению.' : null,
+    );
+    if (!ok) return;
+
+    setState(() => _isActionBusy = true);
+    try {
+      await _api.setUserBan(userId, ban);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(ban ? 'Пользователь забанен' : 'Бан снят'),
+            backgroundColor: AppTheme.accentGreen,
+          ),
+        );
+      }
+      await _load();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isActionBusy = false);
+    }
+  }
+
+  Future<void> _toggleDelete(bool current) async {
+    final user = _data?['user'] as Map<String, dynamic>? ?? {};
+    final userId = user['id'] ?? widget.userId;
+    final del = !current;
+    final ok = await _confirm(
+      del ? 'Удалить пользователя?' : 'Восстановить пользователя?',
+      del ? 'Это обратимо, но юзер будет помечен удалённым.' : null,
+    );
+    if (!ok) return;
+
+    setState(() => _isActionBusy = true);
+    try {
+      await _api.setUserDeleted(userId, del);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(del ? 'Пользователь удалён' : 'Пользователь восстановлен'),
+            backgroundColor: AppTheme.accentGreen,
+          ),
+        );
+      }
+      await _load();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isActionBusy = false);
+    }
+  }
+
+  Future<bool> _confirm(String title, String? message) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surface,
+        title: Text(title),
+        content: message == null ? null : Text(message),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Отмена')),
+          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Подтвердить')),
+        ],
+      ),
+    );
+    return result ?? false;
   }
 
   Widget _buildActivityChart() {

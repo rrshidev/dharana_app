@@ -429,6 +429,32 @@ class ApiClient {
     return resp.data as Map<String, dynamic>;
   }
 
+  Future<Map<String, dynamic>> sendAdminUserMessage(
+    int userId, {
+    required String message,
+    String channel = 'both',
+  }) async {
+    final resp = await _dio.post('/admin/users/$userId/message', data: {
+      'channel': channel,
+      'message': message,
+    });
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> setUserBan(int userId, bool banned) async {
+    final resp = await _dio.post('/admin/users/$userId/ban', data: {
+      'banned': banned,
+    });
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> setUserDeleted(int userId, bool deleted) async {
+    final resp = await _dio.post('/admin/users/$userId/delete', data: {
+      'deleted': deleted,
+    });
+    return resp.data as Map<String, dynamic>;
+  }
+
   Future<Map<String, dynamic>> getSubscriptionStatus() async {
     final resp = await _dio.get('/subscription/status');
     return resp.data as Map<String, dynamic>;

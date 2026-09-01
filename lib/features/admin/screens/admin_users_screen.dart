@@ -10,6 +10,8 @@ class AdminUser {
   final String? username;
   final int? telegramId;
   final bool isPremium;
+  final bool isBanned;
+  final bool isDeleted;
   final int totalPracticeMinutes;
   final int totalPracticeDays;
 
@@ -20,6 +22,8 @@ class AdminUser {
     this.username,
     this.telegramId,
     this.isPremium = false,
+    this.isBanned = false,
+    this.isDeleted = false,
     this.totalPracticeMinutes = 0,
     this.totalPracticeDays = 0,
   });
@@ -32,6 +36,8 @@ class AdminUser {
       username: json['username'],
       telegramId: json['telegram_id'],
       isPremium: json['is_premium'] ?? false,
+      isBanned: json['is_banned'] ?? false,
+      isDeleted: json['is_deleted'] ?? false,
       totalPracticeMinutes: json['total_practice_minutes'] ?? 0,
       totalPracticeDays: json['total_practice_days'] ?? 0,
     );
@@ -175,7 +181,11 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            if (u.isPremium)
+            if (u.isDeleted)
+              const Icon(Icons.delete, color: AppTheme.danger, size: 18)
+            else if (u.isBanned)
+              const Icon(Icons.block, color: AppTheme.danger, size: 18)
+            else if (u.isPremium)
               const Icon(Icons.workspace_premium, color: AppTheme.accent, size: 18),
             Text(
               '${u.totalPracticeMinutes} мин',
