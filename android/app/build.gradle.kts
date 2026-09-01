@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.dharana.dharana_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
