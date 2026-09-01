@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/admin/screens/admin_broadcast_screen.dart';
+import 'package:dharana_app/features/admin/screens/admin_content_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_overview_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_payments_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_users_screen.dart';
@@ -32,6 +33,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           AdminUsersScreen(),
           AdminPaymentsScreen(),
           AdminBroadcastScreen(),
+          AdminContentScreen(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -59,6 +61,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             icon: Icon(Icons.campaign_outlined, color: AppTheme.textSecondary),
             selectedIcon: Icon(Icons.campaign, color: AppTheme.accent),
             label: 'Рассылка',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.folder_outlined, color: AppTheme.textSecondary),
+            selectedIcon: Icon(Icons.folder, color: AppTheme.accent),
+            label: 'Контент',
           ),
         ],
       ),

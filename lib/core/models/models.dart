@@ -347,3 +347,58 @@ class SequenceVideo {
     );
   }
 }
+
+class AdminAsana {
+  final String name;
+  final String categoryId;
+  final String? imageUrl;
+  final int difficulty;
+  final List<String> effects;
+  final bool hasVideo;
+
+  AdminAsana({
+    required this.name,
+    required this.categoryId,
+    this.imageUrl,
+    this.difficulty = 1,
+    this.effects = const [],
+    this.hasVideo = false,
+  });
+
+  factory AdminAsana.fromJson(Map<String, dynamic> json) {
+    return AdminAsana(
+      name: json['name'] ?? '',
+      categoryId: json['category_id'] ?? '',
+      imageUrl: json['image_url'],
+      difficulty: json['difficulty'] ?? 1,
+      effects: List<String>.from(json['effects'] ?? []),
+      hasVideo: json['has_video'] ?? false,
+    );
+  }
+}
+
+class AdminSequence {
+  final int id;
+  final String name;
+  final bool isPremium;
+  final String? videoUrl;
+  final String? createdAt;
+
+  AdminSequence({
+    required this.id,
+    required this.name,
+    this.isPremium = false,
+    this.videoUrl,
+    this.createdAt,
+  });
+
+  factory AdminSequence.fromJson(Map<String, dynamic> json) {
+    return AdminSequence(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      isPremium: json['is_premium'] ?? false,
+      videoUrl: json['video_url'],
+      createdAt: json['created_at'],
+    );
+  }
+}

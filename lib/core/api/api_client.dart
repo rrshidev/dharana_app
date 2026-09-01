@@ -228,6 +228,121 @@ class ApiClient {
     await _dio.post('/videos/scan');
   }
 
+  Future<List<AdminAsana>> getAdminAsanas() async {
+    try {
+      final resp = await _dio.get('/admin/asanas');
+      return (resp.data['items'] as List<dynamic>? ?? [])
+          .map((e) => AdminAsana.fromJson(e))
+          .toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>> createAsana({
+    required String name,
+    required String categoryId,
+    String description = '',
+  }) async {
+    final resp = await _dio.post('/admin/asanas', data: FormData.fromMap({
+      'name': name,
+      'category_id': categoryId,
+      'description': description,
+    }));
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> updateAsanaInfo(
+    String name, {
+    String description = '',
+  }) async {
+    final resp = await _dio.put(
+      '/admin/asanas/${Uri.encodeComponent(name)}/info',
+      data: FormData.fromMap({'description': description}),
+    );
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> uploadAsanaPhoto(String name, File photo) async {
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        photo.path,
+        filename: '${Uri.encodeComponent(name)}_photo.jpg',
+      ),
+    });
+    final resp = await _dio.post(
+      '/admin/asanas/${Uri.encodeComponent(name)}/photo',
+      data: formData,
+    );
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> uploadAsanaVideo(String name, File video) async {
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(video.path, filename: 'video.mp4'),
+    });
+    final resp = await _dio.post(
+      '/admin/asanas/${Uri.encodeComponent(name)}/video',
+      data: formData,
+    );
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<bool> deleteAsana(String name) async {
+    try {
+      await _dio.delete('/admin/asanas/${Uri.encodeComponent(name)}');
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<List<AdminSequence>> getAdminSequences() async {
+    try {
+      final resp = await _dio.get('/admin/sequences');
+      return (resp.data['items'] as List<dynamic>? ?? [])
+          .map((e) => AdminSequence.fromJson(e))
+          .toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>> addSequenceVideo({
+    required String name,
+    required String section,
+    required File video,
+  }) async {
+    final formData = FormData.fromMap({
+      'name': name,
+      'section': section,
+      'file': await MultipartFile.fromFile(video.path, filename: 'video.mp4'),
+    });
+    final resp = await _dio.post('/admin/sequences/video', data: formData);
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> updateSequenceVideo(
+    int id, {
+    required String name,
+    required String section,
+  }) async {
+    final resp = await _dio.put(
+      '/admin/sequences/$id',
+      data: FormData.fromMap({'name': name, 'section': section}),
+    );
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<bool> deleteSequenceVideo(int id) async {
+    try {
+      await _dio.delete('/admin/sequences/$id');
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<Map<String, dynamic>> getAdminStats() async {
     final resp = await _dio.get('/admin/stats');
     return resp.data as Map<String, dynamic>;
