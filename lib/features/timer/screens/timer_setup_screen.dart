@@ -178,6 +178,14 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
     return sec > 0 ? '${m}м ${sec}с' : '${m}мин';
   }
 
+  Widget _asanaPlaceholder() {
+    return Container(
+      color: AppTheme.SurfaceLight,
+      child: Icon(Icons.self_improvement,
+          color: AppTheme.Accent.withValues(alpha: 0.8), size: 20),
+    );
+  }
+
   Widget _buildSelectedAsanas() {
     if (_selectedAsanas.isEmpty) {
       return Expanded(
@@ -275,7 +283,42 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                   final asana = available[index];
                   return ListTile(
                     dense: true,
-                    leading: Icon(Icons.add_circle_outline, color: AppTheme.Accent, size: 20),
+                    leading: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: SizedBox(
+                            width: 44,
+                            height: 44,
+                            child: asana.imageUrl != null
+                                ? Image.network(
+                                    '${ApiClient.baseUrl}${asana.imageUrl}',
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) =>
+                                        _asanaPlaceholder(),
+                                  )
+                                : _asanaPlaceholder(),
+                          ),
+                        ),
+                        Positioned(
+                          right: -6,
+                          bottom: -6,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: AppTheme.Accent,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.add,
+                              size: 14,
+                              color: AppTheme.Background,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     title: Text(asana.name, maxLines: 1, overflow: TextOverflow.ellipsis),
                     subtitle: asana.categoryName != null
                         ? Text(asana.categoryName!, style: Theme.of(context).textTheme.bodySmall)
