@@ -22,11 +22,11 @@ class ChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppTheme.surface,
+      color: AppTheme.Surface,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: AppTheme.cardBorder),
+        side: BorderSide(color: AppTheme.CardBorder),
       ),
       child: Padding(
         padding: padding,
@@ -38,10 +38,10 @@ class ChartCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary,
+                      color: AppTheme.TextPrimary,
                     ),
                   ),
                 ),
@@ -67,7 +67,7 @@ class Sparkline extends StatelessWidget {
   final double height;
   final double width;
 
-  const Sparkline({
+  Sparkline({
     super.key,
     required this.data,
     this.color = AppTheme.accent,
@@ -81,8 +81,8 @@ class Sparkline extends StatelessWidget {
       return SizedBox(
         width: width,
         height: height,
-        child: const Center(
-          child: Text('вЂ”', style: TextStyle(color: AppTheme.textSecondary)),
+        child: Center(
+          child: Text('вЂ”', style: TextStyle(color: AppTheme.TextSecondary)),
         ),
       );
     }
@@ -155,7 +155,7 @@ class AreaTrendChart extends StatelessWidget {
   final double height;
   final bool showBottomLabels;
 
-  const AreaTrendChart({
+  AreaTrendChart({
     super.key,
     required this.data,
     required this.labels,
@@ -179,8 +179,8 @@ class AreaTrendChart extends StatelessWidget {
               gridData: FlGridData(
                 show: true,
                 drawVerticalLine: false,
-                getDrawingHorizontalLine: (_) => const FlLine(
-                  color: AppTheme.cardBorder,
+                getDrawingHorizontalLine: (_) => FlLine(
+                  color: AppTheme.CardBorder,
                   strokeWidth: 1,
                 ),
               ),
@@ -202,7 +202,7 @@ class AreaTrendChart extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           _short(label: labels[i], n: data.length),
-                          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 9),
+                          style: TextStyle(color: AppTheme.TextSecondary, fontSize: 9),
                         ),
                       );
                     },
@@ -215,10 +215,10 @@ class AreaTrendChart extends StatelessWidget {
                   getTooltipItems: (spots) => spots
                       .map((s) => LineTooltipItem(
                             '${s.y.toInt()}',
-                            const TextStyle(color: AppTheme.background, fontWeight: FontWeight.bold),
+                            TextStyle(color: AppTheme.Background, fontWeight: FontWeight.bold),
                           ))
                       .toList(),
-                  getTooltipColor: (_) => AppTheme.textPrimary,
+                  getTooltipColor: (_) => AppTheme.TextPrimary,
                 ),
               ),
               lineBarsData: [
@@ -275,7 +275,7 @@ class MultiLineChart extends StatelessWidget {
                 show: true,
                 drawVerticalLine: false,
                 getDrawingHorizontalLine: (_) =>
-                    const FlLine(color: AppTheme.cardBorder, strokeWidth: 1),
+                    FlLine(color: AppTheme.CardBorder, strokeWidth: 1),
               ),
               titlesData: FlTitlesData(
                 leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -293,7 +293,7 @@ class MultiLineChart extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           _short(label: labels[i], n: labels.length),
-                          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 9),
+                          style: TextStyle(color: AppTheme.TextSecondary, fontSize: 9),
                         ),
                       );
                     },
@@ -306,10 +306,10 @@ class MultiLineChart extends StatelessWidget {
                   getTooltipItems: (spots) => spots
                       .map((s) => LineTooltipItem(
                             '${s.y.toInt()}',
-                            const TextStyle(color: AppTheme.background, fontWeight: FontWeight.bold),
+                            TextStyle(color: AppTheme.Background, fontWeight: FontWeight.bold),
                           ))
                       .toList(),
-                  getTooltipColor: (_) => AppTheme.textPrimary,
+                  getTooltipColor: (_) => AppTheme.TextPrimary,
                 ),
               ),
               lineBarsData: series.map((s) {
@@ -361,7 +361,7 @@ class StackedBarChart extends StatelessWidget {
                 show: true,
                 drawVerticalLine: false,
                 getDrawingHorizontalLine: (_) =>
-                    const FlLine(color: AppTheme.cardBorder, strokeWidth: 1),
+                    FlLine(color: AppTheme.CardBorder, strokeWidth: 1),
               ),
               titlesData: FlTitlesData(
                 leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -379,7 +379,7 @@ class StackedBarChart extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           _short(label: labels[i], n: labels.length),
-                          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 9),
+                          style: TextStyle(color: AppTheme.TextSecondary, fontSize: 9),
                         ),
                       );
                     },
@@ -389,12 +389,12 @@ class StackedBarChart extends StatelessWidget {
               borderData: FlBorderData(show: false),
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
-                  getTooltipColor: (_) => AppTheme.textPrimary,
+                  getTooltipColor: (_) => AppTheme.TextPrimary,
                   getTooltipItem: (group, gi, rod, ri) {
                     final sum = group.barRods.fold<double>(0, (a, b) => a + b.toY);
                     return BarTooltipItem(
                       '${sum.toInt()}',
-                      const TextStyle(color: AppTheme.background, fontWeight: FontWeight.bold),
+                      TextStyle(color: AppTheme.Background, fontWeight: FontWeight.bold),
                     );
                   },
                 ),
@@ -437,7 +437,7 @@ class BarChartSimple extends StatelessWidget {
   final Color color;
   final double height;
 
-  const BarChartSimple({
+  BarChartSimple({
     super.key,
     required this.data,
     required this.labels,
@@ -459,7 +459,7 @@ class BarChartSimple extends StatelessWidget {
                 show: true,
                 drawVerticalLine: false,
                 getDrawingHorizontalLine: (_) =>
-                    const FlLine(color: AppTheme.cardBorder, strokeWidth: 1),
+                    FlLine(color: AppTheme.CardBorder, strokeWidth: 1),
               ),
               titlesData: FlTitlesData(
                 leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -477,7 +477,7 @@ class BarChartSimple extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           _short(label: labels[i], n: labels.length),
-                          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 9),
+                          style: TextStyle(color: AppTheme.TextSecondary, fontSize: 9),
                         ),
                       );
                     },
@@ -487,10 +487,10 @@ class BarChartSimple extends StatelessWidget {
               borderData: FlBorderData(show: false),
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
-                  getTooltipColor: (_) => AppTheme.textPrimary,
+                  getTooltipColor: (_) => AppTheme.TextPrimary,
                   getTooltipItem: (group, gi, rod, ri) => BarTooltipItem(
                     '${rod.toY.toInt()}',
-                    const TextStyle(color: AppTheme.background, fontWeight: FontWeight.bold),
+                    TextStyle(color: AppTheme.Background, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -549,13 +549,13 @@ class DonutRate extends StatelessWidget {
                     sections: [
                       PieChartSectionData(
                         value: (value * t).clamp(0, 100),
-                        color: AppTheme.accentGreen,
+                        color: AppTheme.AccentGreen,
                         showTitle: false,
                         radius: size * 0.46,
                       ),
                       PieChartSectionData(
                         value: ((100 - value) * t).clamp(0, 100),
-                        color: AppTheme.surfaceLight,
+                        color: AppTheme.SurfaceLight,
                         showTitle: false,
                         radius: size * 0.46,
                       ),
@@ -568,16 +568,16 @@ class DonutRate extends StatelessWidget {
                 children: [
                   Text(
                     centerLabel.isNotEmpty ? centerLabel : '${value.round()}%',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: AppTheme.textPrimary,
+                      color: AppTheme.TextPrimary,
                     ),
                   ),
                   if (subLabel != null)
                     Text(
                       subLabel!,
-                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 10),
+                      style: TextStyle(color: AppTheme.TextSecondary, fontSize: 10),
                     ),
                 ],
               ),
@@ -597,10 +597,10 @@ class ChartEmpty extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: height,
-      child: const Center(
+      child: Center(
         child: Text(
           'РќРµС‚ РґР°РЅРЅС‹С… Р·Р° РїРµСЂРёРѕРґ',
-          style: TextStyle(color: AppTheme.textSecondary),
+          style: TextStyle(color: AppTheme.TextSecondary),
         ),
       ),
     );
@@ -639,7 +639,7 @@ class ChartLegend extends StatelessWidget {
                   const SizedBox(width: 6),
                   Text(
                     s.name,
-                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                    style: TextStyle(color: AppTheme.TextSecondary, fontSize: 12),
                   ),
                 ],
               ))

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/screens/admin_user_detail_screen.dart';
@@ -132,14 +132,14 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+                ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
                 : _searching
-                    ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+                    ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
                     : _users.isEmpty
                         ? const Center(child: Text('Пользователи не найдены'))
                         : RefreshIndicator(
                             onRefresh: () => _load(_searchController.text),
-                            color: AppTheme.accent,
+                            color: AppTheme.Accent,
                             child: ListView.builder(
                               padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
                               itemCount: _users.length,
@@ -154,18 +154,18 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 
   Widget _buildCard(AdminUser u) {
     return Card(
-      color: AppTheme.surface,
+      color: AppTheme.Surface,
       margin: const EdgeInsets.only(bottom: 8),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: AppTheme.cardBorder),
+        side: BorderSide(color: AppTheme.CardBorder),
       ),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: AppTheme.surfaceLight,
+          backgroundColor: AppTheme.SurfaceLight,
           child: Text(
             (u.name ?? '?').isNotEmpty ? (u.name ?? '?')[0].toUpperCase() : '?',
-            style: const TextStyle(color: AppTheme.accent, fontWeight: FontWeight.bold),
+            style: TextStyle(color: AppTheme.Accent, fontWeight: FontWeight.bold),
           ),
         ),
         title: Text(u.name ?? 'Без имени'),
@@ -182,11 +182,11 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             if (u.isDeleted)
-              const Icon(Icons.delete, color: AppTheme.danger, size: 18)
+              Icon(Icons.delete, color: AppTheme.Danger, size: 18)
             else if (u.isBanned)
-              const Icon(Icons.block, color: AppTheme.danger, size: 18)
+              Icon(Icons.block, color: AppTheme.Danger, size: 18)
             else if (u.isPremium)
-              const Icon(Icons.workspace_premium, color: AppTheme.accent, size: 18),
+              Icon(Icons.workspace_premium, color: AppTheme.Accent, size: 18),
             Text(
               '${u.totalPracticeMinutes} мин',
               style: Theme.of(context).textTheme.bodySmall,

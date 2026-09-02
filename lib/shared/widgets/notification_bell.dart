@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/services/notifications_center.dart';
 import 'package:dharana_app/features/notifications/screens/notifications_screen.dart';
@@ -26,7 +26,7 @@ class NotificationBell extends StatelessWidget {
           },
           icon: Badge(
             isLabelVisible: center.hasUnread,
-            backgroundColor: AppTheme.danger,
+            backgroundColor: AppTheme.Danger,
             smallSize: 10,
             child: Icon(Icons.notifications_none, color: color),
           ),

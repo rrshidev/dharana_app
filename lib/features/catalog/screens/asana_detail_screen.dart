@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -81,7 +81,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(_isFavorite ? 'Добавлено в избранное' : 'Удалено из избранного'),
-            backgroundColor: AppTheme.surfaceLight,
+            backgroundColor: AppTheme.SurfaceLight,
             duration: const Duration(seconds: 1),
           ),
         );
@@ -89,7 +89,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     }
@@ -99,8 +99,8 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(
+              child: CircularProgressIndicator(color: AppTheme.Accent))
           : _asana == null
               ? const Center(child: Text('Асана не найдена'))
               : CustomScrollView(
@@ -112,7 +112,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                         IconButton(
                           icon: Icon(
                             _isFavorite ? Icons.favorite : Icons.favorite_border,
-                            color: _isFavorite ? AppTheme.danger : AppTheme.textPrimary,
+                            color: _isFavorite ? AppTheme.Danger : AppTheme.TextPrimary,
                           ),
                           onPressed: _toggleFavorite,
                         ),
@@ -129,22 +129,22 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                     width: double.infinity,
                                     height: double.infinity,
                                     errorBuilder: (_, __, ___) => Container(
-                                      color: AppTheme.surface,
-                                      child: const Icon(
+                                      color: AppTheme.Surface,
+                                      child: Icon(
                                         Icons.self_improvement,
                                         size: 80,
-                                        color: AppTheme.accent,
+                                        color: AppTheme.Accent,
                                       ),
                                     ),
                                   ),
                                 ),
                               )
                             : Container(
-                                color: AppTheme.surface,
-                                child: const Icon(
+                                color: AppTheme.Surface,
+                                child: Icon(
                                   Icons.self_improvement,
                                   size: 80,
-                                  color: AppTheme.accent,
+                                  color: AppTheme.Accent,
                                 ),
                               ),
                       ),
@@ -166,7 +166,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: AppTheme.surfaceLight,
+                                    color: AppTheme.SurfaceLight,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
@@ -189,7 +189,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                 children: _asana!.effects.map((effect) {
                                   return Chip(
                                     label: Text(_effectLabel(effect)),
-                                    backgroundColor: AppTheme.surfaceLight,
+                                    backgroundColor: AppTheme.SurfaceLight,
                                     side: BorderSide.none,
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 0),
@@ -204,23 +204,23 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: AppTheme.danger.withValues(alpha: 0.1),
+                                  color: AppTheme.Danger.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                   border: Border.all(
-                                      color: AppTheme.danger.withValues(alpha: 0.3)),
+                                      color: AppTheme.Danger.withValues(alpha: 0.3)),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       children: [
                                         Icon(Icons.warning_amber_rounded,
-                                            color: AppTheme.danger, size: 20),
+                                            color: AppTheme.Danger, size: 20),
                                         SizedBox(width: 8),
                                         Text(
                                           'Противопоказания',
                                           style: TextStyle(
-                                            color: AppTheme.danger,
+                                            color: AppTheme.Danger,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -231,8 +231,8 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                       (c) => Padding(
                                         padding: const EdgeInsets.only(bottom: 4),
                                         child: Text('• $c',
-                                            style: const TextStyle(
-                                                color: AppTheme.textSecondary)),
+                                            style: TextStyle(
+                                                color: AppTheme.TextSecondary)),
                                       ),
                                     )),
                                   ],
@@ -292,13 +292,13 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: AppTheme.surfaceLight,
+                                  color: AppTheme.SurfaceLight,
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: AppTheme.accent.withValues(alpha: 0.3)),
+                                  border: Border.all(color: AppTheme.Accent.withValues(alpha: 0.3)),
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.lock, color: AppTheme.accent),
+                                    Icon(Icons.lock, color: AppTheme.Accent),
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Column(
@@ -311,7 +311,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                           const SizedBox(height: 4),
                                           Text(
                                             _video!.message ?? 'Оформите Premium для доступа',
-                                            style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                                            style: TextStyle(fontSize: 12, color: AppTheme.TextSecondary),
                                           ),
                                         ],
                                       ),

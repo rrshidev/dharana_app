@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -98,7 +98,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 _results = [];
               });
             },
-            child: const Text('Сбросить', style: TextStyle(color: AppTheme.accent)),
+            child: Text('Сбросить', style: TextStyle(color: AppTheme.Accent)),
           ),
         ],
       ),
@@ -122,10 +122,10 @@ class _FilterScreenState extends State<FilterScreen> {
                       onSelected: (selected) {
                         setState(() => _selectedEffect = selected ? e.$1 : null);
                       },
-                      selectedColor: AppTheme.accent,
-                      backgroundColor: AppTheme.surfaceLight,
+                      selectedColor: AppTheme.Accent,
+                      backgroundColor: AppTheme.SurfaceLight,
                       labelStyle: TextStyle(
-                        color: isSelected ? Colors.white : AppTheme.textSecondary,
+                        color: isSelected ? Colors.white : AppTheme.TextSecondary,
                       ),
                     );
                   }).toList(),
@@ -144,10 +144,10 @@ class _FilterScreenState extends State<FilterScreen> {
                       onSelected: (selected) {
                         setState(() => _selectedDifficulty = selected ? d.$1 : null);
                       },
-                      selectedColor: AppTheme.accent,
-                      backgroundColor: AppTheme.surfaceLight,
+                      selectedColor: AppTheme.Accent,
+                      backgroundColor: AppTheme.SurfaceLight,
                       labelStyle: TextStyle(
-                        color: isSelected ? Colors.white : AppTheme.textSecondary,
+                        color: isSelected ? Colors.white : AppTheme.TextSecondary,
                       ),
                     );
                   }).toList(),
@@ -166,10 +166,10 @@ class _FilterScreenState extends State<FilterScreen> {
                       onSelected: (selected) {
                         setState(() => _selectedCategory = selected ? c.$1 : null);
                       },
-                      selectedColor: AppTheme.accent,
-                      backgroundColor: AppTheme.surfaceLight,
+                      selectedColor: AppTheme.Accent,
+                      backgroundColor: AppTheme.SurfaceLight,
                       labelStyle: TextStyle(
-                        color: isSelected ? Colors.white : AppTheme.textSecondary,
+                        color: isSelected ? Colors.white : AppTheme.TextSecondary,
                       ),
                     );
                   }).toList(),
@@ -198,14 +198,14 @@ class _FilterScreenState extends State<FilterScreen> {
           if (_error != null)
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Text(_error!, style: const TextStyle(color: AppTheme.danger)),
+              child: Text(_error!, style: TextStyle(color: AppTheme.Danger)),
             ),
           if (_hasSearched && _results.isEmpty && !_isLoading && _error == null)
             Padding(
               padding: const EdgeInsets.all(32),
               child: Column(
                 children: [
-                  Icon(Icons.search_off, size: 48, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+                  Icon(Icons.search_off, size: 48, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
                   const SizedBox(height: 12),
                   Text('Ничего не найдено', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 4),
@@ -240,14 +240,14 @@ class _FilterScreenState extends State<FilterScreen> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: AppTheme.surfaceLight,
+                          color: AppTheme.SurfaceLight,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
                           child: Text(
                             '${index + 1}',
-                            style: const TextStyle(
-                              color: AppTheme.accent,
+                            style: TextStyle(
+                              color: AppTheme.Accent,
                               fontWeight: FontWeight.w700,
                               fontSize: 16,
                             ),

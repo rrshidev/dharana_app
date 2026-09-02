@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -41,12 +41,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Избранное')),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : _favorites.isEmpty
               ? _buildEmptyState()
               : RefreshIndicator(
                   onRefresh: _loadFavorites,
-                  color: AppTheme.accent,
+                  color: AppTheme.Accent,
                   child: ListView.builder(
                     padding: const EdgeInsets.all(20),
                     itemCount: _favorites.length,
@@ -55,7 +55,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
-                          leading: const Icon(Icons.favorite, color: AppTheme.danger),
+                          leading: Icon(Icons.favorite, color: AppTheme.Danger),
                           title: Text(fav.asanaName),
                           subtitle: Text(
                             fav.createdAt?.substring(0, 10) ?? '',
@@ -63,7 +63,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           ),
                           trailing: IconButton(
                             icon: const Icon(Icons.delete_outline, size: 20),
-                            color: AppTheme.textSecondary,
+                            color: AppTheme.TextSecondary,
                             onPressed: () => _removeFavorite(fav.asanaName),
                           ),
                           onTap: () {
@@ -85,11 +85,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.favorite_border, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+          Icon(Icons.favorite_border, size: 64, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text(
             'Нет избранных асан',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTheme.textSecondary),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTheme.TextSecondary),
           ),
           const SizedBox(height: 8),
           Text(
@@ -112,14 +112,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('$asanaName удалено из избранного'),
-            backgroundColor: AppTheme.surfaceLight,
+            backgroundColor: AppTheme.SurfaceLight,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     }

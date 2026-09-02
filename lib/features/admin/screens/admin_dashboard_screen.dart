@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/admin/screens/admin_broadcast_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_content_screen.dart';
@@ -39,32 +39,32 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
-        backgroundColor: AppTheme.surface,
-        indicatorColor: AppTheme.accent.withValues(alpha: 0.25),
-        destinations: const [
+        backgroundColor: AppTheme.Surface,
+        indicatorColor: AppTheme.Accent.withValues(alpha: 0.25),
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined, color: AppTheme.textSecondary),
-            selectedIcon: Icon(Icons.dashboard, color: AppTheme.accent),
+            icon: Icon(Icons.dashboard_outlined, color: AppTheme.TextSecondary),
+            selectedIcon: Icon(Icons.dashboard, color: AppTheme.Accent),
             label: 'Обзор',
           ),
           NavigationDestination(
-            icon: Icon(Icons.people_outline, color: AppTheme.textSecondary),
-            selectedIcon: Icon(Icons.people, color: AppTheme.accent),
+            icon: Icon(Icons.people_outline, color: AppTheme.TextSecondary),
+            selectedIcon: Icon(Icons.people, color: AppTheme.Accent),
             label: 'Юзеры',
           ),
           NavigationDestination(
-            icon: Icon(Icons.request_page_outlined, color: AppTheme.textSecondary),
-            selectedIcon: Icon(Icons.request_page, color: AppTheme.accent),
+            icon: Icon(Icons.request_page_outlined, color: AppTheme.TextSecondary),
+            selectedIcon: Icon(Icons.request_page, color: AppTheme.Accent),
             label: 'Заявки',
           ),
           NavigationDestination(
-            icon: Icon(Icons.campaign_outlined, color: AppTheme.textSecondary),
-            selectedIcon: Icon(Icons.campaign, color: AppTheme.accent),
+            icon: Icon(Icons.campaign_outlined, color: AppTheme.TextSecondary),
+            selectedIcon: Icon(Icons.campaign, color: AppTheme.Accent),
             label: 'Рассылка',
           ),
           NavigationDestination(
-            icon: Icon(Icons.folder_outlined, color: AppTheme.textSecondary),
-            selectedIcon: Icon(Icons.folder, color: AppTheme.accent),
+            icon: Icon(Icons.folder_outlined, color: AppTheme.TextSecondary),
+            selectedIcon: Icon(Icons.folder, color: AppTheme.Accent),
             label: 'Контент',
           ),
         ],

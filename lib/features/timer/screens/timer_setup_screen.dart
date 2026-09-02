@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -73,7 +73,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Настройка практики')),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : Column(
               children: [
                 _buildTimeSettings(),
@@ -148,16 +148,16 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color: AppTheme.surfaceLight,
+            color: AppTheme.SurfaceLight,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppTheme.cardBorder),
+            border: Border.all(color: AppTheme.CardBorder),
           ),
           child: DropdownButton<int>(
             value: value,
             isExpanded: true,
             underline: const SizedBox(),
-            dropdownColor: AppTheme.surface,
-            style: const TextStyle(color: AppTheme.textPrimary),
+            dropdownColor: AppTheme.Surface,
+            style: TextStyle(color: AppTheme.TextPrimary),
             items: options.map((s) => DropdownMenuItem(
               value: s,
               child: Text(_fmt(s)),
@@ -185,7 +185,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.playlist_add, size: 48, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+              Icon(Icons.playlist_add, size: 48, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
               const SizedBox(height: 12),
               Text('Добавьте асаны из списка ниже',
                 style: Theme.of(context).textTheme.bodyMedium),
@@ -226,9 +226,9 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                       leading: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('${index + 1}', style: const TextStyle(color: AppTheme.textSecondary)),
+                          Text('${index + 1}', style: TextStyle(color: AppTheme.TextSecondary)),
                           const SizedBox(width: 8),
-                          const Icon(Icons.drag_handle, color: AppTheme.textSecondary, size: 20),
+                          Icon(Icons.drag_handle, color: AppTheme.TextSecondary, size: 20),
                         ],
                       ),
                       title: Text(a['name'], maxLines: 1, overflow: TextOverflow.ellipsis),
@@ -238,7 +238,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                       ),
                       trailing: IconButton(
                         icon: const Icon(Icons.close, size: 18),
-                        color: AppTheme.textSecondary,
+                        color: AppTheme.TextSecondary,
                         onPressed: () => _removeAsana(index),
                       ),
                     ),
@@ -275,7 +275,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                   final asana = available[index];
                   return ListTile(
                     dense: true,
-                    leading: const Icon(Icons.add_circle_outline, color: AppTheme.accent, size: 20),
+                    leading: Icon(Icons.add_circle_outline, color: AppTheme.Accent, size: 20),
                     title: Text(asana.name, maxLines: 1, overflow: TextOverflow.ellipsis),
                     subtitle: asana.categoryName != null
                         ? Text(asana.categoryName!, style: Theme.of(context).textTheme.bodySmall)
@@ -302,7 +302,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
           label: Text('Начать практику (${_selectedAsanas.length} асан)'),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(16),
-            disabledBackgroundColor: AppTheme.surfaceLight,
+            disabledBackgroundColor: AppTheme.SurfaceLight,
           ),
         ),
       ),

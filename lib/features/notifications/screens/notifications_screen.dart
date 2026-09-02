@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/services/notifications_center.dart';
 
@@ -28,8 +28,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         builder: (context, _) {
           final items = _center.items;
           if (items.isEmpty) {
-            return const Center(
-              child: Text('Уведомлений пока нет', style: TextStyle(color: AppTheme.textSecondary)),
+            return Center(
+              child: Text('Уведомлений пока нет', style: TextStyle(color: AppTheme.TextSecondary)),
             );
           }
           return ListView.separated(
@@ -42,7 +42,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               final message = item is Map ? (item['message']?.toString() ?? '') : '';
               final createdAt = item is Map ? (item['created_at']?.toString() ?? '') : '';
               return Card(
-                color: isRead ? AppTheme.surface : AppTheme.surfaceLight,
+                color: isRead ? AppTheme.Surface : AppTheme.SurfaceLight,
                 child: Padding(
                   padding: const EdgeInsets.all(14),
                   child: Row(
@@ -53,7 +53,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         child: Icon(
                           Icons.campaign_outlined,
                           size: 20,
-                          color: isRead ? AppTheme.textSecondary : AppTheme.accent,
+                          color: isRead ? AppTheme.TextSecondary : AppTheme.Accent,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -63,9 +63,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           children: [
                             Text(
                               message.isEmpty ? 'Сообщение' : message,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 15,
-                                color: AppTheme.textPrimary,
+                                color: AppTheme.TextPrimary,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -75,9 +75,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 createdAt.length > 16
                                     ? createdAt.substring(0, 16)
                                     : createdAt,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
-                                  color: AppTheme.textSecondary,
+                                  color: AppTheme.TextSecondary,
                                 ),
                               ),
                             ],
@@ -89,8 +89,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           width: 8,
                           height: 8,
                           margin: const EdgeInsets.only(top: 6),
-                          decoration: const BoxDecoration(
-                            color: AppTheme.accent,
+                          decoration: BoxDecoration(
+                            color: AppTheme.Accent,
                             shape: BoxShape.circle,
                           ),
                         ),

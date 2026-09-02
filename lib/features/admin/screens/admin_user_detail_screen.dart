@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
@@ -54,13 +54,13 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Пользователь')),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : RefreshIndicator(
               onRefresh: () async {
                 await _load();
                 await _loadActivity();
               },
-              color: AppTheme.accent,
+              color: AppTheme.Accent,
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
@@ -87,12 +87,12 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       children: [
         CircleAvatar(
           radius: 30,
-          backgroundColor: AppTheme.surfaceLight,
+          backgroundColor: AppTheme.SurfaceLight,
           child: Text(
             user['name']?.toString().isNotEmpty == true
                 ? user['name'].toString()[0].toUpperCase()
                 : '?',
-            style: const TextStyle(fontSize: 24, color: AppTheme.accent, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 24, color: AppTheme.Accent, fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(width: 16),
@@ -103,7 +103,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
               Text(user['name']?.toString() ?? 'Без имени', style: Theme.of(context).textTheme.titleLarge),
               if (user['email'] != null) Text(user['email'].toString(), style: const TextStyle(fontSize: 13)),
               if (user['telegram_id'] != null)
-                Text('TG: ${user['telegram_id']}', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                Text('TG: ${user['telegram_id']}', style: TextStyle(fontSize: 12, color: AppTheme.TextSecondary)),
             ],
           ),
         ),
@@ -141,14 +141,14 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
           SizedBox(
             width: double.infinity,
             child: _isUpdating
-                ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+                ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
                 : ElevatedButton.icon(
                     onPressed: _togglePremium,
                     icon: const Icon(Icons.workspace_premium_outlined, size: 18),
                     label: Text(isPremium ? 'Снять премиум' : 'Выдать премиум'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isPremium ? AppTheme.surfaceLight : AppTheme.accent,
-                      foregroundColor: AppTheme.background,
+                      backgroundColor: isPremium ? AppTheme.SurfaceLight : AppTheme.Accent,
+                      foregroundColor: AppTheme.Background,
                     ),
                   ),
           ),
@@ -164,10 +164,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     return ChartCard(
       title: 'Действия',
       child: _isActionBusy
-          ? const Padding(
+          ? Padding(
               padding: EdgeInsets.all(16),
               child: Center(
-                child: CircularProgressIndicator(color: AppTheme.accent),
+                child: CircularProgressIndicator(color: AppTheme.Accent),
               ),
             )
           : Column(
@@ -191,8 +191,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                         label: Text(isBanned ? 'Разбанить' : 'Забанить'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              isBanned ? AppTheme.accentGreen : AppTheme.danger,
-                          foregroundColor: AppTheme.background,
+                              isBanned ? AppTheme.AccentGreen : AppTheme.Danger,
+                          foregroundColor: AppTheme.Background,
                         ),
                       ),
                     ),
@@ -206,8 +206,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                         ),
                         label: Text(isDeleted ? 'Восстановить' : 'Удалить'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.danger,
-                          foregroundColor: AppTheme.background,
+                          backgroundColor: AppTheme.Danger,
+                          foregroundColor: AppTheme.Background,
                         ),
                       ),
                     ),
@@ -229,7 +229,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setLocal) => AlertDialog(
-          backgroundColor: AppTheme.surface,
+          backgroundColor: AppTheme.Surface,
           title: const Text('Канал доставки'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -267,11 +267,11 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                 onTap: hasTelegram ? () => setLocal(() => channel = 'telegram') : null,
               ),
               if (!hasTelegram)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(top: 8),
                   child: Text(
                     'У пользователя нет Telegram ID',
-                    style: TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                    style: TextStyle(color: AppTheme.TextSecondary, fontSize: 12),
                   ),
                 ),
             ],
@@ -292,7 +292,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     final textResult = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surface,
+        backgroundColor: AppTheme.Surface,
         title: const Text('Сообщение пользователю'),
         content: TextField(
           controller: textController,
@@ -326,14 +326,14 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(parts.where((p) => p.isNotEmpty).join(' · ')),
-            backgroundColor: AppTheme.accentGreen,
+            backgroundColor: AppTheme.AccentGreen,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -372,7 +372,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(ban ? 'Пользователь забанен' : 'Бан снят'),
-            backgroundColor: AppTheme.accentGreen,
+            backgroundColor: AppTheme.AccentGreen,
           ),
         );
       }
@@ -380,7 +380,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -405,7 +405,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(del ? 'Пользователь удалён' : 'Пользователь восстановлен'),
-            backgroundColor: AppTheme.accentGreen,
+            backgroundColor: AppTheme.AccentGreen,
           ),
         );
       }
@@ -413,7 +413,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -425,7 +425,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surface,
+        backgroundColor: AppTheme.Surface,
         title: Text(title),
         content: message == null ? null : Text(message),
         actions: [
@@ -449,8 +449,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         _loadActivity();
       }),
       child: _activityLoading
-          ? const SizedBox(height: 160, child: Center(child: CircularProgressIndicator(color: AppTheme.accent)))
-          : AreaTrendChart(data: minutes, labels: labels, color: AppTheme.accentGreen, showBottomLabels: true),
+          ? SizedBox(height: 160, child: Center(child: CircularProgressIndicator(color: AppTheme.Accent)))
+          : AreaTrendChart(data: minutes, labels: labels, color: AppTheme.AccentGreen, showBottomLabels: true),
     );
   }
 
@@ -459,7 +459,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     return ChartCard(
       title: 'Последние практики',
       child: sessions.isEmpty
-          ? const Text('Нет завершённых практик', style: TextStyle(color: AppTheme.textSecondary))
+          ? Text('Нет завершённых практик', style: TextStyle(color: AppTheme.TextSecondary))
           : Column(
               children: sessions.take(10).map((s) {
                 return Padding(
@@ -507,7 +507,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       final result = await showDialog<int>(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: AppTheme.surface,
+          backgroundColor: AppTheme.Surface,
           title: const Text('Выдать премиум'),
           content: TextField(
             controller: controller,
@@ -534,7 +534,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(isPremium ? 'Премиум снят' : 'Премиум выдан'),
-            backgroundColor: AppTheme.accentGreen,
+            backgroundColor: AppTheme.AccentGreen,
           ),
         );
       }
@@ -542,7 +542,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     } finally {

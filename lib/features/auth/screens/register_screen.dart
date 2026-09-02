@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
 
@@ -100,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 12),
                 Text(
                   _error!,
-                  style: const TextStyle(color: AppTheme.danger, fontSize: 14),
+                  style: TextStyle(color: AppTheme.Danger, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -108,12 +108,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ElevatedButton(
                 onPressed: _isLoading ? null : _register,
                 child: _isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: AppTheme.background,
+                          color: AppTheme.Background,
                         ),
                       )
                     : const Text('Зарегистрироваться'),
@@ -122,14 +122,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                     text: 'Уже есть аккаунт? ',
-                    style: TextStyle(color: AppTheme.textSecondary),
+                    style: TextStyle(color: AppTheme.TextSecondary),
                     children: [
                       TextSpan(
                         text: 'Войдите',
                         style: TextStyle(
-                          color: AppTheme.accent,
+                          color: AppTheme.Accent,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -69,14 +69,14 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(
+              child: CircularProgressIndicator(color: AppTheme.Accent))
           : !_hasSearched
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.search, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+                      Icon(Icons.search, size: 64, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
                       const SizedBox(height: 16),
                       Text(
                         'Введите название асаны',
@@ -109,9 +109,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                     errorBuilder: (_, __, ___) => Container(
                                       width: 48,
                                       height: 48,
-                                      color: AppTheme.surfaceLight,
-                                      child: const Icon(Icons.self_improvement,
-                                          color: AppTheme.accent),
+                                      color: AppTheme.SurfaceLight,
+                                      child: Icon(Icons.self_improvement,
+                                          color: AppTheme.Accent),
                                     ),
                                   ),
                                 )
@@ -119,11 +119,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                   width: 48,
                                   height: 48,
                                   decoration: BoxDecoration(
-                                    color: AppTheme.surfaceLight,
+                                    color: AppTheme.SurfaceLight,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: const Icon(Icons.self_improvement,
-                                      color: AppTheme.accent),
+                                  child: Icon(Icons.self_improvement,
+                                      color: AppTheme.Accent),
                                 ),
                           title: Text(asana.name),
                           subtitle: Text(

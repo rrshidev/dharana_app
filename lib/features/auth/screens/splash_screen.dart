@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
 
@@ -41,20 +41,20 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: AppTheme.accent,
+                color: AppTheme.Accent,
                 borderRadius: BorderRadius.circular(24),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.self_improvement,
                 size: 60,
-                color: AppTheme.background,
+                color: AppTheme.Background,
               ),
             ),
             const SizedBox(height: 24),
             Text(
               'Dharana',
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    color: AppTheme.accent,
+                    color: AppTheme.Accent,
                   ),
             ),
             const SizedBox(height: 8),
@@ -63,8 +63,8 @@ class _SplashScreenState extends State<SplashScreen> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 32),
-            const CircularProgressIndicator(
-              color: AppTheme.accent,
+            CircularProgressIndicator(
+              color: AppTheme.Accent,
               strokeWidth: 2,
             ),
           ],

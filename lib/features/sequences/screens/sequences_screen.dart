@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -43,17 +43,17 @@ class _SequencesScreenState extends State<SequencesScreen> {
         title: const Text('Готовые комплексы'),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : _sequences.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.video_library_outlined, size: 64, color: AppTheme.textSecondary),
+                      Icon(Icons.video_library_outlined, size: 64, color: AppTheme.TextSecondary),
                       const SizedBox(height: 16),
                       Text(
                         'Комплексы пока не добавлены',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondary),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.TextSecondary),
                       ),
                     ],
                   ),
@@ -129,14 +129,14 @@ class _SequenceCardState extends State<_SequenceCard> {
             Container(
               height: 180,
               width: double.infinity,
-              color: AppTheme.surfaceLight,
+              color: AppTheme.SurfaceLight,
               child: Center(
                 child: widget.sequence.accessible
                     ? IconButton(
-                        icon: const Icon(Icons.play_circle_outline, size: 56, color: AppTheme.accent),
+                        icon: Icon(Icons.play_circle_outline, size: 56, color: AppTheme.Accent),
                         onPressed: _togglePlay,
                       )
-                    : const Icon(Icons.lock, size: 40, color: AppTheme.textSecondary),
+                    : Icon(Icons.lock, size: 40, color: AppTheme.TextSecondary),
               ),
             ),
           Padding(
@@ -156,12 +156,12 @@ class _SequenceCardState extends State<_SequenceCard> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: AppTheme.accent.withValues(alpha: 0.2),
+                            color: AppTheme.Accent.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Premium',
-                            style: TextStyle(fontSize: 11, color: AppTheme.accent, fontWeight: FontWeight.w600),
+                            style: TextStyle(fontSize: 11, color: AppTheme.Accent, fontWeight: FontWeight.w600),
                           ),
                         ),
                     ],
@@ -171,7 +171,7 @@ class _SequenceCardState extends State<_SequenceCard> {
                   IconButton(
                     icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
                     onPressed: _togglePlay,
-                    color: AppTheme.accent,
+                    color: AppTheme.Accent,
                   ),
               ],
             ),

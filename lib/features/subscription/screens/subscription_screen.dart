@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -106,10 +106,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         actions: const [NotificationBell()],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : RefreshIndicator(
               onRefresh: _load,
-              color: AppTheme.accent,
+              color: AppTheme.Accent,
               child: ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
@@ -122,14 +122,14 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppTheme.surfaceLight,
+                      color: AppTheme.SurfaceLight,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Как оплатить: переведите сумму на карту, затем нажмите '
                       '"Я оплатил(а) и прикрепить чек" и загрузите фото/скрин чека. '
                       'После проверки Premium будет активирован автоматически.',
-                      style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                      style: TextStyle(fontSize: 13, color: AppTheme.TextSecondary),
                     ),
                   ),
                 ],
@@ -151,7 +151,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               children: [
                 Icon(
                   _isPremium ? Icons.workspace_premium : Icons.workspace_premium_outlined,
-                  color: _isPremium ? AppTheme.accent : AppTheme.textSecondary,
+                  color: _isPremium ? AppTheme.Accent : AppTheme.TextSecondary,
                   size: 30,
                 ),
                 const SizedBox(width: 12),
@@ -176,9 +176,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               const SizedBox(height: 12)
             else ...[
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 '499 ₽ / месяц',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.accent),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.Accent),
               ),
             ],
           ],
@@ -190,11 +190,11 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   Widget _buildRequisitesCard() {
     final price = '499 ₽';
     if (_requisites.isEmpty) {
-      return const Card(
+      return Card(
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Text('Реквизиты недоступны',
-              style: TextStyle(color: AppTheme.textSecondary)),
+              style: TextStyle(color: AppTheme.TextSecondary)),
         ),
       );
     }
@@ -204,21 +204,21 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Реквизиты для оплаты', style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+            Text('Реквизиты для оплаты', style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.TextPrimary)),
             const SizedBox(height: 4),
             Text('Сумма: $price',
-                style: const TextStyle(color: AppTheme.textSecondary)),
+                style: TextStyle(color: AppTheme.TextSecondary)),
             if (_requisites.first['holder']?.toString().isNotEmpty == true) ...[
               const SizedBox(height: 12),
               Text(
                 'Получатель: ${_requisites.first['holder']}',
-                style: const TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.textPrimary),
+                style: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.TextPrimary),
               ),
               const SizedBox(height: 4),
-              const Text('Нажмите на карту, чтобы скопировать номер',
-                  style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+              Text('Нажмите на карту, чтобы скопировать номер',
+                  style: TextStyle(fontSize: 12, color: AppTheme.TextSecondary)),
             ],
             const SizedBox(height: 16),
             for (final r in _requisites)
@@ -234,10 +234,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final number = r['card']?.toString() ?? r['card_number']?.toString() ?? r['number']?.toString() ?? '';
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: const Icon(Icons.credit_card, color: AppTheme.accent),
+      leading: Icon(Icons.credit_card, color: AppTheme.Accent),
       title: Text(bank.isEmpty ? 'Карта' : bank),
       subtitle: number.isNotEmpty
-          ? Text(number, style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary))
+          ? Text(number, style: TextStyle(fontSize: 13, color: AppTheme.TextSecondary))
           : null,
       onTap: () {
         if (number.isNotEmpty) {
@@ -254,17 +254,17 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     return SizedBox(
       width: double.infinity,
       child: _isUploading
-          ? const Padding(
+          ? Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
-              child: Center(child: CircularProgressIndicator(color: AppTheme.accent)),
+              child: Center(child: CircularProgressIndicator(color: AppTheme.Accent)),
             )
           : ElevatedButton.icon(
               onPressed: _pickAndUploadReceipt,
               icon: const Icon(Icons.upload_file),
               label: const Text('Я оплатил(а), прикрепить чек'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isPremium ? AppTheme.surfaceLight : AppTheme.accent,
-                foregroundColor: AppTheme.background,
+                backgroundColor: _isPremium ? AppTheme.SurfaceLight : AppTheme.Accent,
+                foregroundColor: AppTheme.Background,
               ),
             ),
     );
@@ -284,9 +284,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Чек получен! Premium будет активирован после проверки.'),
-            backgroundColor: AppTheme.accentGreen,
+            backgroundColor: AppTheme.AccentGreen,
           ),
         );
       }
@@ -297,13 +297,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       }
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(msg), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text(msg), backgroundColor: AppTheme.Danger),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     } finally {

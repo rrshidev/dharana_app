@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dharana_app/app/theme.dart';
+import 'package:dharana_app/app/theme_controller.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
@@ -169,10 +170,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : RefreshIndicator(
               onRefresh: _loadProfile,
-              color: AppTheme.accent,
+              color: AppTheme.Accent,
               child: ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
@@ -197,16 +198,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           CircleAvatar(
             radius: 55,
-            backgroundColor: AppTheme.surfaceLight,
+            backgroundColor: AppTheme.SurfaceLight,
             backgroundImage: _user?.avatarUrl != null
                 ? NetworkImage(ApiClient().resolveUrl(_user!.avatarUrl!))
                 : null,
             child: _user?.avatarUrl == null
                 ? Text(
                     (_user?.name ?? 'Й')[0].toUpperCase(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 40,
-                      color: AppTheme.accent,
+                      color: AppTheme.Accent,
                       fontWeight: FontWeight.w700,
                     ),
                   )
@@ -219,11 +220,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () => _showAvatarPicker(),
               child: Container(
                 padding: const EdgeInsets.all(6),
-                decoration: const BoxDecoration(
-                  color: AppTheme.accent,
+                decoration: BoxDecoration(
+                  color: AppTheme.Accent,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.camera_alt, size: 16, color: AppTheme.background),
+                child: Icon(Icons.camera_alt, size: 16, color: AppTheme.Background),
               ),
             ),
           ),
@@ -234,13 +235,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: AppTheme.surface,
+                  color: AppTheme.Surface,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppTheme.cardBorder),
+                  border: Border.all(color: AppTheme.CardBorder),
                 ),
                 child: Text(
                   '${_avatars.length}',
-                  style: const TextStyle(fontSize: 10, color: AppTheme.textSecondary),
+                  style: TextStyle(fontSize: 10, color: AppTheme.TextSecondary),
                 ),
               ),
             ),
@@ -327,20 +328,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }) {
     return Column(
       children: [
-        Icon(icon, color: AppTheme.accent, size: 24),
+        Icon(icon, color: AppTheme.Accent, size: 24),
         const SizedBox(height: 8),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: AppTheme.textPrimary,
+            color: AppTheme.TextPrimary,
           ),
         ),
         const SizedBox(height: 2),
         Text(
           label,
-          style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+          style: TextStyle(fontSize: 12, color: AppTheme.TextSecondary),
         ),
       ],
     );
@@ -365,9 +366,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 16),
             _chartLoading
-                ? const SizedBox(
+                ? SizedBox(
                     height: 200,
-                    child: Center(child: CircularProgressIndicator(color: AppTheme.accent)),
+                    child: Center(child: CircularProgressIndicator(color: AppTheme.Accent)),
                   )
                 : ActivityChart(days: _chartDays),
           ],
@@ -419,6 +420,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           },
         ),
+        _buildMenuItem(
+          context,
+          icon: Icons.palette_outlined,
+          title: 'Тема',
+          subtitle: _themeLabel,
+          onTap: _showThemePicker,
+        ),
         const SizedBox(height: 24),
         OutlinedButton.icon(
           onPressed: () async {
@@ -427,13 +435,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.of(context).pushReplacementNamed('/login');
             }
           },
-          icon: const Icon(Icons.logout, color: AppTheme.danger),
-          label: const Text(
+          icon: Icon(Icons.logout, color: AppTheme.Danger),
+          label: Text(
             'Выйти',
-            style: TextStyle(color: AppTheme.danger),
+            style: TextStyle(color: AppTheme.Danger),
           ),
           style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: AppTheme.danger),
+            side: BorderSide(color: AppTheme.Danger),
             padding: const EdgeInsets.all(16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -453,12 +461,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         onTap: onTap,
-        leading: Icon(icon, color: AppTheme.accent),
+        leading: Icon(icon, color: AppTheme.Accent),
         title: Text(title),
         subtitle: subtitle != null
             ? Text(subtitle, style: Theme.of(context).textTheme.bodySmall)
             : null,
-        trailing: const Icon(Icons.chevron_right, color: AppTheme.textSecondary),
+        trailing: Icon(Icons.chevron_right, color: AppTheme.TextSecondary),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
@@ -469,14 +477,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surface,
+        backgroundColor: AppTheme.Surface,
         title: const Text('Привязать Telegram'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               '1. Нажмите "Открыть бот"\n2. Бот пришлёт вам код\n3. Введите его ниже:',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+              style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -545,11 +553,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  String get _themeLabel {
+    switch (ThemeController.instance.value) {
+      case ThemeMode.light:
+        return 'Светлая';
+      case ThemeMode.dark:
+        return 'Тёмная';
+      default:
+        return 'Системная';
+    }
+  }
+
+  Future<void> _showThemePicker() async {
+    final current = ThemeController.instance.value;
+    final selected = await showDialog<ThemeMode>(
+      context: context,
+      builder: (ctx) => SimpleDialog(
+        title: const Text('Тема оформления'),
+        children: [
+          _themeOption(ctx, ThemeMode.system, 'Системная', current),
+          _themeOption(ctx, ThemeMode.light, 'Светлая', current),
+          _themeOption(ctx, ThemeMode.dark, 'Тёмная', current),
+        ],
+      ),
+    );
+    if (selected != null) {
+      await ThemeController.instance.setTheme(selected);
+      if (mounted) setState(() {});
+    }
+  }
+
+  Widget _themeOption(BuildContext ctx, ThemeMode mode, String label,
+      ThemeMode current) {
+    return SimpleDialogOption(
+      onPressed: () => Navigator.of(ctx).pop(mode),
+      child: Row(
+        children: [
+          if (current == mode)
+            Icon(Icons.check, color: AppTheme.Accent)
+          else
+            const SizedBox(width: 24),
+          const SizedBox(width: 12),
+          Text(label),
+        ],
+      ),
+    );
+  }
+
   void _showEditProfileSheet() async {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: AppTheme.Surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -562,7 +617,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: AppTheme.Surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -683,13 +738,13 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
       if (url != null && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Аватар установлен'), backgroundColor: AppTheme.accentGreen),
+          SnackBar(content: Text('Аватар установлен'), backgroundColor: AppTheme.AccentGreen),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -704,13 +759,13 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
       if (url != null && mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Аватар установлен'), backgroundColor: AppTheme.accentGreen),
+          SnackBar(content: Text('Аватар установлен'), backgroundColor: AppTheme.AccentGreen),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger),
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -748,7 +803,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: avatar.isPrimary ? AppTheme.accent : AppTheme.cardBorder,
+                            color: avatar.isPrimary ? AppTheme.Accent : AppTheme.CardBorder,
                             width: avatar.isPrimary ? 2 : 1,
                           ),
                           image: DecorationImage(
@@ -767,8 +822,8 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
                           },
                           child: Container(
                             padding: const EdgeInsets.all(2),
-                            decoration: const BoxDecoration(
-                              color: AppTheme.danger,
+                            decoration: BoxDecoration(
+                              color: AppTheme.Danger,
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(Icons.close, size: 12, color: Colors.white),
@@ -785,14 +840,14 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
             children: [
               Expanded(
                 child: _isUploading
-                    ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+                    ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
                     : OutlinedButton.icon(
                         onPressed: _pickFromGallery,
                         icon: const Icon(Icons.photo_library_outlined),
                         label: const Text('Галерея'),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.all(16),
-                          side: const BorderSide(color: AppTheme.cardBorder),
+                          side: BorderSide(color: AppTheme.CardBorder),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -809,7 +864,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
                         label: const Text('Камера'),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.all(16),
-                          side: const BorderSide(color: AppTheme.cardBorder),
+                          side: BorderSide(color: AppTheme.CardBorder),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),

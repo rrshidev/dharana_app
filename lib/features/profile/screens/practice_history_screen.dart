@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -52,14 +52,14 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('История практик')),
       body: _isLoading && _sessions.isEmpty
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : RefreshIndicator(
               onRefresh: () async {
                 _offset = 0;
                 _sessions.clear();
                 await _loadData();
               },
-              color: AppTheme.accent,
+              color: AppTheme.Accent,
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
@@ -74,7 +74,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Center(
                         child: _isLoading
-                            ? const CircularProgressIndicator(color: AppTheme.accent, strokeWidth: 2)
+                            ? CircularProgressIndicator(color: AppTheme.Accent, strokeWidth: 2)
                             : TextButton(
                                 onPressed: _loadData,
                                 child: const Text('Загрузить ещё'),
@@ -127,18 +127,18 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
   }) {
     return Column(
       children: [
-        Icon(icon, color: AppTheme.accent, size: 24),
+        Icon(icon, color: AppTheme.Accent, size: 24),
         const SizedBox(height: 8),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: AppTheme.textPrimary,
+            color: AppTheme.TextPrimary,
           ),
         ),
         const SizedBox(height: 2),
-        Text(label, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+        Text(label, style: TextStyle(fontSize: 12, color: AppTheme.TextSecondary)),
       ],
     );
   }
@@ -148,7 +148,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: Column(
         children: [
-          Icon(Icons.history, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+          Icon(Icons.history, size: 64, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text('Нет практик', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
@@ -183,8 +183,8 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                       ? Icons.check_circle
                       : Icons.pause_circle,
                   color: session.status == 'completed'
-                      ? AppTheme.accentGreen
-                      : AppTheme.textSecondary,
+                      ? AppTheme.AccentGreen
+                      : AppTheme.TextSecondary,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -195,8 +195,8 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                 const Spacer(),
                 Text(
                   durationStr,
-                  style: const TextStyle(
-                    color: AppTheme.accent,
+                  style: TextStyle(
+                    color: AppTheme.Accent,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -210,13 +210,13 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                 children: session.asanasPracticed.map((name) => Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppTheme.surfaceLight,
+                    color: AppTheme.SurfaceLight,
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: AppTheme.cardBorder),
+                    border: Border.all(color: AppTheme.CardBorder),
                   ),
                   child: Text(
                     name,
-                    style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                    style: TextStyle(fontSize: 11, color: AppTheme.TextSecondary),
                   ),
                 )).toList(),
               ),
@@ -230,8 +230,8 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                     label: const Text('Повторить'),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      side: const BorderSide(color: AppTheme.accent),
-                      foregroundColor: AppTheme.accent,
+                      side: BorderSide(color: AppTheme.Accent),
+                      foregroundColor: AppTheme.Accent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -252,30 +252,30 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppTheme.accent.withValues(alpha: 0.08),
+        color: AppTheme.Accent.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppTheme.accent.withValues(alpha: 0.4)),
+        border: Border.all(color: AppTheme.Accent.withValues(alpha: 0.4)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.lock_outline, color: AppTheme.accent, size: 20),
+          Icon(Icons.lock_outline, color: AppTheme.Accent, size: 20),
           const SizedBox(width: 10),
-          const Expanded(
+          Expanded(
             child: Text(
               'Повтор практики доступен по подписке Premium',
-              style: TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+              style: TextStyle(fontSize: 13, color: AppTheme.TextSecondary),
             ),
           ),
           TextButton(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content: Text('Оформите Premium, чтобы повторять любые практики'),
-                  backgroundColor: AppTheme.surfaceLight,
+                  backgroundColor: AppTheme.SurfaceLight,
                 ),
               );
             },
-            child: const Text('Подробнее', style: TextStyle(color: AppTheme.accent)),
+            child: Text('Подробнее', style: TextStyle(color: AppTheme.Accent)),
           ),
         ],
       ),

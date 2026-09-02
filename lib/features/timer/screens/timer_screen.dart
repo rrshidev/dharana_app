@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
@@ -224,7 +224,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
     final totalDuration = _asanaDurations.values.fold(0, (sum, v) => sum + v);
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: AppTheme.Surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -233,7 +233,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.check_circle, color: AppTheme.accentGreen, size: 64),
+            Icon(Icons.check_circle, color: AppTheme.AccentGreen, size: 64),
             const SizedBox(height: 16),
             Text('Практика завершена!', style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 8),
@@ -305,25 +305,25 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
   Color _modeColor() {
     switch (_mode) {
       case TimerMode.idle:
-        return AppTheme.textSecondary;
+        return AppTheme.TextSecondary;
       case TimerMode.asana:
-        return AppTheme.accent;
+        return AppTheme.Accent;
       case TimerMode.rest:
-        return AppTheme.accentGreen;
+        return AppTheme.AccentGreen;
       case TimerMode.compensation:
         return const Color(0xFF7B8CDE);
       case TimerMode.paused:
-        return AppTheme.textSecondary;
+        return AppTheme.TextSecondary;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.Background,
       appBar: AppBar(
         title: const Text('Таймер'),
-        backgroundColor: AppTheme.background,
+        backgroundColor: AppTheme.Background,
         actions: [
           if (_isRunning)
             IconButton(
@@ -357,7 +357,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.timer_outlined, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+          Icon(Icons.timer_outlined, size: 64, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
           Text('Нет асан для практики', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
@@ -398,7 +398,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                   child: CircularProgressIndicator(
                     value: _progressController.value,
                     strokeWidth: 8,
-                    backgroundColor: AppTheme.surfaceLight,
+                    backgroundColor: AppTheme.SurfaceLight,
                     valueColor: AlwaysStoppedAnimation(_modeColor()),
                   ),
                 ),
@@ -519,17 +519,17 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
             height: size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isLarge ? AppTheme.accent : AppTheme.surfaceLight,
-              border: Border.all(color: AppTheme.cardBorder),
+              color: isLarge ? AppTheme.Accent : AppTheme.SurfaceLight,
+              border: Border.all(color: AppTheme.CardBorder),
             ),
             child: Icon(
               icon,
-              color: isLarge ? AppTheme.background : AppTheme.textPrimary,
+              color: isLarge ? AppTheme.Background : AppTheme.TextPrimary,
               size: isLarge ? 32 : 24,
             ),
           ),
           const SizedBox(height: 6),
-          Text(label, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+          Text(label, style: TextStyle(fontSize: 11, color: AppTheme.TextSecondary)),
         ],
       ),
     );
@@ -553,15 +553,15 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
               color: isCurrent
                   ? _modeColor().withValues(alpha: 0.15)
                   : isCompleted
-                      ? AppTheme.accentGreen.withValues(alpha: 0.08)
-                      : AppTheme.surface,
+                      ? AppTheme.AccentGreen.withValues(alpha: 0.08)
+                      : AppTheme.Surface,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: isCurrent
                     ? _modeColor().withValues(alpha: 0.5)
                     : isCompleted
-                        ? AppTheme.accentGreen.withValues(alpha: 0.3)
-                        : AppTheme.cardBorder,
+                        ? AppTheme.AccentGreen.withValues(alpha: 0.3)
+                        : AppTheme.CardBorder,
               ),
             ),
             child: Row(
@@ -573,10 +573,10 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                           ? Icons.play_circle
                           : Icons.circle_outlined,
                   color: isCompleted
-                      ? AppTheme.accentGreen
+                      ? AppTheme.AccentGreen
                       : isCurrent
                           ? _modeColor()
-                          : AppTheme.textSecondary,
+                          : AppTheme.TextSecondary,
                   size: 18,
                 ),
                 const SizedBox(width: 10),
@@ -586,17 +586,17 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                     style: TextStyle(
                       fontSize: 13,
                       color: isCompleted
-                          ? AppTheme.accentGreen
+                          ? AppTheme.AccentGreen
                           : isCurrent
-                              ? AppTheme.textPrimary
-                              : AppTheme.textSecondary,
+                              ? AppTheme.TextPrimary
+                              : AppTheme.TextSecondary,
                       fontWeight: isCurrent ? FontWeight.w600 : FontWeight.normal,
                     ),
                   ),
                 ),
                 Text(
                   '${asana['duration_seconds'] ?? 60}с',
-                  style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                  style: TextStyle(fontSize: 11, color: AppTheme.TextSecondary),
                 ),
               ],
             ),

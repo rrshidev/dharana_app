@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -57,7 +57,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
-        backgroundColor: error ? AppTheme.danger : AppTheme.surfaceLight,
+        backgroundColor: error ? AppTheme.Danger : AppTheme.SurfaceLight,
       ),
     );
   }
@@ -100,7 +100,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
           ),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+                ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
                 : _tab == 0
                     ? _asanasView()
                     : _sequencesView(),
@@ -108,8 +108,8 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppTheme.accent,
-        foregroundColor: AppTheme.background,
+        backgroundColor: AppTheme.Accent,
+        foregroundColor: AppTheme.Background,
         onPressed: _tab == 0 ? _createAsana : _addSequence,
         icon: const Icon(Icons.add),
         label: Text(_tab == 0 ? 'Новая асана' : 'Добавить комплекс'),
@@ -123,7 +123,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
     }
     return RefreshIndicator(
       onRefresh: _loadAsanas,
-      color: AppTheme.accent,
+      color: AppTheme.Accent,
       child: ListView.builder(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 90),
         itemCount: _asanas.length,
@@ -138,7 +138,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
     }
     return RefreshIndicator(
       onRefresh: _loadSequences,
-      color: AppTheme.accent,
+      color: AppTheme.Accent,
       child: ListView.builder(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 90),
         itemCount: _sequences.length,
@@ -161,11 +161,11 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
                     '${ApiClient.baseUrl}${a.imageUrl}',
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) =>
-                        const ColoredBox(color: AppTheme.surfaceLight, child: Icon(Icons.image)),
+                        ColoredBox(color: AppTheme.SurfaceLight, child: Icon(Icons.image)),
                   )
-                : const ColoredBox(
-                    color: AppTheme.surfaceLight,
-                    child: Icon(Icons.image, color: AppTheme.textSecondary),
+                : ColoredBox(
+                    color: AppTheme.SurfaceLight,
+                    child: Icon(Icons.image, color: AppTheme.TextSecondary),
                   ),
           ),
         ),
@@ -180,22 +180,22 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.photo_outlined, color: AppTheme.accent),
+              icon: Icon(Icons.photo_outlined, color: AppTheme.Accent),
               tooltip: 'Фото',
               onPressed: () => _uploadAsanaPhoto(a),
             ),
             IconButton(
-              icon: const Icon(Icons.video_call_outlined, color: AppTheme.accentGreen),
+              icon: Icon(Icons.video_call_outlined, color: AppTheme.AccentGreen),
               tooltip: 'Видео',
               onPressed: () => _uploadAsanaVideo(a),
             ),
             IconButton(
-              icon: const Icon(Icons.edit_outlined, color: AppTheme.textSecondary),
+              icon: Icon(Icons.edit_outlined, color: AppTheme.TextSecondary),
               tooltip: 'Редактировать',
               onPressed: () => _editAsana(a),
             ),
             IconButton(
-              icon: const Icon(Icons.delete_outline, color: AppTheme.danger),
+              icon: Icon(Icons.delete_outline, color: AppTheme.Danger),
               tooltip: 'Удалить',
               onPressed: () => _deleteAsana(a),
             ),
@@ -211,26 +211,26 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
       child: ListTile(
         leading: Icon(
           s.isPremium ? Icons.workspace_premium : Icons.play_circle_outline,
-          color: s.isPremium ? AppTheme.accent : AppTheme.accentGreen,
+          color: s.isPremium ? AppTheme.Accent : AppTheme.AccentGreen,
         ),
         title: Text(s.name),
         subtitle: Text(
           s.isPremium ? 'Premium' : 'Бесплатный',
           style: TextStyle(
             fontSize: 12,
-            color: s.isPremium ? AppTheme.accent : AppTheme.accentGreen,
+            color: s.isPremium ? AppTheme.Accent : AppTheme.AccentGreen,
           ),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.edit_outlined, color: AppTheme.textSecondary),
+              icon: Icon(Icons.edit_outlined, color: AppTheme.TextSecondary),
               tooltip: 'Редактировать',
               onPressed: () => _editSequence(s),
             ),
             IconButton(
-              icon: const Icon(Icons.delete_outline, color: AppTheme.danger),
+              icon: Icon(Icons.delete_outline, color: AppTheme.Danger),
               tooltip: 'Удалить',
               onPressed: () => _deleteSequence(s),
             ),
@@ -513,7 +513,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Отмена')),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.danger),
+            style: ElevatedButton.styleFrom(backgroundColor: AppTheme.Danger),
             onPressed: () => Navigator.pop(ctx, true),
             child: const Text('Удалить'),
           ),

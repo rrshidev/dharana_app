@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
@@ -68,11 +68,11 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
         : 0;
     return Row(
       children: [
-        _miniStat('$campaigns', 'Рассылок', AppTheme.accent, menu: true),
+        _miniStat('$campaigns', 'Рассылок', AppTheme.Accent, menu: true),
         const SizedBox(width: 8),
-        _miniStat('$recipients', 'Получателей', AppTheme.accentGreen, menu: false),
+        _miniStat('$recipients', 'Получателей', AppTheme.AccentGreen, menu: false),
         const SizedBox(width: 8),
-        _miniStat('$total', 'Всего доставок', AppTheme.accent, menu: false),
+        _miniStat('$total', 'Всего доставок', AppTheme.Accent, menu: false),
       ],
     );
   }
@@ -81,17 +81,17 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
     return Expanded(
       child: Card(
         margin: EdgeInsets.zero,
-        color: AppTheme.surface,
+        color: AppTheme.Surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: AppTheme.cardBorder),
+          side: BorderSide(color: AppTheme.CardBorder),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Column(
             children: [
               Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: color)),
-              Text(label, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary), textAlign: TextAlign.center),
+              Text(label, style: TextStyle(fontSize: 11, color: AppTheme.TextSecondary), textAlign: TextAlign.center),
             ],
           ),
         ),
@@ -120,7 +120,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             contentPadding: EdgeInsets.zero,
             title: const Text('Бесплатные'),
             value: _bcAudFree,
-            activeColor: AppTheme.accent,
+            activeColor: AppTheme.Accent,
             onChanged: (v) => setState(() => _bcAudFree = v ?? true),
           ),
           CheckboxListTile(
@@ -128,12 +128,12 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             contentPadding: EdgeInsets.zero,
             title: const Text('Премиум'),
             value: _bcAudPremium,
-            activeColor: AppTheme.accent,
+            activeColor: AppTheme.Accent,
             onChanged: (v) => setState(() => _bcAudPremium = v ?? true),
           ),
           if (!_bcAudFree && !_bcAudPremium)
-            const Text('Выберите хотя бы одну аудиторию',
-                style: TextStyle(color: AppTheme.danger, fontSize: 12)),
+            Text('Выберите хотя бы одну аудиторию',
+                style: TextStyle(color: AppTheme.Danger, fontSize: 12)),
           const SizedBox(height: 8),
           const Text('Каналы', style: TextStyle(fontWeight: FontWeight.w600)),
           CheckboxListTile(
@@ -141,7 +141,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             contentPadding: EdgeInsets.zero,
             title: const Text('Telegram'),
             value: _bcChanTg,
-            activeColor: AppTheme.accent,
+            activeColor: AppTheme.Accent,
             onChanged: (v) => setState(() => _bcChanTg = v ?? true),
           ),
           CheckboxListTile(
@@ -149,12 +149,12 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             contentPadding: EdgeInsets.zero,
             title: const Text('В приложении'),
             value: _bcChanApp,
-            activeColor: AppTheme.accent,
+            activeColor: AppTheme.Accent,
             onChanged: (v) => setState(() => _bcChanApp = v ?? true),
           ),
           if (!_bcChanTg && !_bcChanApp)
-            const Text('Выберите хотя бы один канал',
-                style: TextStyle(color: AppTheme.danger, fontSize: 12)),
+            Text('Выберите хотя бы один канал',
+                style: TextStyle(color: AppTheme.Danger, fontSize: 12)),
           const SizedBox(height: 14),
           SizedBox(
             width: double.infinity,
@@ -168,14 +168,14 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
           SizedBox(
             width: double.infinity,
             child: _sending
-                ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+                ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
                 : ElevatedButton.icon(
                     onPressed: _send,
                     icon: const Icon(Icons.campaign_outlined),
                     label: const Text('Разослать'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.accent,
-                      foregroundColor: AppTheme.background,
+                      backgroundColor: AppTheme.Accent,
+                      foregroundColor: AppTheme.Background,
                     ),
                   ),
           ),
@@ -200,15 +200,15 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
 
   bool _validate() {
     if (_messageController.text.trim().isEmpty) {
-      _snack('Введите текст сообщения', AppTheme.danger);
+      _snack('Введите текст сообщения', AppTheme.Danger);
       return false;
     }
     if (!_bcAudFree && !_bcAudPremium) {
-      _snack('Выберите аудиторию', AppTheme.danger);
+      _snack('Выберите аудиторию', AppTheme.Danger);
       return false;
     }
     if (!_bcChanTg && !_bcChanApp) {
-      _snack('Выберите канал', AppTheme.danger);
+      _snack('Выберите канал', AppTheme.Danger);
       return false;
     }
     return true;
@@ -223,7 +223,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surface,
+        backgroundColor: AppTheme.Surface,
         title: const Text('Разослать сообщение?'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -255,13 +255,13 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
       if (mounted) {
         _snack(
           'Рассылка создана. Telegram: ${data['count_telegram'] ?? 0}, Приложение: ${data['count_app'] ?? 0}',
-          AppTheme.accentGreen,
+          AppTheme.AccentGreen,
         );
         _messageController.clear();
         _loadSeries();
       }
     } catch (e) {
-      if (mounted) _snack('Ошибка: $e', AppTheme.danger);
+      if (mounted) _snack('Ошибка: $e', AppTheme.Danger);
     } finally {
       if (mounted) setState(() => _sending = false);
     }
@@ -269,7 +269,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
 
   Future<void> _sendTest() async {
     if (_messageController.text.trim().isEmpty) {
-      _snack('Введите текст сообщения', AppTheme.danger);
+      _snack('Введите текст сообщения', AppTheme.Danger);
       return;
     }
     setState(() => _sending = true);
@@ -282,10 +282,10 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
         channelApp: _bcChanApp,
       );
       if (mounted) {
-        _snack('Тест админу: Telegram=${data['telegram'] ?? '?'}, Приложение=${data['app'] ?? '?'}', AppTheme.accent);
+        _snack('Тест админу: Telegram=${data['telegram'] ?? '?'}, Приложение=${data['app'] ?? '?'}', AppTheme.Accent);
       }
     } catch (e) {
-      if (mounted) _snack('Ошибка: $e', AppTheme.danger);
+      if (mounted) _snack('Ошибка: $e', AppTheme.Danger);
     } finally {
       if (mounted) setState(() => _sending = false);
     }

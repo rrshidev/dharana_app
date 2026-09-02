@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
@@ -71,10 +71,10 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : RefreshIndicator(
               onRefresh: _loadAll,
-              color: AppTheme.accent,
+              color: AppTheme.Accent,
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                 children: [
@@ -112,7 +112,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['total_users'] ?? 0}',
               label: 'Юзеров',
               spark: usersTrend,
-              sparkColor: AppTheme.accent,
+              sparkColor: AppTheme.Accent,
             ),
             const SizedBox(width: 10),
             _statCard(
@@ -120,7 +120,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['premium_users'] ?? 0}',
               label: 'Премиум',
               spark: _ints('new_premium'),
-              sparkColor: AppTheme.accentGreen,
+              sparkColor: AppTheme.AccentGreen,
             ),
           ],
         ),
@@ -132,7 +132,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['total_sessions'] ?? 0}',
               label: 'Практик',
               spark: practicesTrend,
-              sparkColor: AppTheme.accent,
+              sparkColor: AppTheme.Accent,
             ),
             const SizedBox(width: 10),
             _statCard(
@@ -140,7 +140,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['total_practice_minutes'] ?? 0}',
               label: 'Минут',
               spark: _periodMinutes(practicesTrend),
-              sparkColor: AppTheme.accentGreen,
+              sparkColor: AppTheme.AccentGreen,
             ),
           ],
         ),
@@ -152,7 +152,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['new_users_week'] ?? 0}',
               label: 'Новых/нед.',
               spark: usersTrend,
-              sparkColor: AppTheme.accent,
+              sparkColor: AppTheme.Accent,
             ),
             const SizedBox(width: 10),
             _statCard(
@@ -160,7 +160,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['conversion_rate'] ?? 0}%',
               label: 'Конверсия',
               spark: [],
-              sparkColor: AppTheme.accent,
+              sparkColor: AppTheme.Accent,
             ),
           ],
         ),
@@ -183,10 +183,10 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
     return Expanded(
       child: Card(
         margin: EdgeInsets.zero,
-        color: AppTheme.surface,
+        color: AppTheme.Surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: const BorderSide(color: AppTheme.cardBorder),
+          side: BorderSide(color: AppTheme.CardBorder),
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -195,7 +195,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
             children: [
               Row(
                 children: [
-                  Icon(icon, color: AppTheme.accent, size: 18),
+                  Icon(icon, color: AppTheme.Accent, size: 18),
                   const Spacer(),
                   if (spark.isNotEmpty) Sparkline(data: spark, color: sparkColor),
                 ],
@@ -203,10 +203,10 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               const SizedBox(height: 8),
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
-                  color: AppTheme.textPrimary,
+                  color: AppTheme.TextPrimary,
                 ),
               ),
               const SizedBox(height: 2),
@@ -236,16 +236,16 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
         children: [
           MultiLineChart(
             series: [
-              ChartSeries(name: 'Зарегистрировано', color: AppTheme.accent, data: _ints('new_users')),
-              ChartSeries(name: 'Премиум', color: AppTheme.accentGreen, data: _ints('new_premium')),
+              ChartSeries(name: 'Зарегистрировано', color: AppTheme.Accent, data: _ints('new_users')),
+              ChartSeries(name: 'Премиум', color: AppTheme.AccentGreen, data: _ints('new_premium')),
             ],
             labels: days,
           ),
           const SizedBox(height: 10),
           ChartLegend(
             series: [
-              const ChartSeries(name: 'Регистрации', color: AppTheme.accent, data: []),
-              const ChartSeries(name: 'Премиум', color: AppTheme.accentGreen, data: []),
+              ChartSeries(name: 'Регистрации', color: AppTheme.Accent, data: []),
+              ChartSeries(name: 'Премиум', color: AppTheme.AccentGreen, data: []),
             ],
           ),
         ],
@@ -284,8 +284,8 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(k, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
-          Text(v, style: const TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w600)),
+          Text(k, style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13)),
+          Text(v, style: TextStyle(color: AppTheme.TextPrimary, fontWeight: FontWeight.w600)),
         ],
       ),
     );
@@ -296,7 +296,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
     return ChartCard(
       title: 'Последняя активность',
       child: list.isEmpty
-          ? const Text('Активности нет', style: TextStyle(color: AppTheme.textSecondary))
+          ? Text('Активности нет', style: TextStyle(color: AppTheme.TextSecondary))
           : Column(
               children: list.map(_activityRow).toList(),
             ),
@@ -312,7 +312,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
         children: [
           Icon(
             isPractice ? Icons.self_improvement : Icons.person_add,
-            color: isPractice ? AppTheme.accentGreen : AppTheme.accent,
+            color: isPractice ? AppTheme.AccentGreen : AppTheme.Accent,
             size: 18,
           ),
           const SizedBox(width: 10),
@@ -321,12 +321,12 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               isPractice
                   ? 'Практика: ${e['asanas_count'] ?? 0} асан · ${((e['duration_seconds'] ?? 0) / 60).round()} мин'
                   : 'Новый пользователь: ${e['user_name'] ?? '?'}',
-              style: const TextStyle(fontSize: 13, color: AppTheme.textPrimary),
+              style: TextStyle(fontSize: 13, color: AppTheme.TextPrimary),
             ),
           ),
           Text(
             _shortDate(e['timestamp']),
-            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+            style: TextStyle(color: AppTheme.TextSecondary, fontSize: 11),
           ),
         ],
       ),

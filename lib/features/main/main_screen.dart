@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/home/screens/home_screen.dart';
 import 'package:dharana_app/features/timer/screens/timer_setup_screen.dart';
@@ -43,27 +43,27 @@ class _MainScreenState extends State<MainScreen> {
         onDestinationSelected: (index) {
           setState(() => _currentIndex = index);
         },
-        backgroundColor: AppTheme.surface,
-        indicatorColor: AppTheme.accent.withValues(alpha: 0.2),
-        destinations: const [
+        backgroundColor: AppTheme.Surface,
+        indicatorColor: AppTheme.Accent.withValues(alpha: 0.2),
+        destinations: [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: AppTheme.accent),
+            selectedIcon: Icon(Icons.home, color: AppTheme.Accent),
             label: 'Главная',
           ),
           NavigationDestination(
             icon: Icon(Icons.timer_outlined),
-            selectedIcon: Icon(Icons.timer, color: AppTheme.accent),
+            selectedIcon: Icon(Icons.timer, color: AppTheme.Accent),
             label: 'Таймер',
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite_outline),
-            selectedIcon: Icon(Icons.favorite, color: AppTheme.accent),
+            selectedIcon: Icon(Icons.favorite, color: AppTheme.Accent),
             label: 'Избранное',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outlined),
-            selectedIcon: Icon(Icons.person, color: AppTheme.accent),
+            selectedIcon: Icon(Icons.person, color: AppTheme.Accent),
             label: 'Профиль',
           ),
         ],

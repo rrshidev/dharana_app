@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 
@@ -57,7 +57,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
         actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _load)],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               children: [
@@ -83,13 +83,13 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     final rejected = _countStatus('rejected');
     return Row(
       children: [
-        _miniStat('${_payments.length}', 'Всего', AppTheme.accent),
+        _miniStat('${_payments.length}', 'Всего', AppTheme.Accent),
         const SizedBox(width: 8),
-        _miniStat('$pending', 'Ожидают', AppTheme.accent),
+        _miniStat('$pending', 'Ожидают', AppTheme.Accent),
         const SizedBox(width: 8),
-        _miniStat('$confirmed', 'Одобрено', AppTheme.accentGreen),
+        _miniStat('$confirmed', 'Одобрено', AppTheme.AccentGreen),
         const SizedBox(width: 8),
-        _miniStat('$rejected', 'Отклонено', AppTheme.danger),
+        _miniStat('$rejected', 'Отклонено', AppTheme.Danger),
       ],
     );
   }
@@ -98,10 +98,10 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     return Expanded(
       child: Card(
         margin: EdgeInsets.zero,
-        color: AppTheme.surface,
+        color: AppTheme.Surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: AppTheme.cardBorder),
+          side: BorderSide(color: AppTheme.CardBorder),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -109,7 +109,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
             children: [
               Text(value,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: color)),
-              Text(label, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+              Text(label, style: TextStyle(fontSize: 11, color: AppTheme.TextSecondary)),
             ],
           ),
         ),
@@ -139,10 +139,10 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
         label: Text(label),
         selected: selected,
         onSelected: (_) => setState(() => _filter = value),
-        selectedColor: AppTheme.accent,
+        selectedColor: AppTheme.Accent,
         labelStyle: TextStyle(
           fontSize: 12,
-          color: selected ? AppTheme.background : AppTheme.textSecondary,
+          color: selected ? AppTheme.Background : AppTheme.TextSecondary,
         ),
       ),
     );
@@ -169,11 +169,11 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     final encoded = Uri.encodeFull(_api.resolveUrl(receipt));
 
     return Card(
-      color: AppTheme.surface,
+      color: AppTheme.Surface,
       margin: const EdgeInsets.only(bottom: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: AppTheme.cardBorder),
+        side: BorderSide(color: AppTheme.CardBorder),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -184,14 +184,14 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
               children: [
                 Icon(
                   pending ? Icons.hourglass_top : Icons.credit_card,
-                  color: pending ? AppTheme.accent : AppTheme.textSecondary,
+                  color: pending ? AppTheme.Accent : AppTheme.TextSecondary,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(userName,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600, color: AppTheme.TextPrimary)),
                 ),
                 Chip(
                   label: Text(
@@ -199,13 +199,13 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                     style: TextStyle(
                       fontSize: 11,
                       color: pending
-                          ? AppTheme.textSecondary
+                          ? AppTheme.TextSecondary
                           : status == 'confirmed'
-                              ? AppTheme.accentGreen
-                              : AppTheme.danger,
+                              ? AppTheme.AccentGreen
+                              : AppTheme.Danger,
                     ),
                   ),
-                  backgroundColor: AppTheme.surfaceLight,
+                  backgroundColor: AppTheme.SurfaceLight,
                   visualDensity: VisualDensity.compact,
                 ),
               ],
@@ -227,15 +227,15 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                   height: 130,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: AppTheme.surfaceLight,
+                    color: AppTheme.SurfaceLight,
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(image: NetworkImage(encoded), fit: BoxFit.cover),
                   ),
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: EdgeInsets.all(6),
-                      child: Icon(Icons.zoom_in, color: AppTheme.textPrimary, size: 18),
+                      child: Icon(Icons.zoom_in, color: AppTheme.TextPrimary, size: 18),
                     ),
                   ),
                 ),
@@ -251,8 +251,8 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                       icon: const Icon(Icons.check, size: 18),
                       label: const Text('Подтвердить'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.accentGreen,
-                        side: const BorderSide(color: AppTheme.accentGreen),
+                        foregroundColor: AppTheme.AccentGreen,
+                        side: BorderSide(color: AppTheme.AccentGreen),
                       ),
                     ),
                   ),
@@ -263,8 +263,8 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                       icon: const Icon(Icons.close, size: 18),
                       label: const Text('Отклонить'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.danger,
-                        side: const BorderSide(color: AppTheme.danger),
+                        foregroundColor: AppTheme.Danger,
+                        side: BorderSide(color: AppTheme.Danger),
                       ),
                     ),
                   ),
@@ -282,7 +282,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     return showDialog(
       context: context,
       builder: (ctx) => Dialog(
-        backgroundColor: AppTheme.background,
+        backgroundColor: AppTheme.Background,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -301,7 +301,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
       final result = await showDialog<int>(
         context: context,
         builder: (ctx) => AlertDialog(
-          backgroundColor: AppTheme.surface,
+          backgroundColor: AppTheme.Surface,
           title: const Text('Подтвердить оплату'),
           content: TextField(
             controller: controller,
@@ -330,14 +330,14 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
             content: Text(status == 'confirmed'
                 ? 'Оплата подтверждена${res['premium_granted'] == true ? ', Premium выдан' : ''}'
                 : 'Оплата отклонена'),
-            backgroundColor: status == 'confirmed' ? AppTheme.accentGreen : AppTheme.danger,
+            backgroundColor: status == 'confirmed' ? AppTheme.AccentGreen : AppTheme.Danger,
           ),
         );
       }
       await _load();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.danger));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger));
       }
     } finally {
       if (mounted) setState(() => _isBusy = false);

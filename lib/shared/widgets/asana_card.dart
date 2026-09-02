@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -56,9 +56,9 @@ class AsanaCard extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(right: 12),
-              child: Icon(Icons.chevron_right, color: AppTheme.textSecondary),
+              child: Icon(Icons.chevron_right, color: AppTheme.TextSecondary),
             ),
           ],
         ),
@@ -68,8 +68,8 @@ class AsanaCard extends StatelessWidget {
 
   Widget _placeholder() {
     return Container(
-      color: AppTheme.surfaceLight,
-      child: const Icon(Icons.self_improvement, color: AppTheme.accent, size: 36),
+      color: AppTheme.SurfaceLight,
+      child: Icon(Icons.self_improvement, color: AppTheme.Accent, size: 36),
     );
   }
 

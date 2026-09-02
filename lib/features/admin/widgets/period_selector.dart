@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 
 /// Переключатель периода для графиков: 7 / 30 / 90 дней.
@@ -21,10 +21,10 @@ class PeriodSelector extends StatelessWidget {
               label: Text('$d д'),
               selected: days == d,
               onSelected: (_) => onChanged(d),
-              selectedColor: AppTheme.accent,
+              selectedColor: AppTheme.Accent,
               labelStyle: TextStyle(
                 fontSize: 12,
-                color: days == d ? AppTheme.background : AppTheme.textPrimary,
+                color: days == d ? AppTheme.Background : AppTheme.TextPrimary,
                 fontWeight: FontWeight.w600,
               ),
               visualDensity: VisualDensity.compact,

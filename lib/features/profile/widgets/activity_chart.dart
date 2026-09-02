@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dharana_app/app/theme.dart';
 
@@ -50,10 +50,10 @@ class ActivityChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (days.isEmpty) {
-      return const SizedBox(
+      return SizedBox(
         height: 180,
         child: Center(
-          child: Text('Нет данных за период', style: TextStyle(color: AppTheme.textSecondary)),
+          child: Text('Нет данных за период', style: TextStyle(color: AppTheme.TextSecondary)),
         ),
       );
     }
@@ -65,8 +65,8 @@ class ActivityChart extends StatelessWidget {
     final n = days.length;
 
     final lineColors = [
-      AppTheme.accent,
-      AppTheme.accentGreen,
+      AppTheme.Accent,
+      AppTheme.AccentGreen,
       const Color(0xFF6FA8DC),
     ];
 
@@ -127,8 +127,8 @@ class ActivityChart extends StatelessWidget {
                 show: true,
                 drawVerticalLine: false,
                 horizontalInterval: 0.25,
-                getDrawingHorizontalLine: (_) => const FlLine(
-                  color: AppTheme.cardBorder,
+                getDrawingHorizontalLine: (_) => FlLine(
+                  color: AppTheme.CardBorder,
                   strokeWidth: 1,
                 ),
               ),
@@ -151,7 +151,7 @@ class ActivityChart extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 6),
                         child: Text(
                           labels[i],
-                          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 10),
+                          style: TextStyle(color: AppTheme.TextSecondary, fontSize: 10),
                         ),
                       );
                     },
@@ -214,8 +214,8 @@ class _LegendDot extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
-            Text(value, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w600)),
+            Text(label, style: TextStyle(color: AppTheme.TextSecondary, fontSize: 11)),
+            Text(value, style: TextStyle(color: AppTheme.TextPrimary, fontSize: 12, fontWeight: FontWeight.w600)),
           ],
         ),
       ],

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,14 +46,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surface,
+        backgroundColor: AppTheme.Surface,
         title: const Text('Вход через Telegram'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               '1. Нажмите "Открыть бот"\n2. Бот пришлёт вам код\n3. Введите его ниже:',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+              style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
             ),
             const SizedBox(height: 16),
             TextField(
@@ -136,13 +136,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: AppTheme.accent,
+                    color: AppTheme.Accent,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.self_improvement,
                     size: 48,
-                    color: AppTheme.background,
+                    color: AppTheme.Background,
                   ),
                 ),
               ),
@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Text(
                   'Dharana',
                   style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: AppTheme.accent,
+                        color: AppTheme.Accent,
                       ),
                 ),
               ),
@@ -184,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 12),
                 Text(
                   _error!,
-                  style: const TextStyle(color: AppTheme.danger, fontSize: 14),
+                  style: TextStyle(color: AppTheme.Danger, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -192,12 +192,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ElevatedButton(
                 onPressed: _isLoading ? null : _login,
                 child: _isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: AppTheme.background,
+                          color: AppTheme.Background,
                         ),
                       )
                     : const Text('Войти'),
@@ -208,14 +208,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   Navigator.of(context).pushNamed('/register');
                 },
                 child: RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                     text: 'Нет аккаунта? ',
-                    style: TextStyle(color: AppTheme.textSecondary),
+                    style: TextStyle(color: AppTheme.TextSecondary),
                     children: [
                       TextSpan(
                         text: 'Зарегистрируйтесь',
                         style: TextStyle(
-                          color: AppTheme.accent,
+                          color: AppTheme.Accent,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -226,12 +226,12 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
               Row(
                 children: [
-                  const Expanded(child: Divider(color: AppTheme.cardBorder)),
+                  Expanded(child: Divider(color: AppTheme.CardBorder)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('или', style: TextStyle(color: AppTheme.textSecondary)),
+                    child: Text('или', style: TextStyle(color: AppTheme.TextSecondary)),
                   ),
-                  const Expanded(child: Divider(color: AppTheme.cardBorder)),
+                  Expanded(child: Divider(color: AppTheme.CardBorder)),
                 ],
               ),
               const SizedBox(height: 24),
