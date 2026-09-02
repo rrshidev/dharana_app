@@ -116,19 +116,18 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
       });
 
       if (_secondsRemaining <= 3 && _secondsRemaining > 0) {
-        SoundService().playBeep();
+        SoundService().playNudge();
       }
 
       if (_secondsRemaining <= 0) {
         timer.cancel();
-        SoundService().playDone();
         _onTimerComplete();
       }
     });
   }
 
   void _onTimerComplete() async {
-    SoundService().playDone();
+    SoundService().playGong();
 
     if (_mode == TimerMode.asana) {
       final name = _asanas[_currentAsanaIndex]['name'] as String;
