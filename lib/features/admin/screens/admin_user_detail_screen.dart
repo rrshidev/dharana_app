@@ -1,4 +1,6 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
@@ -289,34 +291,83 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     if (channelResult == null) return;
     if (!mounted) return;
 
-    final textResult = await showDialog<String>(
+    File? pickedImage;
+
+    final input = await showDialog<_MessageInputResult>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.Surface,
-        title: const Text('Сообщение пользователю'),
-        content: TextField(
-          controller: textController,
-          maxLines: 4,
-          maxLength: 2000,
-          decoration: const InputDecoration(hintText: 'Текст сообщения'),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, textController.text),
-            child: const Text('Отправить'),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setLocal) => AlertDialog(
+          backgroundColor: AppTheme.Surface,
+          title: const Text('Сообщение пользователю'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: textController,
+                maxLines: 4,
+                maxLength: 2000,
+                decoration: const InputDecoration(hintText: 'Текст сообщения'),
+              ),
+              if (pickedImage != null) ...[
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.file(pickedImage!, height: 120, fit: BoxFit.cover),
+                ),
+              ],
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  TextButton.icon(
+                    onPressed: () async {
+                      final img = await ImagePicker()
+                          .pickImage(source: ImageSource.gallery);
+                      if (img == null) return;
+                      if (!ctx.mounted) return;
+                      final file = File(img.path);
+                      setLocal(() => pickedImage = file);
+                    },
+                    icon: const Icon(Icons.attach_file, size: 18),
+                    label: Text(
+                      pickedImage == null ? '📎 Прикрепить изображение' : '📎 Заменить',
+                    ),
+                  ),
+                  if (pickedImage != null)
+                    TextButton(
+                      onPressed: () => setLocal(() => pickedImage = null),
+                      child: const Text('Убрать'),
+                    ),
+                ],
+              ),
+            ],
           ),
-        ],
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+            TextButton(
+              onPressed: () => Navigator.pop(
+                ctx,
+                _MessageInputResult(text: textController.text, image: pickedImage),
+              ),
+              child: const Text('Отправить'),
+            ),
+          ],
+        ),
       ),
     );
-    if (textResult == null || textResult.trim().isEmpty) return;
+    if (input == null || input.text.trim().isEmpty) return;
 
     setState(() => _isActionBusy = true);
     try {
+      String? mediaUrl;
+      if (input.image != null) {
+        final up = await _api.uploadAdminMessageImage(input.image!);
+        mediaUrl = up['media_url']?.toString();
+      }
       final data = await _api.sendAdminUserMessage(
         userId,
-        message: textResult,
+        message: input.text.trim(),
         channel: channelResult,
+        mediaUrl: mediaUrl,
       );
       final parts = <String>[
         if (channelResult == 'both' || channelResult == 'app') _reportApp(data['app']),
@@ -554,4 +605,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     if (iso == null || iso.length < 10) return '-';
     return '${iso.substring(8, 10)}.${iso.substring(5, 7)}.${iso.substring(0, 4)}';
   }
+}
+
+class _MessageInputResult {
+  final String text;
+  final File? image;
+  const _MessageInputResult({required this.text, this.image});
 }

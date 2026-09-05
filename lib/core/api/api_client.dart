@@ -433,11 +433,22 @@ class ApiClient {
     int userId, {
     required String message,
     String channel = 'both',
+    String? mediaUrl,
   }) async {
     final resp = await _dio.post('/admin/users/$userId/message', data: {
       'channel': channel,
       'message': message,
+      if (mediaUrl != null && mediaUrl.isNotEmpty) 'media_url': mediaUrl,
     });
+    return resp.data as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> uploadAdminMessageImage(File file) async {
+    final fileName = file.path.split(Platform.pathSeparator).last;
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+    final resp = await _dio.post('/admin/messages/upload', data: formData);
     return resp.data as Map<String, dynamic>;
   }
 

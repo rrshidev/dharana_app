@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
+import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/services/notifications_center.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -40,6 +41,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               final item = items[index];
               final isRead = item is Map ? (item['is_read'] == true) : true;
               final message = item is Map ? (item['message']?.toString() ?? '') : '';
+              final mediaUrl = item is Map ? (item['media_url']?.toString() ?? '') : '';
               final createdAt = item is Map ? (item['created_at']?.toString() ?? '') : '';
               return Card(
                 color: isRead ? AppTheme.Surface : AppTheme.SurfaceLight,
@@ -69,6 +71,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
+                            if (mediaUrl.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  ApiClient().resolveUrl(mediaUrl),
+                                  height: 180,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                                ),
+                              ),
+                            ],
                             if (createdAt.isNotEmpty) ...[
                               const SizedBox(height: 6),
                               Text(
