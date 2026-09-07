@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
 
@@ -18,10 +19,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _error;
 
   Future<void> _register() async {
-    if (_nameController.text.isEmpty ||
-        _emailController.text.isEmpty ||
-        _passwordController.text.isEmpty) {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
       setState(() => _error = 'Заполните все поля');
+      return;
+    }
+    if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
+      setState(() => _error = 'Проверьте правильность email');
+      return;
+    }
+    if (password.length < 8) {
+      setState(() => _error = 'Пароль должен быть не короче 8 символов');
       return;
     }
 
@@ -31,18 +42,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      await _authService.register(
-        _emailController.text,
-        _passwordController.text,
-        _nameController.text,
-      );
+      await _authService.register(email, password, name);
       if (mounted) {
         Navigator.of(context).pushReplacementNamed('/main');
       }
     } catch (e) {
-      setState(() => _error = 'Ошибка регистрации. Возможно, email уже используется.');
+      setState(() => _error = _mapRegisterError(e));
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  String _mapRegisterError(Object error) {
+    String? detail;
+    if (error is DioException) {
+      final data = error.response?.data;
+      if (data is Map && data['detail'] is String) {
+        detail = data['detail'] as String;
+      }
+    }
+    switch (detail) {
+      case 'PASSWORD_TOO_SHORT':
+        return 'Пароль должен быть не короче 8 символов';
+      case 'EMAIL_INVALID':
+        return 'Проверьте правильность email';
+      case 'EMAIL_DISPOSABLE':
+        return 'Этот почтовый сервис не подходит. Используйте обычную почту';
+      case 'EMAIL_NOT_DELIVERABLE':
+        return 'Похоже, такой почты не существует. Проверьте адрес';
+      case 'Email already registered':
+        return 'Email уже используется. Попробуйте войти.';
+      default:
+        return 'Ошибка регистрации. Попробуйте ещё раз.';
     }
   }
 
@@ -92,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
-                  hintText: 'Пароль',
+                  hintText: 'Пароль (мин. 8 символов)',
                   prefixIcon: Icon(Icons.lock_outline),
                 ),
               ),
