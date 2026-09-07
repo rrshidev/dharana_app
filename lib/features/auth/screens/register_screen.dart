@@ -31,6 +31,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() => _error = 'Проверьте правильность email');
       return;
     }
+    if (name.length > 60) {
+      setState(() => _error = 'Имя слишком длинное (не больше 60 символов)');
+      return;
+    }
     if (password.length < 8) {
       setState(() => _error = 'Пароль должен быть не короче 8 символов');
       return;
@@ -72,6 +76,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return 'Похоже, такой почты не существует. Проверьте адрес';
       case 'Email already registered':
         return 'Email уже используется. Попробуйте войти.';
+      case 'NAME_TOO_LONG':
+        return 'Имя слишком длинное (не больше 60 символов)';
       default:
         return 'Ошибка регистрации. Попробуйте ещё раз.';
     }
