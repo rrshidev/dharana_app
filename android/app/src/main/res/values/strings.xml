@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dharana</string>
+    <!-- Используется google_sign_in (Android): тот же Web Client ID, что и serverClientId в Dart. -->
+    <string name="default_web_client_id" translatable="false">914006620256-t7uqhvlqqlikgesrl59cghv3d1l93gft.apps.googleusercontent.com</string>
+</resources>

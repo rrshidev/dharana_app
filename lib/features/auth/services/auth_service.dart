@@ -1,8 +1,16 @@
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final _api = ApiClient();
+
+  // Web Client ID из Google Cloud Console (для получения idToken на Android).
+  // Задаётся при сборке: --dart-define=GOOGLE_WEB_CLIENT_ID=xxx.apps.googleusercontent.com
+  static const String googleWebClientId = String.fromEnvironment(
+    'GOOGLE_WEB_CLIENT_ID',
+    defaultValue: '',
+  );
 
   Future<AuthResponse> register(String email, String password, String name) async {
     final response = await _api.dio.post('/auth/register', data: {
@@ -23,6 +31,34 @@ class AuthService {
     final auth = AuthResponse.fromJson(response.data);
     await _api.saveToken(auth.accessToken);
     return auth;
+  }
+
+  Future<AuthResponse?> loginWithGoogle() async {
+    final gsi = GoogleSignIn(
+      scopes: ['email'],
+      serverClientId: googleWebClientId.isEmpty ? null : googleWebClientId,
+    );
+    final account = await gsi.signIn();
+    if (account == null) return null; // пользователь отменил выбор
+
+    try {
+      final auth = await account.authentication;
+      final idToken = auth.idToken;
+      if (idToken == null) {
+        throw Exception('Google id_token not available. GOOGLE_WEB_CLIENT_ID not set?');
+      }
+      final response = await _api.dio.post('/auth/google', data: {
+        'id_token': idToken,
+        'name': account.displayName,
+        'avatar_url': account.photoUrl,
+      });
+      final result = AuthResponse.fromJson(response.data);
+      await _api.saveToken(result.accessToken);
+      return result;
+    } finally {
+      // Сбрасываем состояние, чтобы следующий вход снова предлагал выбор аккаунта.
+      await gsi.signOut();
+    }
   }
 
   Future<User?> getCurrentUser() async {
