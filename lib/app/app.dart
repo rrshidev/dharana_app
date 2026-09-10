@@ -5,6 +5,7 @@ import 'package:dharana_app/app/theme_controller.dart';
 import 'package:dharana_app/features/auth/screens/splash_screen.dart';
 import 'package:dharana_app/features/auth/screens/login_screen.dart';
 import 'package:dharana_app/features/auth/screens/register_screen.dart';
+import 'package:dharana_app/features/auth/screens/reset_password_screen.dart';
 import 'package:dharana_app/features/main/main_screen.dart';
 import 'package:dharana_app/features/catalog/screens/category_screen.dart';
 import 'package:dharana_app/features/catalog/screens/asana_detail_screen.dart';
@@ -44,6 +45,7 @@ class _DharanaAppState extends State<DharanaApp> {
             '/': (_) => const SplashScreen(),
             '/login': (_) => const LoginScreen(),
             '/register': (_) => const RegisterScreen(),
+            '/reset_password': (_) => const ResetPasswordScreen(),
             '/main': (_) => const MainScreen(),
           },
           onGenerateRoute: (settings) {

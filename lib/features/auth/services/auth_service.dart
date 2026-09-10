@@ -98,4 +98,11 @@ class AuthService {
     await _api.saveToken(auth.accessToken);
     return auth;
   }
+
+  Future<bool> requestPasswordReset(String email) async {
+    final response = await _api.dio.post('/auth/password-reset/send', data: {
+      'email': email,
+    });
+    return response.data is Map && response.data['ok'] == true;
+  }
 }
