@@ -1,8 +1,9 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
-import 'package:dharana_app/features/timer/screens/timer_screen.dart';
 
 class TimerSetupScreen extends StatefulWidget {
   const TimerSetupScreen({super.key});
@@ -61,11 +62,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
 
   void _startPractice() {
     if (_selectedAsanas.isEmpty) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => TimerScreen(asanas: _selectedAsanas),
-      ),
-    );
+    context.push('/timer', extra: _selectedAsanas);
   }
 
   @override
@@ -292,10 +289,11 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                             width: 44,
                             height: 44,
                             child: asana.imageUrl != null
-                                ? Image.network(
-                                    '${ApiClient.baseUrl}${asana.imageUrl}',
+                                ? CachedNetworkImage(
+                                    imageUrl:
+                                        '${ApiClient.baseUrl}${asana.imageUrl}',
                                     fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) =>
+                                    errorWidget: (_, __, ___) =>
                                         _asanaPlaceholder(),
                                   )
                                 : _asanaPlaceholder(),

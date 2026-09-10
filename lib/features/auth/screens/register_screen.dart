@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
@@ -48,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       await _authService.register(email, password, name);
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/main');
+        context.go('/main');
       }
     } catch (e) {
       setState(() => _error = _mapRegisterError(e));

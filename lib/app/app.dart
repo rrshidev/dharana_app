@@ -1,6 +1,7 @@
 ﻿import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:app_links/app_links.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/app/theme_controller.dart';
@@ -12,6 +13,16 @@ import 'package:dharana_app/features/auth/screens/reset_password_form_screen.dar
 import 'package:dharana_app/features/main/main_screen.dart';
 import 'package:dharana_app/features/catalog/screens/category_screen.dart';
 import 'package:dharana_app/features/catalog/screens/asana_detail_screen.dart';
+import 'package:dharana_app/features/filters/screens/filter_screen.dart';
+import 'package:dharana_app/features/sequences/screens/sequences_screen.dart';
+import 'package:dharana_app/features/search/screens/search_screen.dart';
+import 'package:dharana_app/features/timer/screens/timer_screen.dart';
+import 'package:dharana_app/features/timer/screens/timer_setup_screen.dart';
+import 'package:dharana_app/features/admin/screens/admin_dashboard_screen.dart';
+import 'package:dharana_app/features/admin/screens/admin_user_detail_screen.dart';
+import 'package:dharana_app/features/profile/screens/practice_history_screen.dart';
+import 'package:dharana_app/features/subscription/screens/subscription_screen.dart';
+import 'package:dharana_app/features/notifications/screens/notifications_screen.dart';
 
 class DharanaApp extends StatefulWidget {
   const DharanaApp({super.key});
@@ -22,6 +33,79 @@ class DharanaApp extends StatefulWidget {
 
 class _DharanaAppState extends State<DharanaApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
+  late final GoRouter _router = GoRouter(
+    navigatorKey: _navigatorKey,
+    initialLocation: '/',
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/reset_password',
+        builder: (context, state) => const ResetPasswordScreen(),
+      ),
+      GoRoute(
+        path: '/reset_password_form',
+        builder: (context, state) =>
+            ResetPasswordFormScreen(token: state.extra as String),
+      ),
+      GoRoute(path: '/main', builder: (context, state) => const MainScreen()),
+      GoRoute(
+        path: '/category',
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>;
+          return CategoryScreen(
+            categoryId: args['categoryId'],
+            displayName: args['displayName'],
+          );
+        },
+      ),
+      GoRoute(
+        path: '/asana_detail',
+        builder: (context, state) =>
+            AsanaDetailScreen(asanaName: state.extra as String),
+      ),
+      GoRoute(path: '/filter', builder: (context, state) => const FilterScreen()),
+      GoRoute(
+        path: '/sequences',
+        builder: (context, state) => const SequencesScreen(),
+      ),
+      GoRoute(path: '/search', builder: (context, state) => const SearchScreen()),
+      GoRoute(
+        path: '/timer',
+        builder: (context, state) =>
+            TimerScreen(asanas: state.extra as List<Map<String, dynamic>>?),
+      ),
+      GoRoute(
+        path: '/timer_setup',
+        builder: (context, state) => const TimerSetupScreen(),
+      ),
+      GoRoute(
+        path: '/admin',
+        builder: (context, state) => const AdminDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/admin_user_detail',
+        builder: (context, state) =>
+            AdminUserDetailScreen(userId: state.extra as int),
+      ),
+      GoRoute(
+        path: '/practice_history',
+        builder: (context, state) => const PracticeHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/subscription',
+        builder: (context, state) => const SubscriptionScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
+    ],
+  );
   final _links = AppLinks();
   StreamSubscription<Uri>? _linkSubscription;
 
@@ -53,8 +137,8 @@ class _DharanaAppState extends State<DharanaApp> {
     final navigator = _navigatorKey.currentState;
     if (navigator == null) return;
     _formOpen = true;
-    navigator
-        .pushNamed('/reset_password_form', arguments: token)
+    _router
+        .push('/reset_password_form', extra: token)
         .whenComplete(() => _formOpen = false);
   }
 
@@ -74,45 +158,13 @@ class _DharanaAppState extends State<DharanaApp> {
                 isDark ? Brightness.light : Brightness.dark,
           ),
         );
-        return MaterialApp(
+        return MaterialApp.router(
           title: 'Dharana',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: mode,
-          navigatorKey: _navigatorKey,
-          initialRoute: '/',
-          routes: {
-            '/': (_) => const SplashScreen(),
-            '/login': (_) => const LoginScreen(),
-            '/register': (_) => const RegisterScreen(),
-            '/reset_password': (_) => const ResetPasswordScreen(),
-            '/main': (_) => const MainScreen(),
-          },
-          onGenerateRoute: (settings) {
-            if (settings.name == '/reset_password_form') {
-              final token = settings.arguments as String;
-              return MaterialPageRoute(
-                builder: (_) => ResetPasswordFormScreen(token: token),
-              );
-            }
-            if (settings.name == '/category') {
-              final args = settings.arguments as Map<String, dynamic>;
-              return MaterialPageRoute(
-                builder: (_) => CategoryScreen(
-                  categoryId: args['categoryId'],
-                  displayName: args['displayName'],
-                ),
-              );
-            }
-            if (settings.name == '/asana_detail') {
-              final asanaName = settings.arguments as String;
-              return MaterialPageRoute(
-                builder: (_) => AsanaDetailScreen(asanaName: asanaName),
-              );
-            }
-            return null;
-          },
+          routerConfig: _router,
         );
       },
     );

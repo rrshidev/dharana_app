@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -67,10 +68,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             onPressed: () => _removeFavorite(fav.asanaName),
                           ),
                           onTap: () {
-                            Navigator.of(context).pushNamed(
-                              '/asana_detail',
-                              arguments: fav.asanaName,
-                            );
+                            context.push('/asana_detail', extra: fav.asanaName);
                           },
                         ),
                       );

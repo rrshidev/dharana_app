@@ -57,6 +57,7 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
+      fontFamily: 'Inter',
       scaffoldBackgroundColor: background,
       colorScheme: const ColorScheme.dark(
         primary: accent,
@@ -71,6 +72,7 @@ class AppTheme {
         titleTextStyle: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
+          fontFamily: 'Nunito',
           color: textPrimary,
         ),
         iconTheme: IconThemeData(color: textPrimary),
@@ -87,21 +89,25 @@ class AppTheme {
         headlineLarge: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w700,
+          fontFamily: 'Nunito',
           color: textPrimary,
         ),
         headlineMedium: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w600,
+          fontFamily: 'Nunito',
           color: textPrimary,
         ),
         titleLarge: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
+          fontFamily: 'Nunito',
           color: textPrimary,
         ),
         titleMedium: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
+          fontFamily: 'Nunito',
           color: textPrimary,
         ),
         bodyLarge: TextStyle(
@@ -126,6 +132,7 @@ class AppTheme {
           textStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
           ),
         ),
       ),
@@ -168,6 +175,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       brightness: Brightness.light,
+      fontFamily: 'Inter',
       scaffoldBackgroundColor: _lightBackground,
       colorScheme: const ColorScheme.light(
         primary: _lightAccent,
@@ -182,6 +190,7 @@ class AppTheme {
         titleTextStyle: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
+          fontFamily: 'Nunito',
           color: _lightTextPrimary,
         ),
         iconTheme: IconThemeData(color: _lightTextPrimary),
@@ -198,21 +207,25 @@ class AppTheme {
         headlineLarge: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.w700,
+          fontFamily: 'Nunito',
           color: _lightTextPrimary,
         ),
         headlineMedium: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w600,
+          fontFamily: 'Nunito',
           color: _lightTextPrimary,
         ),
         titleLarge: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w600,
+          fontFamily: 'Nunito',
           color: _lightTextPrimary,
         ),
         titleMedium: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
+          fontFamily: 'Nunito',
           color: _lightTextPrimary,
         ),
         bodyLarge: TextStyle(
@@ -237,6 +250,7 @@ class AppTheme {
           textStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            fontFamily: 'Inter',
           ),
         ),
       ),

@@ -2,7 +2,7 @@
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
-import 'package:dharana_app/features/timer/screens/timer_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class PracticeHistoryScreen extends StatefulWidget {
@@ -295,10 +295,6 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
       };
     }).toList();
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => TimerScreen(asanas: asanas),
-      ),
-    );
+    context.push('/timer', extra: asanas);
   }
 }

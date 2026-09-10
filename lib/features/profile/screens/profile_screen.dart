@@ -1,13 +1,12 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/app/theme_controller.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
-import 'package:dharana_app/features/profile/screens/practice_history_screen.dart';
-import 'package:dharana_app/features/subscription/screens/subscription_screen.dart';
-import 'package:dharana_app/features/admin/screens/admin_dashboard_screen.dart';
 import 'package:dharana_app/features/admin/widgets/period_selector.dart';
 import 'package:dharana_app/features/profile/widgets/activity_chart.dart';
 import 'package:dio/dio.dart';
@@ -200,7 +199,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             radius: 55,
             backgroundColor: AppTheme.SurfaceLight,
             backgroundImage: _user?.avatarUrl != null
-                ? NetworkImage(ApiClient().resolveUrl(_user!.avatarUrl!))
+                ? CachedNetworkImageProvider(
+                    ApiClient().resolveUrl(_user!.avatarUrl!))
                 : null,
             child: _user?.avatarUrl == null
                 ? Text(
@@ -394,9 +394,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             icon: Icons.admin_panel_settings_outlined,
             title: 'Админ-панель',
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const AdminDashboardScreen()),
-              );
+              context.push('/admin');
             },
           ),
         _buildMenuItem(
@@ -404,9 +402,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Icons.history,
           title: 'История практик',
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const PracticeHistoryScreen()),
-            );
+            context.push('/practice_history');
           },
         ),
         _buildMenuItem(
@@ -415,9 +411,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: 'Подписка',
           subtitle: _isPremium ? 'Premium' : 'Бесплатный план',
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const SubscriptionScreen()),
-            );
+            context.push('/subscription');
           },
         ),
         _buildMenuItem(
@@ -432,7 +426,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () async {
             await AuthService().logout();
             if (context.mounted) {
-              Navigator.of(context).pushReplacementNamed('/login');
+              context.go('/login');
             }
           },
           icon: Icon(Icons.logout, color: AppTheme.Danger),
@@ -807,7 +801,8 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
                             width: avatar.isPrimary ? 2 : 1,
                           ),
                           image: DecorationImage(
-                            image: NetworkImage(ApiClient().resolveUrl(avatar.url)),
+                            image: CachedNetworkImageProvider(
+                                ApiClient().resolveUrl(avatar.url)),
                             fit: BoxFit.cover,
                           ),
                         ),

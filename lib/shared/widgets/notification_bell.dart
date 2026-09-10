@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/services/notifications_center.dart';
-import 'package:dharana_app/features/notifications/screens/notifications_screen.dart';
 
 class NotificationBell extends StatelessWidget {
   const NotificationBell({super.key, this.color = Colors.white});
@@ -20,9 +20,7 @@ class NotificationBell extends StatelessWidget {
           onPressed: () async {
             await center.refresh();
             if (!context.mounted) return;
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const NotificationsScreen()),
-            );
+            context.push('/notifications');
           },
           icon: Badge(
             isLabelVisible: center.hasUnread,

@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
 
@@ -24,9 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     if (isLoggedIn) {
-      Navigator.of(context).pushReplacementNamed('/main');
+      context.go('/main');
     } else {
-      Navigator.of(context).pushReplacementNamed('/login');
+      context.go('/login');
     }
   }
 

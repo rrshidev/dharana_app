@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -272,10 +273,7 @@ class _FilterScreenState extends State<FilterScreen> {
                         ],
                       ),
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                          '/asana_detail',
-                          arguments: asana.name,
-                        );
+                        context.push('/asana_detail', extra: asana.name);
                       },
                     ),
                   );

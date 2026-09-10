@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -7,9 +8,6 @@ import 'package:dharana_app/shared/widgets/asana_card.dart';
 import 'package:dharana_app/shared/widgets/category_card.dart';
 import 'package:dharana_app/shared/widgets/loading_skeleton.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
-import 'package:dharana_app/features/filters/screens/filter_screen.dart';
-import 'package:dharana_app/features/sequences/screens/sequences_screen.dart';
-import 'package:dharana_app/features/search/screens/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -129,9 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: Icons.tune,
                             label: 'Подбор',
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const FilterScreen()),
-                              );
+                              context.push('/filter');
                             },
                           ),
                           const SizedBox(width: 12),
@@ -139,9 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: Icons.video_library_outlined,
                             label: 'Комплексы',
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const SequencesScreen()),
-                              );
+                              context.push('/sequences');
                             },
                           ),
                           const SizedBox(width: 12),
@@ -149,9 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: Icons.search,
                             label: 'Поиск',
                             onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const SearchScreen()),
-                              );
+                              context.push('/search');
                             },
                           ),
                         ],
@@ -181,10 +173,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: AsanaCard(
                           asana: _dailyAsana!,
                           onTap: () {
-                            Navigator.of(context).pushNamed(
-                              '/asana_detail',
-                              arguments: _dailyAsana!.name,
-                            );
+                            context.push('/asana_detail',
+                                extra: _dailyAsana!.name);
                           },
                         ),
                       ),
@@ -215,9 +205,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           return CategoryCard(
                             category: _categories[index],
                             onTap: () {
-                              Navigator.of(context).pushNamed(
+                              context.push(
                                 '/category',
-                                arguments: {
+                                extra: {
                                   'categoryId': _categories[index].id,
                                   'displayName': _categories[index].displayName,
                                 },

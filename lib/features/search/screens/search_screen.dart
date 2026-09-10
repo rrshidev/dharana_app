@@ -1,4 +1,8 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -13,6 +17,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _controller = TextEditingController();
   final _api = ApiClient();
+  Timer? _debounce;
   List<Asana> _results = [];
   bool _isLoading = false;
   bool _hasSearched = false;
@@ -64,8 +69,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   )
                 : null,
           ),
-          onSubmitted: _search,
-          onChanged: (_) => setState(() {}),
+          onSubmitted: (q) {
+            _debounce?.cancel();
+            _search(q);
+          },
+          onChanged: (value) {
+            setState(() {});
+            _debounce?.cancel();
+            _debounce = Timer(const Duration(milliseconds: 300), () {
+              _search(value);
+            });
+          },
         ),
       ),
       body: _isLoading
@@ -101,12 +115,13 @@ class _SearchScreenState extends State<SearchScreen> {
                           leading: asana.imageUrl != null
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    '${ApiClient.baseUrl}${asana.imageUrl}',
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        '${ApiClient.baseUrl}${asana.imageUrl}',
                                     width: 48,
                                     height: 48,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => Container(
+                                    errorWidget: (_, __, ___) => Container(
                                       width: 48,
                                       height: 48,
                                       color: AppTheme.SurfaceLight,
@@ -131,10 +146,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             style: AppTheme.difficultyStars(asana.difficulty),
                           ),
                           onTap: () {
-                            Navigator.of(context).pushNamed(
-                              '/asana_detail',
-                              arguments: asana.name,
-                            );
+                            context.push('/asana_detail', extra: asana.name);
                           },
                         );
                       },
@@ -144,6 +156,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     super.dispose();
   }

@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/services/notifications_center.dart';
@@ -75,11 +76,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               const SizedBox(height: 8),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  ApiClient().resolveUrl(mediaUrl),
+                                child: CachedNetworkImage(
+                                  imageUrl: ApiClient().resolveUrl(mediaUrl),
                                   height: 180,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                                  errorWidget: (_, __, ___) =>
+                                      const SizedBox.shrink(),
                                 ),
                               ),
                             ],

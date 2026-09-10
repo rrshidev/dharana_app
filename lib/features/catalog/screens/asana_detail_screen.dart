@@ -1,8 +1,9 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
-import 'package:dharana_app/features/timer/screens/timer_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class AsanaDetailScreen extends StatefulWidget {
@@ -123,12 +124,13 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                 minScale: 0.5,
                                 maxScale: 3.0,
                                 child: Center(
-                                  child: Image.network(
-                                    '${ApiClient.baseUrl}${_asana!.imageUrl}',
+                                  child: CachedNetworkImage(
+                                    imageUrl:
+                                        '${ApiClient.baseUrl}${_asana!.imageUrl}',
                                     fit: BoxFit.contain,
                                     width: double.infinity,
                                     height: double.infinity,
-                                    errorBuilder: (_, __, ___) => Container(
+                                    errorWidget: (_, __, ___) => Container(
                                       color: AppTheme.Surface,
                                       child: Icon(
                                         Icons.self_improvement,
@@ -325,14 +327,15 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                               width: double.infinity,
                               child: ElevatedButton.icon(
                                 onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (_) => TimerScreen(
-                                        asanas: [
-                                          {'name': _asana!.name, 'duration_seconds': 60, 'rest_seconds': 15}
-                                        ],
-                                      ),
-                                    ),
+                                  context.push(
+                                    '/timer',
+                                    extra: <Map<String, dynamic>>[
+                                      {
+                                        'name': _asana!.name,
+                                        'duration_seconds': 60,
+                                        'rest_seconds': 15,
+                                      }
+                                    ],
                                   );
                                 },
                                 icon: const Icon(Icons.timer_outlined),

@@ -1,5 +1,6 @@
 ﻿import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dharana_app/app/theme.dart';
@@ -157,10 +158,10 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: a.imageUrl != null
-                ? Image.network(
-                    '${ApiClient.baseUrl}${a.imageUrl}',
+                ? CachedNetworkImage(
+                    imageUrl: '${ApiClient.baseUrl}${a.imageUrl}',
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
+                    errorWidget: (_, __, ___) =>
                         ColoredBox(color: AppTheme.SurfaceLight, child: Icon(Icons.image)),
                   )
                 : ColoredBox(

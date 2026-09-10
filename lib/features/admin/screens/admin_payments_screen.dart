@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 
@@ -229,7 +230,10 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                   decoration: BoxDecoration(
                     color: AppTheme.SurfaceLight,
                     borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(image: NetworkImage(encoded), fit: BoxFit.cover),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(encoded),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   child: Align(
                     alignment: Alignment.topRight,
@@ -286,7 +290,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            InteractiveViewer(child: Image.network(encoded)),
+            InteractiveViewer(child: CachedNetworkImage(imageUrl: encoded)),
             TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Закрыть')),
           ],
         ),

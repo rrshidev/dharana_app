@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await _authService.login(_emailController.text, _passwordController.text);
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/main');
+        context.go('/main');
       }
     } catch (e) {
       setState(() => _error = 'Неверный email или пароль');
@@ -51,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final auth = await _authService.loginWithGoogle();
       if (auth == null) return; // пользователь отменил выбор аккаунта
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/main');
+        context.go('/main');
       }
     } catch (e) {
       setState(() => _error = 'Не удалось войти через Google');
@@ -121,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await _authService.verifyTelegramCode(result);
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/main');
+        context.go('/main');
       }
     } catch (e) {
       setState(() => _error = _extractError(e));
@@ -210,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed('/reset_password');
+                          context.push('/reset_password');
                         },
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -252,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/register');
+                        context.push('/register');
                       },
                       child: RichText(
                         text: TextSpan(

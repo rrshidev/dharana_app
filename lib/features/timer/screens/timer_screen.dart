@@ -1,10 +1,10 @@
 ﻿import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/core/services/sound_service.dart';
-import 'package:dharana_app/features/timer/screens/timer_setup_screen.dart';
 
 enum TimerMode { idle, asana, rest, compensation, paused }
 
@@ -252,7 +252,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
             TextButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
-                Navigator.of(context).pop();
+                context.pop();
               },
               child: const Text('Закрыть'),
             ),
@@ -364,9 +364,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const TimerSetupScreen()),
-              );
+              context.pushReplacement('/timer_setup');
             },
             icon: const Icon(Icons.settings),
             label: const Text('Настроить'),

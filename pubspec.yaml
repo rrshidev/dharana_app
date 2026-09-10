@@ -21,6 +21,8 @@ dependencies:
   google_sign_in: ^6.2.0
   fl_chart: ^0.68.0
   app_links: ^7.2.1
+  cached_network_image: ^3.4.1
+  go_router: ^17.5.0
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +33,20 @@ flutter:
   uses-material-design: true
   assets:
     - assets/sounds/
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Variable.ttf
+          weight: 400
+        - asset: assets/fonts/Inter-Variable.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Variable.ttf
+          weight: 700
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/Nunito-Variable.ttf
+          weight: 600
+        - asset: assets/fonts/Nunito-Variable.ttf
+          weight: 700

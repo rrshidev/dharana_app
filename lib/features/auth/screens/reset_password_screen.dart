@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
@@ -67,7 +68,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => context.pop(),
         ),
       ),
       body: SafeArea(
@@ -101,7 +102,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () => context.pop(),
                       child: const Text('Вернуться ко входу'),
                     ),
                   ]

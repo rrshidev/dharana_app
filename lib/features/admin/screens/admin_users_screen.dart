@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
-import 'package:dharana_app/features/admin/screens/admin_user_detail_screen.dart';
 
 class AdminUser {
   final int id;
@@ -194,9 +194,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           ],
         ),
         onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => AdminUserDetailScreen(userId: u.id)),
-          );
+          context.push('/admin_user_detail', extra: u.id);
         },
       ),
     );

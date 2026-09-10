@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -21,10 +22,10 @@ class AsanaCard extends StatelessWidget {
               width: 100,
               height: 100,
               child: asana.imageUrl != null
-                  ? Image.network(
-                      '${ApiClient.baseUrl}${asana.imageUrl}',
+                  ? CachedNetworkImage(
+                      imageUrl: '${ApiClient.baseUrl}${asana.imageUrl}',
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => _placeholder(),
+                      errorWidget: (_, __, ___) => _placeholder(),
                     )
                   : _placeholder(),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/shared/widgets/asana_card.dart';
@@ -70,10 +71,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       child: AsanaCard(
                         asana: _asanas[index],
                         onTap: () {
-                          Navigator.of(context).pushNamed(
-                            '/asana_detail',
-                            arguments: _asanas[index].name,
-                          );
+                          context.push('/asana_detail',
+                              extra: _asanas[index].name);
                         },
                       ),
                     );
