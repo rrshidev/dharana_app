@@ -1,0 +1,57 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "lib/**"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - "android/**"
+      - ".github/workflows/build-apk.yml"
+  workflow_dispatch:
+
+# ВАЖНО: артефакт CI подписан СВЕЖИМ debug-keystore, сгенерированным на раннере.
+# Его отпечатки НЕ совпадают с опубликованными:
+#   - assetlinks.json (https://dharana.ru/.well-known/assetlinks.json, SHA-256 CA:15:BD:...)
+#   - Android OAuth-клиент Google (SHA-1 AD:7D:54:...)
+# Поэтому APK из артефакта годится для QA, но НЕ для замены https://dharana.ru/download/dharana.apk.
+# Публичную сборку делаем локально: .\build_apk.ps1 (стабильный developer-keystore).
+
+jobs:
+  build:
+    name: Build release APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Build release APK
+        run: |
+          flutter build apk --release \
+            --dart-define=GOOGLE_WEB_CLIENT_ID=914006620256-t7uqhvlqqlikgesrl59cghv3d1l93gft.apps.googleusercontent.com
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dharana-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14
