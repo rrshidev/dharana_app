@@ -105,4 +105,11 @@ class AuthService {
     });
     return response.data is Map && response.data['ok'] == true;
   }
+
+  Future<void> resetPassword(String token, String password) async {
+    await _api.dio.post('/auth/password-reset/confirm', data: {
+      'token': token,
+      'password': password,
+    });
+  }
 }
