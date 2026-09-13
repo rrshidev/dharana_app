@@ -167,7 +167,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
     final duration = session.totalDurationSeconds;
     final m = duration ~/ 60;
     final s = duration % 60;
-    final durationStr = m > 0 ? '${m}м ${s > 0 ? '$sс' : ''}' : '${s}с';
+    final durationStr = m > 0 ? '$mм ${s > 0 ? '$sс' : ''}' : '$sс';
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),

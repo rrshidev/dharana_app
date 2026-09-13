@@ -67,7 +67,7 @@ class Sparkline extends StatelessWidget {
   final double height;
   final double width;
 
-  Sparkline({
+  const Sparkline({
     super.key,
     required this.data,
     this.color = AppTheme.accent,
@@ -155,7 +155,7 @@ class AreaTrendChart extends StatelessWidget {
   final double height;
   final bool showBottomLabels;
 
-  AreaTrendChart({
+  const AreaTrendChart({
     super.key,
     required this.data,
     required this.labels,
@@ -437,7 +437,7 @@ class BarChartSimple extends StatelessWidget {
   final Color color;
   final double height;
 
-  BarChartSimple({
+  const BarChartSimple({
     super.key,
     required this.data,
     required this.labels,

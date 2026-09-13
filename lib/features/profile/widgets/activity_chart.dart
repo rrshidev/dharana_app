@@ -80,7 +80,7 @@ class ActivityChart extends StatelessWidget {
         dotData: const FlDotData(show: false),
         belowBarData: BarAreaData(
           show: true,
-          color: lineColors[0].withOpacity(0.15),
+          color: lineColors[0].withValues(alpha: 0.15),
         ),
       ),
       LineChartBarData(

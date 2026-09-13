@@ -169,10 +169,10 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
   }
 
   String _fmt(int s) {
-    if (s < 60) return '${s}с';
+    if (s < 60) return '$sс';
     final m = s ~/ 60;
     final sec = s % 60;
-    return sec > 0 ? '${m}м ${sec}с' : '${m}мин';
+    return sec > 0 ? '$mм $secс' : '$mмин';
   }
 
   Widget _asanaPlaceholder() {
@@ -216,8 +216,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
               child: ReorderableListView.builder(
                 padding: const EdgeInsets.all(8),
                 itemCount: _selectedAsanas.length,
-                onReorder: (oldIndex, newIndex) {
-                  if (newIndex > oldIndex) newIndex--;
+                onReorderItem: (oldIndex, newIndex) {
                   final item = _selectedAsanas.removeAt(oldIndex);
                   _selectedAsanas.insert(newIndex, item);
                   setState(() {});

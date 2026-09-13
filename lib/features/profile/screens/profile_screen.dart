@@ -425,7 +425,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         OutlinedButton.icon(
           onPressed: () async {
             await AuthService().logout();
-            if (context.mounted) {
+            if (mounted) {
               context.go('/login');
             }
           },
@@ -687,19 +687,21 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
                 ? null
                 : () async {
                     setState(() => _isSaving = true);
+                    final navigator = Navigator.of(context);
+                    final messenger = ScaffoldMessenger.of(context);
                     try {
                       await ApiClient().updateProfile(
                         name: _nameController.text,
                         username: _usernameController.text,
                         bio: _bioController.text,
                       );
-                      if (mounted) Navigator.of(context).pop();
+                      if (!mounted) return;
+                      navigator.pop();
                     } catch (e) {
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Ошибка: $e')),
-                        );
-                      }
+                      if (!mounted) return;
+                      messenger.showSnackBar(
+                        SnackBar(content: Text('Ошибка: $e')),
+                      );
                     } finally {
                       if (mounted) setState(() => _isSaving = false);
                     }
@@ -812,8 +814,10 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
                         right: 14,
                         child: GestureDetector(
                           onTap: () async {
+                            final navigator = Navigator.of(context);
                             await ApiClient().deleteAvatar(avatar.id);
-                            if (mounted) Navigator.of(context).pop();
+                            if (!mounted) return;
+                            navigator.pop();
                           },
                           child: Container(
                             padding: const EdgeInsets.all(2),
