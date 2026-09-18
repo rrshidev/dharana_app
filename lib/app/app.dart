@@ -16,6 +16,7 @@ import 'package:dharana_app/features/catalog/screens/asana_detail_screen.dart';
 import 'package:dharana_app/features/filters/screens/filter_screen.dart';
 import 'package:dharana_app/features/sequences/screens/sequences_screen.dart';
 import 'package:dharana_app/features/search/screens/search_screen.dart';
+import 'package:dharana_app/features/generator/screens/generator_screen.dart';
 import 'package:dharana_app/features/timer/screens/timer_screen.dart';
 import 'package:dharana_app/features/timer/screens/timer_setup_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_dashboard_screen.dart';
@@ -69,6 +70,10 @@ class _DharanaAppState extends State<DharanaApp> {
             AsanaDetailScreen(asanaName: state.extra as String),
       ),
       GoRoute(path: '/filter', builder: (context, state) => const FilterScreen()),
+      GoRoute(
+        path: '/generator',
+        builder: (context, state) => const GeneratorScreen(),
+      ),
       GoRoute(
         path: '/sequences',
         builder: (context, state) => const SequencesScreen(),

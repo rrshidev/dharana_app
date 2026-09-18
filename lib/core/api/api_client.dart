@@ -118,6 +118,19 @@ class ApiClient {
     return resp.data as Map<String, dynamic>;
   }
 
+  Future<Map<String, dynamic>> generatePractice({
+    required String difficulty,
+    required int durationMinutes,
+    String? focus,
+  }) async {
+    final resp = await _dio.post('/practice/generate', data: {
+      'difficulty': difficulty,
+      'duration_minutes': durationMinutes,
+      if (focus != null && focus.isNotEmpty) 'focus': focus,
+    });
+    return resp.data as Map<String, dynamic>;
+  }
+
   Future<void> completePractice(
     int sessionId, {
     required List<String> asanasPracticed,
