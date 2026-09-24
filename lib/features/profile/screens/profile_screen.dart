@@ -355,6 +355,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'pranayama': 'Пранаяма',
   };
 
+  String? get _chartThirdLabel {
+    switch (_chartType) {
+      case 'all':
+        return 'Упражнения';
+      case 'asana':
+        return 'Асаны';
+      case 'pranayama':
+        return 'Пранаяма';
+      case 'meditation':
+        return null;
+    }
+    return null;
+  }
+
+  String? get _chartThirdUnit {
+    if (_chartThirdLabel == null) return null;
+    return _chartType == 'asana' ? 'асан' : 'упражнений';
+  }
+
   Widget _buildChartSection() {
     return Card(
       child: Padding(
@@ -406,7 +425,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 200,
                     child: Center(child: CircularProgressIndicator(color: AppTheme.Accent)),
                   )
-                : ActivityChart(days: _chartDays),
+                : ActivityChart(
+                    days: _chartDays,
+                    thirdLabel: _chartThirdLabel,
+                    thirdUnit: _chartThirdUnit,
+                  ),
           ],
         ),
       ),

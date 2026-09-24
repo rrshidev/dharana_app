@@ -18,8 +18,10 @@ class ActivityDaily {
 
 class ActivityChart extends StatelessWidget {
   final List<ActivityDaily> days;
+  final String? thirdLabel;
+  final String? thirdUnit;
 
-  const ActivityChart({super.key, required this.days});
+  const ActivityChart({super.key, required this.days, this.thirdLabel, this.thirdUnit});
 
   List<String> _thinnedLabels() {
     final n = days.length;
@@ -58,9 +60,10 @@ class ActivityChart extends StatelessWidget {
       );
     }
 
+    final showThird = thirdLabel != null;
     final maxMin = _maxOf((d) => d.minutes);
     final maxSes = _maxOf((d) => d.sessions);
-    final maxAsa = _maxOf((d) => d.asanas);
+    final maxAsa = showThird ? _maxOf((d) => d.asanas) : 1.0;
     final labels = _thinnedLabels();
     final n = days.length;
 
@@ -91,26 +94,31 @@ class ActivityChart extends StatelessWidget {
         barWidth: 2,
         dotData: const FlDotData(show: false),
       ),
-      LineChartBarData(
-        spots: _spots((d) => d.asanas, maxAsa),
-        isCurved: true,
-        curveSmoothness: 0.35,
-        color: lineColors[2],
-        barWidth: 2,
-        dotData: const FlDotData(show: false),
-      ),
+      if (showThird)
+        LineChartBarData(
+          spots: _spots((d) => d.asanas, maxAsa),
+          isCurved: true,
+          curveSmoothness: 0.35,
+          color: lineColors[2],
+          barWidth: 2,
+          dotData: const FlDotData(show: false),
+        ),
     ];
 
     final totalMin = days.fold<double>(0, (a, b) => a + b.minutes);
     final totalSes = days.fold<double>(0, (a, b) => a + b.sessions);
-    final totalAsa = days.fold<double>(0, (a, b) => a + b.asanas);
+    final totalAsa = showThird ? days.fold<double>(0, (a, b) => a + b.asanas) : 0;
 
-    final lineValues = [
+    final lineValues = <String>[
       '${totalMin.round()} мин',
       '${totalSes.round()} сессий',
-      '${totalAsa.round()} асан',
+      if (showThird) '${totalAsa.round()} ${thirdUnit ?? 'асан'}',
     ];
-    final lineNames = ['Минуты', 'Сессии', 'Асаны'];
+    final lineNames = <String>[
+      'Минуты',
+      'Сессии',
+      if (showThird) thirdLabel!,
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,13 +169,18 @@ class ActivityChart extends StatelessWidget {
               lineTouchData: LineTouchData(
                 touchTooltipData: LineTouchTooltipData(
                   getTooltipItems: (spots) {
-                    final names = ['Минуты', 'Сессии', 'Асаны'];
+                    final names = <String>[
+                      'Минуты',
+                      'Сессии',
+                      if (showThird) thirdLabel!,
+                    ];
+                    final scales = <double>[maxMin, maxSes, if (showThird) maxAsa];
                     return spots.asMap().entries.map((e) {
                       final i = e.key;
                       final s = e.value;
                       final value = s.y < 0.0001
                           ? 0.0
-                          : s.y * [maxMin, maxSes, maxAsa][i];
+                          : s.y * scales[i];
                       return LineTooltipItem(
                         '${names[i]}: ${value.toStringAsFixed(value >= 10 ? 0 : 1)}',
                         TextStyle(color: lineColors[i], fontWeight: FontWeight.w600),
