@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:app_links/app_links.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/app/theme_controller.dart';
+import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/features/auth/screens/splash_screen.dart';
 import 'package:dharana_app/features/auth/screens/login_screen.dart';
 import 'package:dharana_app/features/auth/screens/register_screen.dart';
@@ -13,6 +14,8 @@ import 'package:dharana_app/features/auth/screens/reset_password_form_screen.dar
 import 'package:dharana_app/features/main/main_screen.dart';
 import 'package:dharana_app/features/catalog/screens/category_screen.dart';
 import 'package:dharana_app/features/catalog/screens/asana_detail_screen.dart';
+import 'package:dharana_app/features/catalog/screens/theory_list_screen.dart';
+import 'package:dharana_app/features/catalog/screens/theory_detail_screen.dart';
 import 'package:dharana_app/features/filters/screens/filter_screen.dart';
 import 'package:dharana_app/features/sequences/screens/sequences_screen.dart';
 import 'package:dharana_app/features/search/screens/search_screen.dart';
@@ -68,6 +71,30 @@ class _DharanaAppState extends State<DharanaApp> {
         path: '/asana_detail',
         builder: (context, state) =>
             AsanaDetailScreen(asanaName: state.extra as String),
+      ),
+      GoRoute(
+        path: '/basics',
+        builder: (context, state) => const TheoryListScreen(
+          kind: TheoryKind.basics,
+          title: 'Основы йоги',
+        ),
+      ),
+      GoRoute(
+        path: '/steps',
+        builder: (context, state) => const TheoryListScreen(
+          kind: TheoryKind.steps,
+          title: '8 ступеней йоги',
+        ),
+      ),
+      GoRoute(
+        path: '/theory_detail',
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>;
+          return TheoryDetailScreen(
+            title: args['title'] as String,
+            item: args['item'] as TheoryItem,
+          );
+        },
       ),
       GoRoute(path: '/filter', builder: (context, state) => const FilterScreen()),
       GoRoute(

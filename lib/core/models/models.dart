@@ -56,6 +56,29 @@ class Category {
   }
 }
 
+class TheoryItem {
+  final String name;
+  final String? nameEn;
+  final String content;
+  final String? imageUrl;
+
+  TheoryItem({
+    required this.name,
+    this.nameEn,
+    this.content = '',
+    this.imageUrl,
+  });
+
+  factory TheoryItem.fromJson(Map<String, dynamic> json) {
+    return TheoryItem(
+      name: json['name'] ?? '',
+      nameEn: json['name_en'],
+      content: json['content'] ?? '',
+      imageUrl: json['image_url'],
+    );
+  }
+}
+
 class AsanaListResponse {
   final int total;
   final List<Asana> items;

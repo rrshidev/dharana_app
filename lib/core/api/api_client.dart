@@ -250,6 +250,16 @@ class ApiClient {
     }
   }
 
+  Future<List<TheoryItem>> getBasics() async {
+    final resp = await _dio.get('/basics');
+    return (resp.data as List).map((e) => TheoryItem.fromJson(e)).toList();
+  }
+
+  Future<List<TheoryItem>> getSteps() async {
+    final resp = await _dio.get('/steps');
+    return (resp.data as List).map((e) => TheoryItem.fromJson(e)).toList();
+  }
+
   Future<void> scanVideos() async {
     await _dio.post('/videos/scan');
   }

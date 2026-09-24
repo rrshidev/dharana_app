@@ -162,6 +162,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                      child: Row(
+                        children: [
+                          _QuickTile(
+                            icon: Icons.menu_book_outlined,
+                            label: 'Основы йоги',
+                            onTap: () {
+                              context.push('/basics');
+                            },
+                          ),
+                          const SizedBox(width: 12),
+                          _QuickTile(
+                            icon: Icons.layers_outlined,
+                            label: '8 ступеней',
+                            onTap: () {
+                              context.push('/steps');
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   if (_dailyAsana != null) ...[
                     SliverToBoxAdapter(
                       child: Padding(
