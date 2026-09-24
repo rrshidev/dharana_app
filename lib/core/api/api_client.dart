@@ -164,6 +164,19 @@ class ApiClient {
     return resp.data as Map<String, dynamic>;
   }
 
+  Future<Map<String, dynamic>> getPracticeSeries({
+    int days = 30,
+    String practiceType = 'all',
+    int tzOffsetMinutes = 0,
+  }) async {
+    final resp = await _dio.get('/practice/stats/series', queryParameters: {
+      'days': days,
+      'practice_type': practiceType,
+      'tz_offset_minutes': tzOffsetMinutes,
+    });
+    return resp.data as Map<String, dynamic>;
+  }
+
   Future<Map<String, dynamic>> getSequences() async {
     final resp = await _dio.get('/sequences');
     final data = resp.data;

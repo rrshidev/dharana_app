@@ -29,6 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<ActivityDaily> _chartDays = [];
   bool _chartLoading = true;
   int _chartRange = 30;
+  String _chartType = 'all';
+  static const _chartTypes = <String>['all', 'asana', 'meditation', 'pranayama'];
 
   @override
   void initState() {
@@ -75,47 +77,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadActivityChart() async {
     setState(() => _chartLoading = true);
     try {
-      final data = await _api.getPracticeHistory(limit: 500, offset: 0);
-      final sessions = (data['sessions'] as List? ?? [])
-          .map<PracticeSession>((e) => PracticeSession.fromJson(Map<String, dynamic>.from(e as Map)))
-          .toList();
-      final agg = _aggregateByDay(sessions, _chartRange);
+      final tzOffset = DateTime.now().timeZoneOffset.inMinutes;
+      final data = await _api.getPracticeSeries(
+        days: _chartRange,
+        practiceType: _chartType,
+        tzOffsetMinutes: tzOffset,
+      );
+      final agg = _seriesToDays(data, _chartRange);
       if (mounted) setState(() { _chartDays = List.of(agg); _chartLoading = false; });
     } catch (_) {
       if (mounted) setState(() { _chartDays = []; _chartLoading = false; });
     }
   }
 
-  List<ActivityDaily> _aggregateByDay(List<PracticeSession> sessions, int rangeDays) {
-    final now = DateTime.now();
-    final startDay = DateTime(now.year, now.month, now.day).subtract(Duration(days: rangeDays - 1));
-    final map = <DateTime, List<double>>{};
-    for (var i = 0; i < rangeDays; i++) {
-      map[startDay.add(Duration(days: i))] = [0, 0, 0];
-    }
-    for (final s in sessions) {
-      final ts = s.startedAt ?? s.completedAt;
-      if (ts == null) continue;
-      final parsed = DateTime.tryParse(ts)?.toLocal();
-      if (parsed == null) continue;
-      final day = DateTime(parsed.year, parsed.month, parsed.day);
-      if (!map.containsKey(day)) continue;
-      final m = map[day]!;
-      m[0] += s.totalDurationSeconds / 60.0;
-      m[1] += 1;
-      m[2] += s.asanasPracticed.length.toDouble();
-    }
+  List<ActivityDaily> _seriesToDays(Map<String, dynamic> data, int rangeDays) {
+    final daysRaw = data['days'] as List? ?? <dynamic>[];
+    final minutes = data['minutes'] as List? ?? <dynamic>[];
+    final sessions = data['sessions'] as List? ?? <dynamic>[];
+    final asanas = data['asanas'] as List? ?? <dynamic>[];
     final out = <ActivityDaily>[];
-    final keys = map.keys.toList()..sort();
-    for (final k in keys) {
+    for (var i = 0; i < daysRaw.length; i++) {
+      final dayText = daysRaw[i].toString();
+      final date = DateTime.tryParse(dayText);
+      if (date == null) continue;
       out.add(ActivityDaily(
-        date: k,
-        minutes: map[k]![0],
-        sessions: map[k]![1],
-        asanas: map[k]![2],
+        date: date,
+        minutes: (minutes.length > i ? minutes[i] : 0).toDouble(),
+        sessions: (sessions.length > i ? sessions[i] : 0).toDouble(),
+        asanas: (asanas.length > i ? asanas[i] : 0).toDouble(),
       ));
     }
-    return out;
+    if (out.length >= rangeDays) return out;
+    final now = DateTime.now();
+    final startDay = DateTime(now.year, now.month, now.day).subtract(Duration(days: rangeDays - 1));
+    final byDate = {for (final d in out) DateTime(d.date.year, d.date.month, d.date.day): d};
+    final filled = <ActivityDaily>[];
+    for (var i = 0; i < rangeDays; i++) {
+      final day = startDay.add(Duration(days: i));
+      filled.add(byDate[day] ?? ActivityDaily(date: day, minutes: 0, sessions: 0, asanas: 0));
+    }
+    return filled;
   }
 
   Future<void> _checkNotifications() async {
@@ -347,6 +348,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  static const _typeLabels = <String, String>{
+    'all': 'Все',
+    'asana': 'Асана',
+    'meditation': 'Медитация',
+    'pranayama': 'Пранаяма',
+  };
+
   Widget _buildChartSection() {
     return Card(
       child: Padding(
@@ -362,6 +370,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   setState(() => _chartRange = d);
                   _loadActivityChart();
                 }),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final t in _chartTypes)
+                  ChoiceChip(
+                    label: Text(_typeLabels[t] ?? t),
+                    selected: _chartType == t,
+                    selectedColor: AppTheme.Accent,
+                    labelStyle: TextStyle(
+                      color: _chartType == t ? AppTheme.Background : AppTheme.TextSecondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    backgroundColor: AppTheme.SurfaceLight,
+                    side: BorderSide(color: AppTheme.CardBorder),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    onSelected: (_) {
+                      if (_chartType == t) return;
+                      setState(() => _chartType = t);
+                      _loadActivityChart();
+                    },
+                  ),
               ],
             ),
             const SizedBox(height: 16),
