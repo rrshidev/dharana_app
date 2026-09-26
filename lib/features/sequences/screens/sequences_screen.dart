@@ -2,6 +2,7 @@
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:dharana_app/shared/widgets/share_button.dart';
 import 'package:video_player/video_player.dart';
 
 class SequencesScreen extends StatefulWidget {
@@ -41,6 +42,11 @@ class _SequencesScreenState extends State<SequencesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Готовые комплексы'),
+        actions: const [
+          ShareButton(
+            message: 'Готовые комплексы йоги — Dharana\nhttps://dharana.ru/ru/complexes',
+          ),
+        ],
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))

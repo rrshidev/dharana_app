@@ -4,6 +4,7 @@ import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/shared/widgets/asana_card.dart';
 import 'package:dharana_app/shared/widgets/loading_skeleton.dart';
+import 'package:dharana_app/shared/widgets/share_button.dart';
 
 class CategoryScreen extends StatefulWidget {
   final String categoryId;
@@ -52,6 +53,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.displayName),
+        actions: [
+          ShareButton(
+            message:
+                'Каталог асан — ${widget.displayName}\nhttps://dharana.ru/ru/catalog?category=${Uri.encodeQueryComponent(widget.categoryId)}',
+          ),
+        ],
       ),
       body: _isLoading
           ? const CatalogSkeleton()

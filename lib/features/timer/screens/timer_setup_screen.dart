@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:dharana_app/shared/widgets/share_button.dart';
 
 class TimerSetupScreen extends StatefulWidget {
   const TimerSetupScreen({super.key});
@@ -68,7 +69,14 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Настройка практики')),
+      appBar: AppBar(
+        title: const Text('Настройка практики'),
+        actions: const [
+          ShareButton(
+            message: 'Таймер практики — Dharana\nhttps://dharana.ru/ru/timer',
+          ),
+        ],
+      ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : Column(

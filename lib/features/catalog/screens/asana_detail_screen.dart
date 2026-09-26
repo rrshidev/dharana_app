@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:dharana_app/shared/widgets/share_button.dart';
 import 'package:video_player/video_player.dart';
 
 class AsanaDetailScreen extends StatefulWidget {
@@ -110,6 +111,10 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                       expandedHeight: 350,
                       pinned: true,
                       actions: [
+                        ShareButton(
+                          message:
+                              '${_asana!.name}\nhttps://dharana.ru/ru/asana/${Uri.encodeComponent(widget.asanaName)}',
+                        ),
                         IconButton(
                           icon: Icon(
                             _isFavorite ? Icons.favorite : Icons.favorite_border,
