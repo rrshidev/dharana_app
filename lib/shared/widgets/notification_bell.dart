@@ -2,6 +2,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/services/notifications_center.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class NotificationBell extends StatelessWidget {
   const NotificationBell({super.key, this.color = Colors.white});
@@ -16,7 +17,7 @@ class NotificationBell extends StatelessWidget {
       listenable: center,
       builder: (context, _) {
         return IconButton(
-          tooltip: 'Уведомления',
+          tooltip: AppLocalizations.of(context)!.notifications,
           onPressed: () async {
             await center.refresh();
             if (!context.mounted) return;

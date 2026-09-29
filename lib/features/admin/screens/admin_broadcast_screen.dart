@@ -2,6 +2,7 @@
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class AdminBroadcastScreen extends StatefulWidget {
   const AdminBroadcastScreen({super.key});
@@ -44,7 +45,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Рассылка'),
+        title: Text(AppLocalizations.of(context)!.adminBroadcastTitle),
         actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadSeries)],
       ),
       body: ListView(
@@ -59,6 +60,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   }
 
   Widget _buildStatStrip() {
+    final l10n = AppLocalizations.of(context)!;
     final total = _series?['total_recipients'] ?? 0;
     final campaigns = _series?['campaigns'] is List
         ? (_series?['campaigns'] as List).fold<int>(0, (a, b) => a + ((b as num?)?.toInt() ?? 0))
@@ -68,11 +70,11 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
         : 0;
     return Row(
       children: [
-        _miniStat('$campaigns', 'Рассылок', AppTheme.Accent, menu: true),
+        _miniStat('$campaigns', l10n.adminBroadcastCampaigns, AppTheme.Accent, menu: true),
         const SizedBox(width: 8),
-        _miniStat('$recipients', 'Получателей', AppTheme.AccentGreen, menu: false),
+        _miniStat('$recipients', l10n.adminBroadcastRecipients, AppTheme.AccentGreen, menu: false),
         const SizedBox(width: 8),
-        _miniStat('$total', 'Всего доставок', AppTheme.Accent, menu: false),
+        _miniStat('$total', l10n.adminBroadcastTotalDeliveries, AppTheme.Accent, menu: false),
       ],
     );
   }
@@ -100,25 +102,26 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   }
 
   Widget _buildForm() {
+    final l10n = AppLocalizations.of(context)!;
     return ChartCard(
-      title: 'Новая рассылка',
+      title: l10n.adminBroadcastNew,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
             controller: _messageController,
             maxLines: 4,
-            decoration: const InputDecoration(
-              hintText: 'Текст сообщения для пользователей',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              hintText: l10n.adminBroadcastMessageHint,
+              border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 14),
-          const Text('Аудитория', style: TextStyle(fontWeight: FontWeight.w600)),
+          Text(l10n.adminBroadcastAudience, style: const TextStyle(fontWeight: FontWeight.w600)),
           CheckboxListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
-            title: const Text('Бесплатные'),
+            title: Text(l10n.adminBroadcastFree),
             value: _bcAudFree,
             activeColor: AppTheme.Accent,
             onChanged: (v) => setState(() => _bcAudFree = v ?? true),
@@ -126,16 +129,16 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
           CheckboxListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
-            title: const Text('Премиум'),
+            title: Text(l10n.adminBroadcastPremium),
             value: _bcAudPremium,
             activeColor: AppTheme.Accent,
             onChanged: (v) => setState(() => _bcAudPremium = v ?? true),
           ),
           if (!_bcAudFree && !_bcAudPremium)
-            Text('Выберите хотя бы одну аудиторию',
+            Text(l10n.adminBroadcastPickAudience,
                 style: TextStyle(color: AppTheme.Danger, fontSize: 12)),
           const SizedBox(height: 8),
-          const Text('Каналы', style: TextStyle(fontWeight: FontWeight.w600)),
+          Text(l10n.adminBroadcastChannels, style: const TextStyle(fontWeight: FontWeight.w600)),
           CheckboxListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
@@ -147,13 +150,13 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
           CheckboxListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
-            title: const Text('В приложении'),
+            title: Text(l10n.adminBroadcastInApp),
             value: _bcChanApp,
             activeColor: AppTheme.Accent,
             onChanged: (v) => setState(() => _bcChanApp = v ?? true),
           ),
           if (!_bcChanTg && !_bcChanApp)
-            Text('Выберите хотя бы один канал',
+            Text(l10n.adminBroadcastPickChannel,
                 style: TextStyle(color: AppTheme.Danger, fontSize: 12)),
           const SizedBox(height: 14),
           SizedBox(
@@ -161,7 +164,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             child: OutlinedButton.icon(
               onPressed: _sending ? null : _sendTest,
               icon: const Icon(Icons.science_outlined),
-              label: const Text('Тест админу'),
+              label: Text(l10n.adminBroadcastTest),
             ),
           ),
           const SizedBox(height: 10),
@@ -172,7 +175,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
                 : ElevatedButton.icon(
                     onPressed: _send,
                     icon: const Icon(Icons.campaign_outlined),
-                    label: const Text('Разослать'),
+                    label: Text(l10n.adminBroadcastSend),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.Accent,
                       foregroundColor: AppTheme.Background,
@@ -185,30 +188,33 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   }
 
   String _audLabel() {
-    if (_bcAudFree && _bcAudPremium) return 'Все';
-    if (_bcAudFree) return 'Бесплатные';
-    if (_bcAudPremium) return 'Премиум';
+    final l10n = AppLocalizations.of(context)!;
+    if (_bcAudFree && _bcAudPremium) return l10n.adminBroadcastAll;
+    if (_bcAudFree) return l10n.adminBroadcastFree;
+    if (_bcAudPremium) return l10n.adminBroadcastPremium;
     return '—';
   }
 
   String _chanLabel() {
+    final l10n = AppLocalizations.of(context)!;
     final parts = <String>[];
     if (_bcChanTg) parts.add('Telegram');
-    if (_bcChanApp) parts.add('Приложение');
+    if (_bcChanApp) parts.add(l10n.adminBroadcastInApp);
     return parts.isEmpty ? '—' : parts.join(' + ');
   }
 
   bool _validate() {
+    final l10n = AppLocalizations.of(context)!;
     if (_messageController.text.trim().isEmpty) {
-      _snack('Введите текст сообщения', AppTheme.Danger);
+      _snack(l10n.adminBroadcastEnterMessage, AppTheme.Danger);
       return false;
     }
     if (!_bcAudFree && !_bcAudPremium) {
-      _snack('Выберите аудиторию', AppTheme.Danger);
+      _snack(l10n.adminBroadcastPickAudienceShort, AppTheme.Danger);
       return false;
     }
     if (!_bcChanTg && !_bcChanApp) {
-      _snack('Выберите канал', AppTheme.Danger);
+      _snack(l10n.adminBroadcastPickChannelShort, AppTheme.Danger);
       return false;
     }
     return true;
@@ -219,25 +225,28 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
   }
 
   Future<void> _send() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_validate()) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppTheme.Surface,
-        title: const Text('Разослать сообщение?'),
+        title: Text(l10n.adminBroadcastConfirmTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(_messageController.text, maxLines: 5, overflow: TextOverflow.ellipsis),
             const SizedBox(height: 12),
-            Text('Аудитория: ${_audLabel()}'),
-            Text('Каналы: ${_chanLabel()}'),
+            Text(l10n.adminBroadcastAudienceRow(_audLabel())),
+            Text(l10n.adminBroadcastChannelsRow(_chanLabel())),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Отмена')),
-          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Отправить')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.cancel)),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.adminSend)),
         ],
       ),
     );
@@ -254,22 +263,26 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
       );
       if (mounted) {
         _snack(
-          'Рассылка создана. Telegram: ${data['count_telegram'] ?? 0}, Приложение: ${data['count_app'] ?? 0}',
+          l10n.adminBroadcastCreated(
+              '${data['count_telegram'] ?? 0}', '${data['count_app'] ?? 0}'),
           AppTheme.AccentGreen,
         );
         _messageController.clear();
         _loadSeries();
       }
     } catch (e) {
-      if (mounted) _snack('Ошибка: $e', AppTheme.Danger);
+      if (mounted) {
+        _snack(AppLocalizations.of(context)!.errorMessage('$e'), AppTheme.Danger);
+      }
     } finally {
       if (mounted) setState(() => _sending = false);
     }
   }
 
   Future<void> _sendTest() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_messageController.text.trim().isEmpty) {
-      _snack('Введите текст сообщения', AppTheme.Danger);
+      _snack(l10n.adminBroadcastEnterMessage, AppTheme.Danger);
       return;
     }
     setState(() => _sending = true);
@@ -282,10 +295,16 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
         channelApp: _bcChanApp,
       );
       if (mounted) {
-        _snack('Тест админу: Telegram=${data['telegram'] ?? '?'}, Приложение=${data['app'] ?? '?'}', AppTheme.Accent);
+        _snack(
+          l10n.adminBroadcastTestResult(
+              '${data['telegram'] ?? '?'}', '${data['app'] ?? '?'}'),
+          AppTheme.Accent,
+        );
       }
     } catch (e) {
-      if (mounted) _snack('Ошибка: $e', AppTheme.Danger);
+      if (mounted) {
+        _snack(AppLocalizations.of(context)!.errorMessage('$e'), AppTheme.Danger);
+      }
     } finally {
       if (mounted) setState(() => _sending = false);
     }

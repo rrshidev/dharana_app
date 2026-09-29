@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/services/notifications_center.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -23,15 +24,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Уведомления')),
+      appBar: AppBar(title: Text(l10n.notifications)),
       body: ListenableBuilder(
         listenable: _center,
         builder: (context, _) {
           final items = _center.items;
           if (items.isEmpty) {
             return Center(
-              child: Text('Уведомлений пока нет', style: TextStyle(color: AppTheme.TextSecondary)),
+              child: Text(l10n.notificationsEmpty,
+                  style: TextStyle(color: AppTheme.TextSecondary)),
             );
           }
           return ListView.separated(
@@ -65,7 +68,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              message.isEmpty ? 'Сообщение' : message,
+                              message.isEmpty
+                                  ? l10n.notificationMessageFallback
+                                  : message,
                               style: TextStyle(
                                 fontSize: 15,
                                 color: AppTheme.TextPrimary,

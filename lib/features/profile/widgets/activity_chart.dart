@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dharana_app/app/theme.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class ActivityDaily {
   final DateTime date;
@@ -51,11 +52,13 @@ class ActivityChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (days.isEmpty) {
       return SizedBox(
         height: 180,
         child: Center(
-          child: Text('Нет данных за период', style: TextStyle(color: AppTheme.TextSecondary)),
+          child: Text(l10n.chartNoData,
+              style: TextStyle(color: AppTheme.TextSecondary)),
         ),
       );
     }
@@ -110,13 +113,13 @@ class ActivityChart extends StatelessWidget {
     final totalAsa = showThird ? days.fold<double>(0, (a, b) => a + b.asanas) : 0;
 
     final lineValues = <String>[
-      '${totalMin.round()} мин',
-      '${totalSes.round()} сессий',
-      if (showThird) '${totalAsa.round()} ${thirdUnit ?? 'асан'}',
+      '${totalMin.round()} ${l10n.minutes}',
+      l10n.chartSessionsCount(totalSes.round()),
+      if (showThird) '${totalAsa.round()} ${thirdUnit ?? l10n.chartAsanasUnit}',
     ];
     final lineNames = <String>[
-      'Минуты',
-      'Сессии',
+      l10n.chartMinutesLabel,
+      l10n.chartSessionsLabel,
       if (showThird) thirdLabel!,
     ];
 
@@ -170,8 +173,8 @@ class ActivityChart extends StatelessWidget {
                 touchTooltipData: LineTouchTooltipData(
                   getTooltipItems: (spots) {
                     final names = <String>[
-                      'Минуты',
-                      'Сессии',
+                      l10n.chartMinutesLabel,
+                      l10n.chartSessionsLabel,
                       if (showThird) thirdLabel!,
                     ];
                     final scales = <double>[maxMin, maxSes, if (showThird) maxAsa];

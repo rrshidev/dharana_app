@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/core/api/api_client.dart';
+import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/shared/widgets/asana_card.dart';
 import 'package:dharana_app/shared/widgets/loading_skeleton.dart';
 import 'package:dharana_app/shared/widgets/share_button.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class CategoryScreen extends StatefulWidget {
   final String categoryId;
@@ -50,13 +52,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final lang = LanguageController.instance.value.languageCode;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.displayName),
         actions: [
           ShareButton(
             message:
-                'Каталог асан — ${widget.displayName}\nhttps://dharana.ru/ru/catalog?category=${Uri.encodeQueryComponent(widget.categoryId)}',
+                '${l10n.shareCatalogText(widget.displayName)}\nhttps://dharana.ru/$lang/catalog?category=${Uri.encodeQueryComponent(widget.categoryId)}',
           ),
         ],
       ),
@@ -65,7 +69,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           : _asanas.isEmpty
               ? Center(
                   child: Text(
-                    'В этой категории пока нет асан',
+                    l10n.categoryEmpty,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 )

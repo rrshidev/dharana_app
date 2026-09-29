@@ -1,6 +1,7 @@
 ﻿import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 /// РћР±С‰РёРµ Р°РЅРёРјРёСЂРѕРІР°РЅРЅС‹Рµ РєРѕРјРїРѕРЅРµРЅС‚С‹ РіСЂР°С„РёРєРѕРІ РґР»СЏ Р°РґРјРёРЅ-РїР°РЅРµР»Рё.
 /// Р’СЃРµ С‡Р°СЂС‚С‹ РїР»Р°РІРЅРѕ "РІС‹СЂР°СЃС‚Р°СЋС‚" РїСЂРё СЃРјРµРЅРµ РґР°РЅРЅС‹С… (TweenAnimationBuilder).
@@ -599,7 +600,7 @@ class ChartEmpty extends StatelessWidget {
       height: height,
       child: Center(
         child: Text(
-          'РќРµС‚ РґР°РЅРЅС‹С… Р·Р° РїРµСЂРёРѕРґ',
+          AppLocalizations.of(context)!.chartNoData,
           style: TextStyle(color: AppTheme.TextSecondary),
         ),
       ),

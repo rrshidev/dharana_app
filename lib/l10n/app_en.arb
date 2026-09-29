@@ -1,0 +1,751 @@
+{
+  "@@locale": "en",
+  "appTitle": "Dharana",
+  "themeModeSystem": "System",
+  "themeModeLight": "Light",
+  "themeModeDark": "Dark",
+  "profile": "Profile",
+  "userFallback": "User",
+  "memberSince": "Member since {date}",
+  "recently": "recently",
+  "statistics": "Statistics",
+  "minutes": "min",
+  "days": "days",
+  "streak": "streak",
+  "sessions": "sessions",
+  "all": "All",
+  "asana": "Asana",
+  "asanas": "Asanas",
+  "meditation": "Meditation",
+  "pranayama": "Pranayama",
+  "exercises": "Exercises",
+  "unitAsanas": "asanas",
+  "unitExercises": "exercises",
+  "activity": "Activity",
+  "linkTelegram": "Link Telegram",
+  "tgLoginDesc": "Sign in via code from the bot",
+  "adminPanel": "Admin panel",
+  "practiceHistory": "Practice history",
+  "subscription": "Subscription",
+  "freePlan": "Free plan",
+  "theme": "Theme",
+  "themeTitle": "Appearance theme",
+  "language": "Language",
+  "russian": "Русский",
+  "english": "English",
+  "logout": "Log out",
+  "telegramNotInstalled": "Telegram is not installed",
+  "openBot": "Open bot",
+  "cancel": "Cancel",
+  "close": "Close",
+  "link": "Link",
+  "telegramLinked": "Telegram linked!",
+  "invalidTgCode": "Invalid or expired code",
+  "tgGuide": "1. Tap \"Open bot\"\n2. The bot will send you a code\n3. Enter it below:",
+  "telegramCodeHint": "Code from Telegram",
+  "paymentConfirmedTitle": "🎉 Payment confirmed!",
+  "paymentRejectedTitle": "❌ Request declined",
+  "paymentConfirmedMsg": "Your payment has been confirmed. Premium subscription is active{end}",
+  "paymentRejectedMsg": "Unfortunately, we couldn't confirm your payment.\nContact the administrator if you're sure you paid, or try again.",
+  "ok": "OK",
+  "editProfile": "Edit profile",
+  "name": "Name",
+  "about": "About",
+  "save": "Save",
+  "errorMessage": "Error: {error}",
+  "errorLoad": "Loading error",
+  "avatarSet": "Avatar set",
+  "avatar": "Avatar",
+  "gallery": "Gallery",
+  "camera": "Camera",
+  "home": "Home",
+  "timer": "Timer",
+  "favorites": "Favorites",
+  "greetingGoodNight": "Good night",
+  "greetingGoodMorning": "Good morning",
+  "greetingGoodDay": "Good afternoon",
+  "greetingGoodEvening": "Good evening",
+  "yogi": "yogi",
+  "homeGreeting": "{greeting}, {name}",
+  "practiceRegularly": "Practice regularly",
+  "quickFilter": "Filter",
+  "quickComplexes": "Sequences",
+  "quickSearch": "Search",
+  "quickBasics": "Yoga basics",
+  "quickSteps": "8 limbs",
+  "dailyAsana": "Asana of the day",
+  "categories": "Categories",
+  "generatorTitle": "Practice generator",
+  "generatorSubtitle": "Generate a practice for your level and goals",
+  "login": "Sign in",
+  "loginToAccount": "Sign in to your account",
+  "email": "Email",
+  "password": "Password",
+  "forgotPassword": "Forgot password?",
+  "noAccount": "No account? ",
+  "registerCta": "Sign up",
+  "or": "or",
+  "loginWithGoogle": "Continue with Google",
+  "loginWithTelegram": "Continue with Telegram",
+  "loginViaTelegram": "Sign in with Telegram",
+  "fillAllFields": "Fill in all fields",
+  "invalidEmailOrPassword": "Invalid email or password",
+  "googleLoginFailed": "Google sign-in failed",
+  "telegramNotInstalledLong": "Telegram is not installed. Install Telegram and try again.",
+  "createAccount": "Create account",
+  "startYogaJourney": "Start your yoga journey",
+  "passwordMinHint": "Password (min. 8 characters)",
+  "register": "Sign up",
+  "alreadyHaveAccount": "Already have an account? ",
+  "signIn": "Sign in",
+  "checkEmail": "Check the email address",
+  "nameTooLong": "Name is too long (no more than 60 characters)",
+  "passwordTooShort": "Password must be at least 8 characters",
+  "disposableEmail": "This email service is not suitable. Use a regular email",
+  "emailNotDeliverable": "It looks like this email doesn't exist. Check the address",
+  "emailAlreadyRegistered": "Email is already in use. Try signing in.",
+  "registrationError": "Registration failed. Try again.",
+  "enterEmail": "Enter email",
+  "resetPasswordTitle": "Password recovery",
+  "resetPasswordDesc": "Enter the email registered to your account. We'll send you a password reset link.",
+  "sendResetLink": "Send link",
+  "checkYourEmail": "Check your email",
+  "resetLinkSent": "We sent you a password reset link. It's valid for 30 minutes.",
+  "backToLogin": "Back to sign in",
+  "emailSentRecently": "An email was sent recently. Wait a minute and try again",
+  "failSendEmail": "Failed to send the email. Try again later",
+  "newPassword": "New password",
+  "newPasswordHint": "New password",
+  "repeatPassword": "Repeat password",
+  "savePassword": "Save password",
+  "passwordChanged": "Password changed",
+  "canLoginNow": "You can now sign in with your new password.",
+  "newPasswordDesc": "Come up with a new password to sign in. The link is valid for 30 minutes.",
+  "passwordsDontMatch": "Passwords don't match",
+  "invalidResetToken": "The link is invalid or expired. Request a new one",
+  "passwordTooLong": "Password is too long (maximum 128 characters)",
+  "failChangePassword": "Failed to change password. Try again later",
+  "categoryEmpty": "No asanas in this category yet",
+  "asanaNotFound": "Asana not found",
+  "contraindications": "Contraindications",
+  "description": "Description",
+  "video": "Video",
+  "videoPremium": "Video available with subscription",
+  "getPremium": "Get Premium for access",
+  "startPractice": "Start practice",
+  "addedToFavorites": "Added to favorites",
+  "removedFromFavorites": "Removed from favorites",
+  "effectBackPain": "🦴 Back",
+  "effectCalmMind": "🧘 Calm mind",
+  "effectBoostEnergy": "⚡ Energy",
+  "effectDigestion": "🌿 Digestion",
+  "effectFlexibility": "🤸 Flexibility",
+  "effectBalance": "⚖️ Balance",
+  "effectStrength": "💪 Strength",
+  "effectStressRelief": "😌 Stress relief",
+  "theoryBasicsTitle": "Yoga basics",
+  "theoryStepsTitle": "8 limbs of yoga",
+  "theoryLoadError": "Failed to load sections. Try again later.",
+  "searchHint": "Search asanas...",
+  "searchEmpty": "Enter asana name",
+  "searchNoResults": "Nothing found",
+  "favoritesEmpty": "No favorite asanas",
+  "favoritesEmptyHint": "Add asanas to favorites\nby tapping the heart on details",
+  "removedFavorite": "{name} removed from favorites",
+  "@removedFavorite": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "filterTitle": "Select by parameters",
+  "filterReset": "Reset",
+  "filterGoal": "Goal",
+  "filterLevel": "Level",
+  "filterPosition": "Position",
+  "filterShow": "Show",
+  "filterParamsNotFound": "parameters not found",
+  "filterNoResults": "Nothing found",
+  "filterNoResultsHint": "Try other parameters",
+  "filterCountAsanas": "{count, plural, one{Asana} other{Asanas}}",
+  "@filterCountAsanas": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterEffectBackPain": "🦴 Back pain",
+  "filterEffectCalmMind": "🧘 Calm mind",
+  "filterEffectBoostEnergy": "⚡ Energy",
+  "filterEffectDigestion": "🌿 Digestion",
+  "filterEffectFlexibility": "🤸 Flexibility",
+  "filterEffectBalance": "⚖️ Balance",
+  "filterEffectStrength": "💪 Strength",
+  "filterEffectStressRelief": "😌 Stress relief",
+  "filterEffectAbs": "🎯 Abs",
+  "filterEffectKnees": "🦵 Knees",
+  "filterEffectNeck": "💆 Neck",
+  "filterEffectCirculation": "❤️ Circulation",
+  "filterEffectLungs": "🫁 Breathing",
+  "filterEffectWeightLoss": "🔥 Weight loss",
+  "filterDifficultyBeginner": "★ Beginner",
+  "filterDifficultyIntermediate": "★★ Intermediate",
+  "filterDifficultyAdvanced": "★★★ Advanced",
+  "filterCategorySitLie": "Sitting and lying",
+  "filterCategoryStand": "Standing poses",
+  "filterCategoryHands": "On hands",
+  "filterCategoryBends": "Bends",
+  "filterCategoryBackbends": "Backbends",
+  "filterCategoryPower": "Power",
+  "complexesTitle": "Ready-made sequences",
+  "complexesEmpty": "No sequences yet",
+  "complexesShareTitle": "Yoga sequences — Dharana",
+  "generatorDesc": "We'll pick asanas for your level and goals.",
+  "generatorLevel": "Level",
+  "generatorDuration": "Duration",
+  "generatorFocus": "Focus",
+  "generatorBeginner": "Beginner",
+  "generatorIntermediate": "Intermediate",
+  "generatorAdvanced": "Advanced",
+  "generatorMinutes": "{minutes} minutes",
+  "@generatorMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "generatorNoFocus": "No focus",
+  "generatorFocusBack": "Back",
+  "generatorFocusLegs": "Legs",
+  "generatorFocusBalance": "Balance",
+  "generatorFocusFlexibility": "Flexibility",
+  "generatorFocusEnergy": "Energy",
+  "generatorGenerating": "Building sequence…",
+  "generatorGenerate": "Generate",
+  "generatorError": "Failed to generate practice. Try again.",
+  "generatorYourPractice": "Your practice",
+  "generatorRebuild": "Rebuild",
+  "generatorAsanCount": "Asanas: {count}",
+  "@generatorAsanCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "generatorTotal": "Total: {duration}",
+  "@generatorTotal": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "generatorCalories": " · ~{calories} kcal",
+  "@generatorCalories": {
+    "placeholders": {
+      "calories": {
+        "type": "int"
+      }
+    }
+  },
+  "generatorHour": "{hours} hour(s)",
+  "@generatorHour": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "generatorLimitTitle": "Daily limit reached",
+  "generatorLimitDesc": "Free users can generate one practice a day. Get Premium to practice unlimited.",
+  "generatorGetPremium": "Get Premium",
+  "timerSetupTitle": "Practice setup",
+  "timerSetupShareTitle": "Practice timer — Dharana",
+  "timerSetupDefaultTime": "Default time",
+  "timerAsana": "Asana",
+  "timerRest": "Rest",
+  "timerSetupEmpty": "Add asanas from the list below",
+  "timerSetupSequence": "Sequence ({count})",
+  "@timerSetupSequence": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timerSetupItem": "{asanDuration} asana / {restDuration} rest",
+  "@timerSetupItem": {
+    "placeholders": {
+      "asanDuration": {
+        "type": "String"
+      },
+      "restDuration": {
+        "type": "String"
+      }
+    }
+  },
+  "timerSetupAvailable": "Available asanas",
+  "timerSetupStart": "Start practice ({count} {count, plural, one{asana} other{asanas}})",
+  "@timerSetupStart": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "secondsShort": "{value}s",
+  "@secondsShort": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesShort": "{value}min",
+  "@minutesShort": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesSecondsShort": "{m}m {s}s",
+  "@minutesSecondsShort": {
+    "placeholders": {
+      "m": {
+        "type": "int"
+      },
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "timerTitle": "Timer",
+  "timerStop": "Stop",
+  "timerEmpty": "No asanas to practice",
+  "timerEmptyHint": "Add asanas in settings",
+  "timerSetup": "Setup",
+  "timerReady": "Ready",
+  "timerFinish": "Finishing",
+  "timerPause": "Paused",
+  "timerDoneTitle": "Practice complete!",
+  "timerDoneSummary": "{count} {count, plural, one{asana} other{asanas}} · {duration}",
+  "@timerDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "timerRestart": "Start over",
+  "timerClose": "Close",
+  "timerAgain": "Again",
+  "timerResume": "Resume",
+  "timerSkip": "Next",
+  "subPremiumActive": "Premium active",
+  "subActiveUntil": "Valid until {date}",
+  "@subActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "subPlanDesc": "Unlock all catalog videos, unlimited sequences and practice repeats",
+  "subPricePerMonth": "499 ₽ / month",
+  "subHowToPay": "How to pay: transfer the amount to the card, then tap \"I paid and attach receipt\" and upload a photo/screenshot of the receipt. After verification Premium will be activated automatically.",
+  "subRequisitesUnavailable": "Payment details unavailable",
+  "subRequisitesTitle": "Payment details",
+  "subAmount": "Amount: {amount}",
+  "@subAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subRecipient": "Recipient: {name}",
+  "@subRecipient": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "subTapToCopy": "Tap the card to copy the number",
+  "subCard": "Card",
+  "subCardCopied": "Card number copied",
+  "subUploadReceipt": "I paid, attach receipt",
+  "subReceiptSent": "Receipt received! Premium will be activated after verification.",
+  "subReceiptFailed": "Failed to send receipt",
+  "historyLoadMore": "Load more",
+  "historyEmpty": "No practices",
+  "historyEmptyHint": "Start a practice in the timer",
+  "historyRepeat": "Repeat",
+  "historyRepeatPremium": "Practice repeat is available with Premium subscription",
+  "historyRepeatPremiumHint": "Get Premium to repeat any practices",
+  "historyMore": "Details",
+  "notifications": "Notifications",
+  "notificationsEmpty": "No notifications yet",
+  "notificationMessageFallback": "Message",
+  "splashTagline": "Yoga encyclopedia",
+  "chartNoData": "No data for the period",
+  "periodDays": "{days}d",
+  "@periodDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "adminPanelTitle": "Admin panel",
+  "adminTabOverview": "Overview",
+  "adminTabUsers": "Users",
+  "adminTabPayments": "Requests",
+  "adminTabBroadcast": "Broadcast",
+  "adminTabContent": "Content",
+  "adminStatUsers": "Users",
+  "adminStatPremium": "Premium",
+  "adminStatPractices": "Practices",
+  "adminStatMinutes": "Minutes",
+  "adminStatNewPerWeek": "New/week",
+  "adminStatConversion": "Conversion",
+  "adminChartPracticesPerDay": "Practices per day",
+  "adminChartNewUsersPremium": "New users and premium",
+  "adminSeriesRegistered": "Registered",
+  "adminSeriesRegistrations": "Registrations",
+  "adminChartConversionTitle": "Conversion to Premium",
+  "adminPremiumAllRatio": "premium/all",
+  "adminKvTotalUsers": "Total users",
+  "adminKvNewMonth": "New this month",
+  "adminKvPracticesMonth": "Practices this month",
+  "adminActivityTitle": "Recent activity",
+  "adminActivityEmpty": "No activity",
+  "adminActivityPractice": "Practice: {count} {count, plural, one{asana} other{asanas}} · {minutes} min",
+  "@adminActivityPractice": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "adminActivityNewUser": "New user: {name}",
+  "@adminActivityNewUser": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminUsersTitle": "Users",
+  "adminUsersSearchHint": "Search by name, email, username",
+  "adminUsersNotFound": "No users found",
+  "adminUserNoName": "No name",
+  "adminUserMinutes": "{minutes} min",
+  "@adminUserMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "adminUserTitle": "User",
+  "adminStatsTitle": "Statistics",
+  "adminStatPracticeMinutes": "Practice minutes",
+  "adminStatPracticeDays": "Practice days",
+  "adminStatCurrentStreak": "Current streak",
+  "adminStatLongestStreak": "Longest streak",
+  "adminStatRegisteredAt": "Registered",
+  "adminStatusLabel": "Status",
+  "adminStatusPremium": "Premium",
+  "adminStatusFree": "Free",
+  "adminUntilLabel": "Until",
+  "adminPremiumRemove": "Revoke premium",
+  "adminPremiumGrant": "Grant premium",
+  "adminActionsTitle": "Actions",
+  "adminSendMessage": "Send message",
+  "adminUnban": "Unban",
+  "adminBan": "Ban",
+  "adminRestore": "Restore",
+  "adminDelete": "Delete",
+  "adminChannelTitle": "Delivery channel",
+  "adminChannelBoth": "Telegram + app",
+  "adminChannelAppOnly": "App only (in-app)",
+  "adminChannelTelegramOnly": "Telegram only",
+  "adminNoTelegramId": "User has no Telegram ID",
+  "adminMessageTitle": "Message to user",
+  "adminMessageHint": "Message text",
+  "adminAttachImage": "📎 Attach image",
+  "adminAttachReplace": "📎 Replace",
+  "adminRemoveImage": "Remove",
+  "adminSend": "Send",
+  "adminNext": "Next",
+  "adminReportAppQueued": "in-app: queued",
+  "adminReportAppFailed": "in-app: failed",
+  "adminReportAppStatus": "in-app: {status}",
+  "@adminReportAppStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "adminReportTgSent": "TG: sent",
+  "adminReportTgNoId": "TG: no ID",
+  "adminReportTgFailed": "TG: failed",
+  "adminReportTgNoBot": "TG: bot not configured",
+  "adminReportTgStatus": "TG: {status}",
+  "@adminReportTgStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "adminConfirmBan": "Ban the user?",
+  "adminConfirmUnban": "Unban the user?",
+  "adminBanLosesAccess": "They will lose access to the app.",
+  "adminConfirmDelete": "Delete the user?",
+  "adminConfirmRestore": "Restore the user?",
+  "adminDeleteReversible": "This is reversible, but the user will be marked as deleted.",
+  "adminUserBanned": "User banned",
+  "adminUserUnbanned": "Ban lifted",
+  "adminUserDeleted": "User deleted",
+  "adminUserRestored": "User restored",
+  "adminConfirm": "Confirm",
+  "adminMinutesChartTitle": "Practice minutes",
+  "adminRecentSessions": "Recent practices",
+  "adminNoCompletedSessions": "No completed practices",
+  "adminSessionAsanas": "{count} {count, plural, one{asana} other{asanas}}",
+  "@adminSessionAsanas": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adminSessionMeta": "{minutes} min · {date}",
+  "@adminSessionMeta": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDaysLabel": "Number of days",
+  "adminGrant": "Grant",
+  "adminPremiumRemoved": "Premium revoked",
+  "adminPremiumGranted": "Premium granted",
+  "adminPaymentsTitle": "Premium requests",
+  "adminPaymentsEmpty": "No requests",
+  "adminPaymentsTotal": "Total",
+  "adminPaymentsPending": "Pending",
+  "adminPaymentsApproved": "Approved",
+  "adminPaymentsRejected": "Rejected",
+  "adminPaymentsAll": "All",
+  "adminPaymentsApprovedPlural": "Approved",
+  "adminPaymentsRejectedPlural": "Rejected",
+  "adminStatusConfirmed": "Approved",
+  "adminStatusRejected": "Rejected",
+  "adminStatusPending": "Pending",
+  "adminApprove": "Approve",
+  "adminReject": "Reject",
+  "adminConfirmPaymentTitle": "Approve payment",
+  "adminPremiumDaysLabel": "Premium days",
+  "adminPaymentConfirmed": "Payment approved{premium}",
+  "@adminPaymentConfirmed": {
+    "placeholders": {
+      "premium": {
+        "type": "String"
+      }
+    }
+  },
+  "adminPaymentConfirmedPremium": ", premium granted",
+  "adminPaymentRejected": "Payment rejected",
+  "adminBroadcastTitle": "Broadcast",
+  "adminBroadcastCampaigns": "Campaigns",
+  "adminBroadcastRecipients": "Recipients",
+  "adminBroadcastTotalDeliveries": "Total deliveries",
+  "adminBroadcastNew": "New broadcast",
+  "adminBroadcastMessageHint": "Message text for users",
+  "adminBroadcastAudience": "Audience",
+  "adminBroadcastFree": "Free",
+  "adminBroadcastPremium": "Premium",
+  "adminBroadcastAll": "All",
+  "adminBroadcastPickAudience": "Select at least one audience",
+  "adminBroadcastChannels": "Channels",
+  "adminBroadcastInApp": "In-app",
+  "adminBroadcastPickChannel": "Select at least one channel",
+  "adminBroadcastTest": "Test to admin",
+  "adminBroadcastSend": "Send broadcast",
+  "adminBroadcastEnterMessage": "Enter the message text",
+  "adminBroadcastPickAudienceShort": "Select an audience",
+  "adminBroadcastPickChannelShort": "Select a channel",
+  "adminBroadcastConfirmTitle": "Send the message?",
+  "adminBroadcastAudienceRow": "Audience: {audience}",
+  "@adminBroadcastAudienceRow": {
+    "placeholders": {
+      "audience": {
+        "type": "String"
+      }
+    }
+  },
+  "adminBroadcastChannelsRow": "Channels: {channels}",
+  "@adminBroadcastChannelsRow": {
+    "placeholders": {
+      "channels": {
+        "type": "String"
+      }
+    }
+  },
+  "adminBroadcastCreated": "Broadcast created. Telegram: {telegram}, App: {app}",
+  "@adminBroadcastCreated": {
+    "placeholders": {
+      "telegram": {
+        "type": "String"
+      },
+      "app": {
+        "type": "String"
+      }
+    }
+  },
+  "adminBroadcastTestResult": "Test to admin: Telegram={telegram}, App={app}",
+  "@adminBroadcastTestResult": {
+    "placeholders": {
+      "telegram": {
+        "type": "String"
+      },
+      "app": {
+        "type": "String"
+      }
+    }
+  },
+  "adminContentTitle": "Content",
+  "adminTabAsanas": "Asanas",
+  "adminTabSequences": "Sequences",
+  "adminNewAsana": "New asana",
+  "adminAddSequence": "Add sequence",
+  "adminAsanasEmpty": "No asanas found",
+  "adminSequencesEmpty": "No ready-made sequences found",
+  "adminVideoTag": "video",
+  "adminTooltipPhoto": "Photo",
+  "adminTooltipVideo": "Video",
+  "adminTooltipEdit": "Edit",
+  "adminTooltipDelete": "Delete",
+  "adminSequenceFree": "Free",
+  "adminAsanaCreated": "Asana created",
+  "adminSaved": "Saved",
+  "adminEditTitle": "Edit: {name}",
+  "@adminEditTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminFieldCategory": "Category",
+  "adminFieldDescriptionHint": "Description (kept for a new asana)",
+  "adminFieldSection": "Section",
+  "adminPhotoUpdated": "Photo updated",
+  "adminVideoUploaded": "Video uploaded",
+  "adminDeleteAsanaTitle": "Delete asana \"{name}\"?",
+  "@adminDeleteAsanaTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDeleteAsanaBody": "The description, photo and video of the asana will be deleted.",
+  "adminAsanaDeleted": "Asana deleted",
+  "adminDeleteFailed": "Could not delete",
+  "adminSequenceAdded": "Sequence added",
+  "adminNewSequenceTitle": "New sequence",
+  "adminDeleteSequenceTitle": "Delete sequence \"{name}\"?",
+  "@adminDeleteSequenceTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDeleteSequenceBody": "The video will be deleted permanently.",
+  "adminSequenceDeleted": "Sequence deleted",
+  "chartMinutesLabel": "Minutes",
+  "chartSessionsLabel": "Sessions",
+  "chartAsanasUnit": "asanas",
+  "chartSessionsCount": "{count, plural, one{session} other{sessions}}",
+  "@chartSessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareTooltip": "Share",
+  "secOnly": "{value}s",
+  "@secOnly": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "secPlusRest": "{value}s + {rest}s",
+  "@secPlusRest": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "rest": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentConfirmedUntil": " until {date}",
+  "@paymentConfirmedUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptSentMsg": "Receipt received! Premium will be activated after review.",
+  "categoryAsanaCount": "{count, plural, one{{count} asana} other{{count} asanas}}",
+  "@categoryAsanaCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareCatalogText": "Asana catalog — {category}",
+  "@shareCatalogText": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "shareFailed": "Couldn't share: {error}",
+  "@shareFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
+}

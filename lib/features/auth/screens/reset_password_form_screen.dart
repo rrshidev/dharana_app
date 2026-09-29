@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class ResetPasswordFormScreen extends StatefulWidget {
   const ResetPasswordFormScreen({super.key, required this.token});
@@ -24,16 +25,17 @@ class _ResetPasswordFormScreenState extends State<ResetPasswordFormScreen> {
   String? _error;
 
   Future<void> _submit() async {
+    final l10n = AppLocalizations.of(context)!;
     final password = _passwordController.text;
     final confirm = _confirmController.text;
     setState(() => _error = null);
 
     if (password.length < 8) {
-      setState(() => _error = 'Пароль должен быть не короче 8 символов');
+      setState(() => _error = l10n.passwordTooShort);
       return;
     }
     if (password != confirm) {
-      setState(() => _error = 'Пароли не совпадают');
+      setState(() => _error = l10n.passwordsDontMatch);
       return;
     }
 
@@ -56,20 +58,22 @@ class _ResetPasswordFormScreenState extends State<ResetPasswordFormScreen> {
         detail = data['detail'] as String;
       }
     }
+    final l10n = AppLocalizations.of(context)!;
     switch (detail) {
       case 'INVALID_RESET_TOKEN':
-        return 'Ссылка недействительна или устарела. Запросите новую';
+        return l10n.invalidResetToken;
       case 'PASSWORD_TOO_SHORT':
-        return 'Пароль должен быть не короче 8 символов';
+        return l10n.passwordTooShort;
       case 'PASSWORD_TOO_LONG':
-        return 'Пароль слишком длинный (максимум 128 символов)';
+        return l10n.passwordTooLong;
       default:
-        return 'Не удалось изменить пароль. Попробуйте позже';
+        return l10n.failChangePassword;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -92,13 +96,13 @@ class _ResetPasswordFormScreenState extends State<ResetPasswordFormScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Пароль изменён',
+                      l10n.passwordChanged,
                       style: Theme.of(context).textTheme.headlineMedium,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Теперь можно войти с новым паролем.',
+                      l10n.canLoginNow,
                       style: TextStyle(
                         color: AppTheme.TextSecondary,
                         fontSize: 14,
@@ -109,17 +113,17 @@ class _ResetPasswordFormScreenState extends State<ResetPasswordFormScreen> {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () => context.pop(),
-                      child: const Text('Войти'),
+                      child: Text(l10n.login),
                     ),
                   ]
                 : [
                     Text(
-                      'Новый пароль',
+                      l10n.newPassword,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Придумайте новый пароль для входа. Ссылка действует 30 минут.',
+                      l10n.newPasswordDesc,
                       style: TextStyle(
                         color: AppTheme.TextSecondary,
                         fontSize: 14,
@@ -131,7 +135,7 @@ class _ResetPasswordFormScreenState extends State<ResetPasswordFormScreen> {
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
-                        hintText: 'Новый пароль',
+                        hintText: l10n.newPasswordHint,
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -150,7 +154,7 @@ class _ResetPasswordFormScreenState extends State<ResetPasswordFormScreen> {
                       controller: _confirmController,
                       obscureText: _obscureConfirm,
                       decoration: InputDecoration(
-                        hintText: 'Повторите пароль',
+                        hintText: l10n.repeatPassword,
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -187,7 +191,7 @@ class _ResetPasswordFormScreenState extends State<ResetPasswordFormScreen> {
                                 color: AppTheme.Background,
                               ),
                             )
-                          : const Text('Сохранить пароль'),
+                          : Text(l10n.savePassword),
                     ),
                   ],
           ),

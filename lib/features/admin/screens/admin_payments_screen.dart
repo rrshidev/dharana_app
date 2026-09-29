@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class AdminPaymentsScreen extends StatefulWidget {
   const AdminPaymentsScreen({super.key});
@@ -38,7 +39,8 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppLocalizations.of(context)!.errorMessage('$e'))));
       }
     }
   }
@@ -52,9 +54,10 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Заявки на Premium'),
+        title: Text(l10n.adminPaymentsTitle),
         actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _load)],
       ),
       body: _isLoading
@@ -67,9 +70,9 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                 _buildFilterRow(),
                 const SizedBox(height: 4),
                 if (_filtered.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Center(child: Text('Заявок нет')),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Center(child: Text(l10n.adminPaymentsEmpty)),
                   )
                 else
                   ..._filtered.map(_buildCard),
@@ -79,18 +82,19 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   }
 
   Widget _buildSummaryRow() {
+    final l10n = AppLocalizations.of(context)!;
     final pending = _countStatus('pending');
     final confirmed = _countStatus('confirmed');
     final rejected = _countStatus('rejected');
     return Row(
       children: [
-        _miniStat('${_payments.length}', 'Всего', AppTheme.Accent),
+        _miniStat('${_payments.length}', l10n.adminPaymentsTotal, AppTheme.Accent),
         const SizedBox(width: 8),
-        _miniStat('$pending', 'Ожидают', AppTheme.Accent),
+        _miniStat('$pending', l10n.adminPaymentsPending, AppTheme.Accent),
         const SizedBox(width: 8),
-        _miniStat('$confirmed', 'Одобрено', AppTheme.AccentGreen),
+        _miniStat('$confirmed', l10n.adminPaymentsApproved, AppTheme.AccentGreen),
         const SizedBox(width: 8),
-        _miniStat('$rejected', 'Отклонено', AppTheme.Danger),
+        _miniStat('$rejected', l10n.adminPaymentsRejected, AppTheme.Danger),
       ],
     );
   }
@@ -119,14 +123,15 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   }
 
   Widget _buildFilterRow() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.only(top: 6, bottom: 6),
       child: Row(
         children: [
-          _filterChip('all', 'Все'),
-          _filterChip('pending', 'Ожидают'),
-          _filterChip('confirmed', 'Одобрены'),
-          _filterChip('rejected', 'Отклонены'),
+          _filterChip('all', l10n.adminPaymentsAll),
+          _filterChip('pending', l10n.adminPaymentsPending),
+          _filterChip('confirmed', l10n.adminPaymentsApprovedPlural),
+          _filterChip('rejected', l10n.adminPaymentsRejectedPlural),
         ],
       ),
     );
@@ -150,17 +155,19 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   }
 
   String _statusLabel(String? s) {
+    final l10n = AppLocalizations.of(context)!;
     switch (s) {
       case 'confirmed':
-        return 'Одобрено';
+        return l10n.adminStatusConfirmed;
       case 'rejected':
-        return 'Отклонено';
+        return l10n.adminStatusRejected;
       default:
-        return 'Ожидает';
+        return l10n.adminStatusPending;
     }
   }
 
   Widget _buildCard(Map<String, dynamic> p) {
+    final l10n = AppLocalizations.of(context)!;
     final status = p['status']?.toString() ?? 'pending';
     final pending = status == 'pending';
     final receipt = p['receipt_url']?.toString() ?? '';
@@ -253,7 +260,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                     child: OutlinedButton.icon(
                       onPressed: _isBusy ? null : () => _review(p, 'confirmed'),
                       icon: const Icon(Icons.check, size: 18),
-                      label: const Text('Подтвердить'),
+                      label: Text(l10n.adminApprove),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppTheme.AccentGreen,
                         side: BorderSide(color: AppTheme.AccentGreen),
@@ -265,7 +272,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                     child: OutlinedButton.icon(
                       onPressed: _isBusy ? null : () => _review(p, 'rejected'),
                       icon: const Icon(Icons.close, size: 18),
-                      label: const Text('Отклонить'),
+                      label: Text(l10n.adminReject),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppTheme.Danger,
                         side: BorderSide(color: AppTheme.Danger),
@@ -282,6 +289,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   }
 
   Future<void> _showReceipt(String url) {
+    final l10n = AppLocalizations.of(context)!;
     final encoded = Uri.encodeFull(_api.resolveUrl(url));
     return showDialog(
       context: context,
@@ -291,7 +299,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             InteractiveViewer(child: CachedNetworkImage(imageUrl: encoded)),
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Закрыть')),
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.close)),
           ],
         ),
       ),
@@ -299,6 +307,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
   }
 
   Future<void> _review(Map<String, dynamic> p, String status) async {
+    final l10n = AppLocalizations.of(context)!;
     int days = 30;
     if (status == 'confirmed') {
       final controller = TextEditingController(text: (p['premium_days']?.toString() ?? '30'));
@@ -306,17 +315,18 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           backgroundColor: AppTheme.Surface,
-          title: const Text('Подтвердить оплату'),
+          title: Text(l10n.adminConfirmPaymentTitle),
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Кол-во дней Premium'),
+            decoration: InputDecoration(labelText: l10n.adminPremiumDaysLabel),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+            TextButton(
+                onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
             TextButton(
               onPressed: () => Navigator.pop(ctx, int.tryParse(controller.text) ?? 30),
-              child: const Text('Подтвердить'),
+              child: Text(l10n.adminApprove),
             ),
           ],
         ),
@@ -332,8 +342,10 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(status == 'confirmed'
-                ? 'Оплата подтверждена${res['premium_granted'] == true ? ', Premium выдан' : ''}'
-                : 'Оплата отклонена'),
+                ? l10n.adminPaymentConfirmed(res['premium_granted'] == true
+                    ? l10n.adminPaymentConfirmedPremium
+                    : '')
+                : l10n.adminPaymentRejected),
             backgroundColor: status == 'confirmed' ? AppTheme.AccentGreen : AppTheme.Danger,
           ),
         );
@@ -341,7 +353,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
       await _load();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.errorMessage('$e')), backgroundColor: AppTheme.Danger));
       }
     } finally {
       if (mounted) setState(() => _isBusy = false);

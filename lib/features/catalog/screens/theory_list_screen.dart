@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 enum TheoryKind { basics, steps }
 
@@ -12,12 +13,10 @@ extension TheoryKindInfo on TheoryKind {
 
 class TheoryListScreen extends StatefulWidget {
   final TheoryKind kind;
-  final String title;
 
   const TheoryListScreen({
     super.key,
     required this.kind,
-    required this.title,
   });
 
   @override
@@ -59,8 +58,13 @@ class _TheoryListScreenState extends State<TheoryListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final lang = Localizations.localeOf(context).languageCode;
+    final title = widget.kind == TheoryKind.basics
+        ? l10n.theoryBasicsTitle
+        : l10n.theoryStepsTitle;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(title: Text(title)),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error
@@ -68,7 +72,7 @@ class _TheoryListScreenState extends State<TheoryListScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Text(
-                      'Не удалось загрузить разделы. Попробуйте позже.',
+                      l10n.theoryLoadError,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
@@ -86,13 +90,13 @@ class _TheoryListScreenState extends State<TheoryListScreen> {
                         borderRadius: BorderRadius.circular(16),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(16),
-                          onTap: () {
-                            context.push('/theory_detail',
-                                extra: {
-                                  'title': widget.title,
-                                  'item': item,
-                                });
-                          },
+                            onTap: () {
+                              context.push('/theory_detail',
+                                  extra: {
+                                    'title': title,
+                                    'item': item,
+                                  });
+                            },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -109,7 +113,7 @@ class _TheoryListScreenState extends State<TheoryListScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        item.name,
+                                        item.displayName(lang),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleMedium,

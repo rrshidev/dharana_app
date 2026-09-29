@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -19,13 +20,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   String? _error;
 
   Future<void> _send() async {
+    final l10n = AppLocalizations.of(context);
     final email = _emailController.text.trim();
     if (email.isEmpty) {
-      setState(() => _error = 'Введите email');
+      setState(() => _error = l10n!.enterEmail);
       return;
     }
     if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
-      setState(() => _error = 'Проверьте правильность email');
+      setState(() => _error = l10n!.checkEmail);
       return;
     }
 
@@ -52,18 +54,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         detail = data['detail'] as String;
       }
     }
+    final l10n = AppLocalizations.of(context);
     switch (detail) {
       case 'EMAIL_INVALID':
-        return 'Проверьте правильность email';
+        return l10n!.checkEmail;
       case 'TOO_FREQUENT':
-        return 'Письмо уже отправлено недавно. Подождите минуту';
+        return l10n!.emailSentRecently;
       default:
-        return 'Не удалось отправить письмо. Попробуйте позже';
+        return l10n!.failSendEmail;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -86,13 +90,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Проверьте почту',
+                      l10n.checkYourEmail,
                       style: Theme.of(context).textTheme.headlineMedium,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Мы отправили ссылку для сброса пароля. Она действует 30 минут.',
+                      l10n.resetLinkSent,
                       style: TextStyle(
                         color: AppTheme.TextSecondary,
                         fontSize: 14,
@@ -103,17 +107,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () => context.pop(),
-                      child: const Text('Вернуться ко входу'),
+                      child: Text(l10n.backToLogin),
                     ),
                   ]
                 : [
                     Text(
-                      'Восстановление пароля',
+                      l10n.resetPasswordTitle,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Введите email, на который зарегистрирован аккаунт. Мы отправим ссылку для сброса пароля.',
+                      l10n.resetPasswordDesc,
                       style: TextStyle(
                         color: AppTheme.TextSecondary,
                         fontSize: 14,
@@ -152,7 +156,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                                 color: AppTheme.Background,
                               ),
                             )
-                          : const Text('Отправить ссылку'),
+                          : Text(l10n.sendResetLink),
                     ),
                   ],
           ),

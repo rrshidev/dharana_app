@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key});
@@ -21,37 +22,97 @@ class _FilterScreenState extends State<FilterScreen> {
   String? _error;
   bool _hasSearched = false;
 
-  final _effects = [
-    ('back_pain', '🦴 Боль в спине'),
-    ('calm_mind', '🧘 Спокойствие'),
-    ('boost_energy', '⚡ Энергия'),
-    ('digestion', '🌿 Пищеварение'),
-    ('flexibility', '🤸 Гибкость'),
-    ('balance', '⚖️ Баланс'),
-    ('strength', '💪 Сила'),
-    ('stress_relief', '😌 Стресс'),
-    ('strength_abs', '🎯 Пресс'),
-    ('knees', '🦵 Колени'),
-    ('neck_pain', '💆 Шея'),
-    ('circulation', '❤️ Кровообращение'),
-    ('lungs', '🫁 Дыхание'),
-    ('weight_loss', '🔥 Похудение'),
+  final _effectKeys = [
+    'back_pain',
+    'calm_mind',
+    'boost_energy',
+    'digestion',
+    'flexibility',
+    'balance',
+    'strength',
+    'stress_relief',
+    'strength_abs',
+    'knees',
+    'neck_pain',
+    'circulation',
+    'lungs',
+    'weight_loss',
   ];
 
-  final _difficulties = [
-    ('1', '★ Начинающий'),
-    ('2', '★★ Средний'),
-    ('3', '★★★ Продвинутый'),
+  final _difficultyKeys = ['1', '2', '3'];
+
+  final _categoryKeys = [
+    'sit_lie+',
+    'stay+',
+    'hand+',
+    'coup+',
+    'sag+',
+    'power+',
   ];
 
-  final _categories = [
-    ('sit_lie+', 'Сидя и лёжа'),
-    ('stay+', 'В позах стоя'),
-    ('hand+', 'На руках'),
-    ('coup+', 'Наклоны'),
-    ('sag+', 'Прогибы'),
-    ('power+', 'Силовые'),
-  ];
+  String _effectLabel(AppLocalizations l10n, String key) {
+    switch (key) {
+      case 'back_pain':
+        return l10n.filterEffectBackPain;
+      case 'calm_mind':
+        return l10n.filterEffectCalmMind;
+      case 'boost_energy':
+        return l10n.filterEffectBoostEnergy;
+      case 'digestion':
+        return l10n.filterEffectDigestion;
+      case 'flexibility':
+        return l10n.filterEffectFlexibility;
+      case 'balance':
+        return l10n.filterEffectBalance;
+      case 'strength':
+        return l10n.filterEffectStrength;
+      case 'stress_relief':
+        return l10n.filterEffectStressRelief;
+      case 'strength_abs':
+        return l10n.filterEffectAbs;
+      case 'knees':
+        return l10n.filterEffectKnees;
+      case 'neck_pain':
+        return l10n.filterEffectNeck;
+      case 'circulation':
+        return l10n.filterEffectCirculation;
+      case 'lungs':
+        return l10n.filterEffectLungs;
+      case 'weight_loss':
+        return l10n.filterEffectWeightLoss;
+    }
+    return key;
+  }
+
+  String _difficultyLabel(AppLocalizations l10n, String key) {
+    switch (key) {
+      case '1':
+        return l10n.filterDifficultyBeginner;
+      case '2':
+        return l10n.filterDifficultyIntermediate;
+      case '3':
+        return l10n.filterDifficultyAdvanced;
+    }
+    return key;
+  }
+
+  String _categoryLabel(AppLocalizations l10n, String key) {
+    switch (key) {
+      case 'sit_lie+':
+        return l10n.filterCategorySitLie;
+      case 'stay+':
+        return l10n.filterCategoryStand;
+      case 'hand+':
+        return l10n.filterCategoryHands;
+      case 'coup+':
+        return l10n.filterCategoryBends;
+      case 'sag+':
+        return l10n.filterCategoryBackbends;
+      case 'power+':
+        return l10n.filterCategoryPower;
+    }
+    return key;
+  }
 
   Future<void> _applyFilters() async {
     setState(() {
@@ -77,7 +138,9 @@ class _FilterScreenState extends State<FilterScreen> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Ошибка загрузки: ${e.toString().contains('type') ? 'параметры не найдены' : e}';
+          _error = e.toString().contains('type')
+              ? AppLocalizations.of(context)!.filterParamsNotFound
+              : e.toString();
           _isLoading = false;
         });
       }
@@ -86,9 +149,10 @@ class _FilterScreenState extends State<FilterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Подбор по параметрам'),
+        title: Text(l10n.filterTitle),
         actions: [
           TextButton(
             onPressed: () {
@@ -99,7 +163,8 @@ class _FilterScreenState extends State<FilterScreen> {
                 _results = [];
               });
             },
-            child: Text('Сбросить', style: TextStyle(color: AppTheme.Accent)),
+            child: Text(l10n.filterReset,
+                style: TextStyle(color: AppTheme.Accent)),
           ),
         ],
       ),
@@ -110,18 +175,18 @@ class _FilterScreenState extends State<FilterScreen> {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                Text('Цель', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.filterGoal, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _effects.map((e) {
-                    final isSelected = _selectedEffect == e.$1;
+                  children: _effectKeys.map((key) {
+                    final isSelected = _selectedEffect == key;
                     return FilterChip(
-                      label: Text(e.$2),
+                      label: Text(_effectLabel(l10n, key)),
                       selected: isSelected,
                       onSelected: (selected) {
-                        setState(() => _selectedEffect = selected ? e.$1 : null);
+                        setState(() => _selectedEffect = selected ? key : null);
                       },
                       selectedColor: AppTheme.Accent,
                       backgroundColor: AppTheme.SurfaceLight,
@@ -132,18 +197,18 @@ class _FilterScreenState extends State<FilterScreen> {
                   }).toList(),
                 ),
                 const SizedBox(height: 20),
-                Text('Уровень', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.filterLevel, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _difficulties.map((d) {
-                    final isSelected = _selectedDifficulty == d.$1;
+                  children: _difficultyKeys.map((key) {
+                    final isSelected = _selectedDifficulty == key;
                     return FilterChip(
-                      label: Text(d.$2),
+                      label: Text(_difficultyLabel(l10n, key)),
                       selected: isSelected,
                       onSelected: (selected) {
-                        setState(() => _selectedDifficulty = selected ? d.$1 : null);
+                        setState(() => _selectedDifficulty = selected ? key : null);
                       },
                       selectedColor: AppTheme.Accent,
                       backgroundColor: AppTheme.SurfaceLight,
@@ -154,18 +219,18 @@ class _FilterScreenState extends State<FilterScreen> {
                   }).toList(),
                 ),
                 const SizedBox(height: 20),
-                Text('Позиция', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.filterPosition, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: _categories.map((c) {
-                    final isSelected = _selectedCategory == c.$1;
+                  children: _categoryKeys.map((key) {
+                    final isSelected = _selectedCategory == key;
                     return FilterChip(
-                      label: Text(c.$2),
+                      label: Text(_categoryLabel(l10n, key)),
                       selected: isSelected,
                       onSelected: (selected) {
-                        setState(() => _selectedCategory = selected ? c.$1 : null);
+                        setState(() => _selectedCategory = selected ? key : null);
                       },
                       selectedColor: AppTheme.Accent,
                       backgroundColor: AppTheme.SurfaceLight,
@@ -190,7 +255,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             height: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Показать'),
+                        : Text(l10n.filterShow),
                   ),
                 ),
               ],
@@ -208,9 +273,9 @@ class _FilterScreenState extends State<FilterScreen> {
                 children: [
                   Icon(Icons.search_off, size: 48, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
                   const SizedBox(height: 12),
-                  Text('Ничего не найдено', style: Theme.of(context).textTheme.titleMedium),
+                  Text(l10n.filterNoResults, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 4),
-                  Text('Попробуйте другие параметры', style: Theme.of(context).textTheme.bodyMedium),
+                  Text(l10n.filterNoResultsHint, style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
             ),
@@ -221,7 +286,7 @@ class _FilterScreenState extends State<FilterScreen> {
               child: Row(
                 children: [
                   Text(
-                    '${_results.length} асан',
+                    l10n.filterCountAsanas(_results.length),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
@@ -233,6 +298,8 @@ class _FilterScreenState extends State<FilterScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: _results.length,
                 itemBuilder: (context, index) {
+                  final lang =
+                      Localizations.localeOf(context).languageCode;
                   final asana = _results[index];
                   return Card(
                     margin: const EdgeInsets.only(bottom: 8),
@@ -255,7 +322,7 @@ class _FilterScreenState extends State<FilterScreen> {
                           ),
                         ),
                       ),
-                      title: Text(asana.name),
+                      title: Text(asana.displayName(lang)),
                       subtitle: Row(
                         children: [
                           Text(

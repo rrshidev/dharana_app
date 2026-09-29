@@ -5,6 +5,7 @@ import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/core/services/sound_service.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 enum TimerMode { idle, asana, rest, compensation, paused }
 
@@ -220,6 +221,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
   }
 
   void _showCompletionDialog() {
+    final l10n = AppLocalizations.of(context)!;
     final totalDuration = _asanaDurations.values.fold(0, (sum, v) => sum + v);
     showModalBottomSheet(
       context: context,
@@ -234,10 +236,10 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
           children: [
             Icon(Icons.check_circle, color: AppTheme.AccentGreen, size: 64),
             const SizedBox(height: 16),
-            Text('Практика завершена!', style: Theme.of(context).textTheme.headlineMedium),
+            Text(l10n.timerDoneTitle, style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 8),
             Text(
-              '${_completedAsanas.length} асан · ${_fmt(totalDuration)}',
+              l10n.timerDoneSummary(_completedAsanas.length, _fmt(totalDuration)),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
@@ -246,7 +248,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                 Navigator.of(ctx).pop();
                 _resetTimer();
               },
-              child: const Text('Начать заново'),
+              child: Text(l10n.timerRestart),
             ),
             const SizedBox(height: 8),
             TextButton(
@@ -254,7 +256,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                 Navigator.of(ctx).pop();
                 context.pop();
               },
-              child: const Text('Закрыть'),
+              child: Text(l10n.timerClose),
             ),
           ],
         ),
@@ -286,18 +288,18 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
     return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
   }
 
-  String _modeLabel() {
+  String _modeLabel(AppLocalizations l10n) {
     switch (_mode) {
       case TimerMode.idle:
-        return 'Готов';
+        return l10n.timerReady;
       case TimerMode.asana:
-        return 'Асана';
+        return l10n.timerAsana;
       case TimerMode.rest:
-        return 'Отдых';
+        return l10n.timerRest;
       case TimerMode.compensation:
-        return 'Завершение';
+        return l10n.timerFinish;
       case TimerMode.paused:
-        return 'Пауза';
+        return l10n.timerPause;
     }
   }
 
@@ -318,17 +320,18 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.Background,
       appBar: AppBar(
-        title: const Text('Таймер'),
+        title: Text(l10n.timerTitle),
         backgroundColor: AppTheme.Background,
         actions: [
           if (_isRunning)
             IconButton(
               icon: const Icon(Icons.stop),
               onPressed: _stopPractice,
-              tooltip: 'Остановить',
+              tooltip: l10n.timerStop,
             ),
         ],
       ),
@@ -352,22 +355,23 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.timer_outlined, size: 64, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
-          Text('Нет асан для практики', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.timerEmpty, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
-          Text('Добавьте асаны в настройках', style: Theme.of(context).textTheme.bodyMedium),
+          Text(l10n.timerEmptyHint, style: Theme.of(context).textTheme.bodyMedium),
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () {
               context.pushReplacement('/timer_setup');
             },
             icon: const Icon(Icons.settings),
-            label: const Text('Настроить'),
+            label: Text(l10n.timerSetup),
           ),
         ],
       ),
@@ -412,7 +416,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _modeLabel(),
+                      _modeLabel(AppLocalizations.of(context)!),
                       style: TextStyle(
                         fontSize: 14,
                         color: _modeColor().withValues(alpha: 0.7),
@@ -436,7 +440,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
       child: Column(
         children: [
           Text(
-            current['name'] ?? '',
+            current['name_display'] ?? current['name'] ?? '',
             style: Theme.of(context).textTheme.headlineMedium,
             textAlign: TextAlign.center,
           ),
@@ -451,6 +455,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
   }
 
   Widget _buildControls() {
+    final l10n = AppLocalizations.of(context)!;
     if (!_isRunning && _mode == TimerMode.idle) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -459,7 +464,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
           child: ElevatedButton.icon(
             onPressed: _startPractice,
             icon: const Icon(Icons.play_arrow),
-            label: const Text('Начать практику'),
+            label: Text(l10n.startPractice),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(16),
             ),
@@ -473,20 +478,20 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
       children: [
         _buildControlButton(
           icon: Icons.replay,
-          label: 'Заново',
+          label: l10n.timerAgain,
           onTap: _resetTimer,
         ),
         const SizedBox(width: 24),
         _buildControlButton(
           icon: _isPaused ? Icons.play_arrow : Icons.pause,
-          label: _isPaused ? 'Продолжить' : 'Пауза',
+          label: _isPaused ? l10n.timerResume : l10n.timerPause,
           onTap: _togglePause,
           isLarge: true,
         ),
         const SizedBox(width: 24),
         _buildControlButton(
           icon: Icons.skip_next,
-          label: 'Далее',
+          label: l10n.timerSkip,
           onTap: _skipToNext,
         ),
       ],
@@ -579,7 +584,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    asana['name'] ?? '',
+                    asana['name_display'] ?? asana['name'] ?? '',
                     style: TextStyle(
                       fontSize: 13,
                       color: isCompleted
@@ -592,7 +597,8 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                   ),
                 ),
                 Text(
-                  '${asana['duration_seconds'] ?? 60}с',
+                  AppLocalizations.of(context)!
+                      .secondsShort(asana['duration_seconds'] ?? 60),
                   style: TextStyle(fontSize: 11, color: AppTheme.TextSecondary),
                 ),
               ],

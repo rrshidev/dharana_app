@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class CategoryCard extends StatelessWidget {
   final Category category;
@@ -19,6 +20,7 @@ class CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: InkWell(
         onTap: onTap,
@@ -45,7 +47,7 @@ class CategoryCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '${category.asanaCount} асан',
+                l10n.categoryAsanaCount(category.asanaCount),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

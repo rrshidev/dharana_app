@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_links/app_links.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/app/theme_controller.dart';
+import 'package:dharana_app/app/language_controller.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/features/auth/screens/splash_screen.dart';
 import 'package:dharana_app/features/auth/screens/login_screen.dart';
@@ -74,17 +77,13 @@ class _DharanaAppState extends State<DharanaApp> {
       ),
       GoRoute(
         path: '/basics',
-        builder: (context, state) => const TheoryListScreen(
-          kind: TheoryKind.basics,
-          title: 'Основы йоги',
-        ),
+        builder: (context, state) =>
+            const TheoryListScreen(kind: TheoryKind.basics),
       ),
       GoRoute(
         path: '/steps',
-        builder: (context, state) => const TheoryListScreen(
-          kind: TheoryKind.steps,
-          title: '8 ступеней йоги',
-        ),
+        builder: (context, state) =>
+            const TheoryListScreen(kind: TheoryKind.steps),
       ),
       GoRoute(
         path: '/theory_detail',
@@ -179,24 +178,37 @@ class _DharanaAppState extends State<DharanaApp> {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: ThemeController.instance,
       builder: (context, mode, _) {
-        final isDark = AppTheme.isDark;
-        SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness:
-                isDark ? Brightness.light : Brightness.dark,
-            systemNavigationBarColor: AppTheme.Surface,
-            systemNavigationBarIconBrightness:
-                isDark ? Brightness.light : Brightness.dark,
-          ),
-        );
-        return MaterialApp.router(
-          title: 'Dharana',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: mode,
-          routerConfig: _router,
+        return ValueListenableBuilder<Locale>(
+          valueListenable: LanguageController.instance,
+          builder: (context, locale, _) {
+            final isDark = AppTheme.isDark;
+            SystemChrome.setSystemUIOverlayStyle(
+              SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness:
+                    isDark ? Brightness.light : Brightness.dark,
+                systemNavigationBarColor: AppTheme.Surface,
+                systemNavigationBarIconBrightness:
+                    isDark ? Brightness.light : Brightness.dark,
+              ),
+            );
+            return MaterialApp.router(
+              title: 'Dharana',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: mode,
+              locale: locale,
+              supportedLocales: LanguageController.supported,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              routerConfig: _router,
+            );
+          },
         );
       },
     );

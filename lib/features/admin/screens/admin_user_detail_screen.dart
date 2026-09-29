@@ -5,6 +5,7 @@ import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
 import 'package:dharana_app/features/admin/widgets/period_selector.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class AdminUserDetailScreen extends StatefulWidget {
   final int userId;
@@ -54,7 +55,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Пользователь')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.adminUserTitle)),
       body: _isLoading
           ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : RefreshIndicator(
@@ -84,6 +85,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context)!;
     final user = _data?['user'] as Map<String, dynamic>? ?? {};
     return Row(
       children: [
@@ -102,7 +104,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(user['name']?.toString() ?? 'Без имени', style: Theme.of(context).textTheme.titleLarge),
+              Text(user['name']?.toString() ?? l10n.adminUserNoName, style: Theme.of(context).textTheme.titleLarge),
               if (user['email'] != null) Text(user['email'].toString(), style: const TextStyle(fontSize: 13)),
               if (user['telegram_id'] != null)
                 Text('TG: ${user['telegram_id']}', style: TextStyle(fontSize: 12, color: AppTheme.TextSecondary)),
@@ -114,31 +116,34 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Widget _buildStatsCard() {
+    final l10n = AppLocalizations.of(context)!;
     final user = _data?['user'] as Map<String, dynamic>? ?? {};
     return ChartCard(
-      title: 'Статистика',
+      title: l10n.adminStatsTitle,
       child: Column(
         children: [
-          _row('Минут практики', '${user['total_practice_minutes'] ?? 0}'),
-          _row('Дней практики', '${user['total_practice_days'] ?? 0}'),
-          _row('Текущая серия', '${user['current_streak'] ?? 0}'),
-          _row('Лучшая серия', '${user['longest_streak'] ?? 0}'),
-          _row('Регистрация', _date(user['created_at'])),
+          _row(l10n.adminStatPracticeMinutes, '${user['total_practice_minutes'] ?? 0}'),
+          _row(l10n.adminStatPracticeDays, '${user['total_practice_days'] ?? 0}'),
+          _row(l10n.adminStatCurrentStreak, '${user['current_streak'] ?? 0}'),
+          _row(l10n.adminStatLongestStreak, '${user['longest_streak'] ?? 0}'),
+          _row(l10n.adminStatRegisteredAt, _date(user['created_at'])),
         ],
       ),
     );
   }
 
   Widget _buildSubscriptionCard() {
+    final l10n = AppLocalizations.of(context)!;
     final sub = _data?['subscription'] as Map<String, dynamic>? ?? {};
     final isPremium = (sub['is_premium'] ?? false) == true;
     return ChartCard(
-      title: 'Подписка',
+      title: l10n.subscription,
       child: Column(
         children: [
-          _row('Статус', isPremium ? 'Премиум' : 'Бесплатно'),
+          _row(l10n.adminStatusLabel,
+              isPremium ? l10n.adminStatusPremium : l10n.adminStatusFree),
           if (sub['subscription_end'] != null)
-            _row('До', _date(sub['subscription_end'])),
+            _row(l10n.adminUntilLabel, _date(sub['subscription_end'])),
           const SizedBox(height: 10),
           SizedBox(
             width: double.infinity,
@@ -147,7 +152,9 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                 : ElevatedButton.icon(
                     onPressed: _togglePremium,
                     icon: const Icon(Icons.workspace_premium_outlined, size: 18),
-                    label: Text(isPremium ? 'Снять премиум' : 'Выдать премиум'),
+                    label: Text(isPremium
+                        ? l10n.adminPremiumRemove
+                        : l10n.adminPremiumGrant),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isPremium ? AppTheme.SurfaceLight : AppTheme.Accent,
                       foregroundColor: AppTheme.Background,
@@ -160,11 +167,12 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Widget _buildActionsCard() {
+    final l10n = AppLocalizations.of(context)!;
     final user = _data?['user'] as Map<String, dynamic>? ?? {};
     final isBanned = (user['is_banned'] ?? false) == true;
     final isDeleted = (user['is_deleted'] ?? false) == true;
     return ChartCard(
-      title: 'Действия',
+      title: l10n.adminActionsTitle,
       child: _isActionBusy
           ? Padding(
               padding: EdgeInsets.all(16),
@@ -178,7 +186,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                 ElevatedButton.icon(
                   onPressed: isDeleted ? null : _sendMessage,
                   icon: const Icon(Icons.send, size: 18),
-                  label: const Text('Написать сообщение'),
+                  label: Text(l10n.adminSendMessage),
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -190,7 +198,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                           isBanned ? Icons.check_circle_outline : Icons.block,
                           size: 18,
                         ),
-                        label: Text(isBanned ? 'Разбанить' : 'Забанить'),
+                        label: Text(isBanned ? l10n.adminUnban : l10n.adminBan),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               isBanned ? AppTheme.AccentGreen : AppTheme.Danger,
@@ -206,7 +214,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                           isDeleted ? Icons.restore : Icons.delete,
                           size: 18,
                         ),
-                        label: Text(isDeleted ? 'Восстановить' : 'Удалить'),
+                        label:
+                            Text(isDeleted ? l10n.adminRestore : l10n.adminDelete),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.Danger,
                           foregroundColor: AppTheme.Background,
@@ -221,6 +230,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Future<void> _sendMessage() async {
+    final l10n = AppLocalizations.of(context)!;
     final user = _data?['user'] as Map<String, dynamic>? ?? {};
     final userId = user['id'] ?? widget.userId;
     final hasTelegram = user['telegram_id'] != null;
@@ -232,7 +242,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setLocal) => AlertDialog(
           backgroundColor: AppTheme.Surface,
-          title: const Text('Канал доставки'),
+          title: Text(l10n.adminChannelTitle),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -244,7 +254,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                       : Icons.radio_button_off,
                   size: 20,
                 ),
-                title: const Text('Telegram + приложение'),
+                title: Text(l10n.adminChannelBoth),
                 onTap: hasTelegram ? () => setLocal(() => channel = 'both') : null,
               ),
               ListTile(
@@ -254,7 +264,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                       : Icons.radio_button_off,
                   size: 20,
                 ),
-                title: const Text('Только приложение (in-app)'),
+                title: Text(l10n.adminChannelAppOnly),
                 onTap: () => setLocal(() => channel = 'app'),
               ),
               ListTile(
@@ -265,24 +275,25 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                       : Icons.radio_button_off,
                   size: 20,
                 ),
-                title: const Text('Только Telegram'),
+                title: Text(l10n.adminChannelTelegramOnly),
                 onTap: hasTelegram ? () => setLocal(() => channel = 'telegram') : null,
               ),
               if (!hasTelegram)
                 Padding(
                   padding: EdgeInsets.only(top: 8),
                   child: Text(
-                    'У пользователя нет Telegram ID',
+                    l10n.adminNoTelegramId,
                     style: TextStyle(color: AppTheme.TextSecondary, fontSize: 12),
                   ),
                 ),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+            TextButton(
+                onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
             TextButton(
               onPressed: () => Navigator.pop(ctx, channel),
-              child: const Text('Далее'),
+              child: Text(l10n.adminNext),
             ),
           ],
         ),
@@ -298,7 +309,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setLocal) => AlertDialog(
           backgroundColor: AppTheme.Surface,
-          title: const Text('Сообщение пользователю'),
+          title: Text(l10n.adminMessageTitle),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -306,7 +317,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                 controller: textController,
                 maxLines: 4,
                 maxLength: 2000,
-                decoration: const InputDecoration(hintText: 'Текст сообщения'),
+                decoration:
+                    InputDecoration(hintText: l10n.adminMessageHint),
               ),
               if (pickedImage != null) ...[
                 const SizedBox(height: 10),
@@ -329,26 +341,29 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                     },
                     icon: const Icon(Icons.attach_file, size: 18),
                     label: Text(
-                      pickedImage == null ? '📎 Прикрепить изображение' : '📎 Заменить',
+                      pickedImage == null
+                          ? l10n.adminAttachImage
+                          : l10n.adminAttachReplace,
                     ),
                   ),
                   if (pickedImage != null)
                     TextButton(
                       onPressed: () => setLocal(() => pickedImage = null),
-                      child: const Text('Убрать'),
+                      child: Text(l10n.adminRemoveImage),
                     ),
                 ],
               ),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+            TextButton(
+                onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
             TextButton(
               onPressed: () => Navigator.pop(
                 ctx,
                 _MessageInputResult(text: textController.text, image: pickedImage),
               ),
-              child: const Text('Отправить'),
+              child: Text(l10n.adminSend),
             ),
           ],
         ),
@@ -370,8 +385,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         mediaUrl: mediaUrl,
       );
       final parts = <String>[
-        if (channelResult == 'both' || channelResult == 'app') _reportApp(data['app']),
-        if (channelResult == 'both' || channelResult == 'telegram') _reportTg(data['telegram']),
+        if (channelResult == 'both' || channelResult == 'app')
+          _reportApp(l10n, data['app']),
+        if (channelResult == 'both' || channelResult == 'telegram')
+          _reportTg(l10n, data['telegram']),
       ];
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -384,7 +401,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.errorMessage('$e')),
+              backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -392,27 +412,28 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     }
   }
 
-  String _reportApp(dynamic status) {
-    if (status == 'queued') return 'in-app: поставлено';
-    if (status == 'failed') return 'in-app: ошибка';
-    return 'in-app: $status';
+  String _reportApp(AppLocalizations l10n, dynamic status) {
+    if (status == 'queued') return l10n.adminReportAppQueued;
+    if (status == 'failed') return l10n.adminReportAppFailed;
+    return l10n.adminReportAppStatus('$status');
   }
 
-  String _reportTg(dynamic status) {
-    if (status == 'sent') return 'TG: отправлено';
-    if (status == 'no_telegram') return 'TG: нет ID';
-    if (status == 'failed') return 'TG: ошибка';
-    if (status == 'no_bot') return 'TG: бот не настроен';
-    return 'TG: $status';
+  String _reportTg(AppLocalizations l10n, dynamic status) {
+    if (status == 'sent') return l10n.adminReportTgSent;
+    if (status == 'no_telegram') return l10n.adminReportTgNoId;
+    if (status == 'failed') return l10n.adminReportTgFailed;
+    if (status == 'no_bot') return l10n.adminReportTgNoBot;
+    return l10n.adminReportTgStatus('$status');
   }
 
   Future<void> _toggleBan(bool current) async {
+    final l10n = AppLocalizations.of(context)!;
     final user = _data?['user'] as Map<String, dynamic>? ?? {};
     final userId = user['id'] ?? widget.userId;
     final ban = !current;
     final ok = await _confirm(
-      ban ? 'Забанить пользователя?' : 'Разбанить пользователя?',
-      ban ? 'Он потеряет доступ к приложению.' : null,
+      ban ? l10n.adminConfirmBan : l10n.adminConfirmUnban,
+      ban ? l10n.adminBanLosesAccess : null,
     );
     if (!ok) return;
 
@@ -422,7 +443,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(ban ? 'Пользователь забанен' : 'Бан снят'),
+            content: Text(
+                ban ? l10n.adminUserBanned : l10n.adminUserUnbanned),
             backgroundColor: AppTheme.AccentGreen,
           ),
         );
@@ -431,7 +453,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.errorMessage('$e')),
+              backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -440,12 +465,13 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Future<void> _toggleDelete(bool current) async {
+    final l10n = AppLocalizations.of(context)!;
     final user = _data?['user'] as Map<String, dynamic>? ?? {};
     final userId = user['id'] ?? widget.userId;
     final del = !current;
     final ok = await _confirm(
-      del ? 'Удалить пользователя?' : 'Восстановить пользователя?',
-      del ? 'Это обратимо, но юзер будет помечен удалённым.' : null,
+      del ? l10n.adminConfirmDelete : l10n.adminConfirmRestore,
+      del ? l10n.adminDeleteReversible : null,
     );
     if (!ok) return;
 
@@ -455,7 +481,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(del ? 'Пользователь удалён' : 'Пользователь восстановлен'),
+            content: Text(
+                del ? l10n.adminUserDeleted : l10n.adminUserRestored),
             backgroundColor: AppTheme.AccentGreen,
           ),
         );
@@ -464,7 +491,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.errorMessage('$e')),
+              backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -473,6 +503,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Future<bool> _confirm(String title, String? message) async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -480,8 +511,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         title: Text(title),
         content: message == null ? null : Text(message),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Отмена')),
-          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Подтвердить')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.cancel)),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, true), child: Text(l10n.adminConfirm)),
         ],
       ),
     );
@@ -489,12 +522,13 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Widget _buildActivityChart() {
+    final l10n = AppLocalizations.of(context)!;
     final days = _activity?['days'];
     final minutesSer = _activity?['minutes'];
     final labels = days is List ? days.cast<String>() : <String>[];
     final minutes = minutesSer is List ? minutesSer.map((e) => (e as num).toDouble()).toList() : <double>[];
     return ChartCard(
-      title: 'Минут практики',
+      title: l10n.adminMinutesChartTitle,
       subtitle: PeriodSelector(days: _rangeDays, onChanged: (d) {
         setState(() => _rangeDays = d);
         _loadActivity();
@@ -506,11 +540,13 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Widget _buildRecentSessions() {
+    final l10n = AppLocalizations.of(context)!;
     final sessions = _data?['recent_sessions'] as List? ?? [];
     return ChartCard(
-      title: 'Последние практики',
+      title: l10n.adminRecentSessions,
       child: sessions.isEmpty
-          ? Text('Нет завершённых практик', style: TextStyle(color: AppTheme.TextSecondary))
+          ? Text(l10n.adminNoCompletedSessions,
+              style: TextStyle(color: AppTheme.TextSecondary))
           : Column(
               children: sessions.take(10).map((s) {
                 return Padding(
@@ -518,11 +554,16 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text('${s['asanas_practiced'] ?? 0} асан',
+                        child: Text(
+                            l10n.adminSessionAsanas(
+                                (s['asanas_practiced'] as num?)?.toInt() ?? 0),
                             style: Theme.of(context).textTheme.bodyLarge),
                       ),
                       Text(
-                        '${((s['total_duration_seconds'] ?? 0) / 60).round()} мин · ${_date(s['started_at'])}',
+                        l10n.adminSessionMeta(
+                          ((s['total_duration_seconds'] as num?)?.toInt() ?? 0) ~/ 60,
+                          _date(s['started_at']),
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
@@ -547,6 +588,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
   }
 
   Future<void> _togglePremium() async {
+    final l10n = AppLocalizations.of(context)!;
     final user = _data?['user'] as Map<String, dynamic>? ?? {};
     final sub = _data?['subscription'] as Map<String, dynamic>? ?? {};
     final isPremium = (sub['is_premium'] ?? false) == true;
@@ -559,17 +601,18 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           backgroundColor: AppTheme.Surface,
-          title: const Text('Выдать премиум'),
+          title: Text(l10n.adminPremiumGrant),
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Кол-во дней'),
+            decoration: InputDecoration(labelText: l10n.adminDaysLabel),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+            TextButton(
+                onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
             TextButton(
               onPressed: () => Navigator.pop(ctx, int.tryParse(controller.text) ?? 30),
-              child: const Text('Выдать'),
+              child: Text(l10n.adminGrant),
             ),
           ],
         ),
@@ -584,7 +627,9 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isPremium ? 'Премиум снят' : 'Премиум выдан'),
+            content: Text(isPremium
+                ? l10n.adminPremiumRemoved
+                : l10n.adminPremiumGranted),
             backgroundColor: AppTheme.AccentGreen,
           ),
         );
@@ -593,7 +638,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.errorMessage('$e')),
+              backgroundColor: AppTheme.Danger),
         );
       }
     } finally {

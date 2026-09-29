@@ -12,6 +12,7 @@ class AsanaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -36,7 +37,7 @@ class AsanaCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      asana.name,
+                      asana.displayName(lang),
                       style: Theme.of(context).textTheme.titleMedium,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

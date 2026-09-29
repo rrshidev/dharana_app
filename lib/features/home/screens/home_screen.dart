@@ -8,6 +8,7 @@ import 'package:dharana_app/shared/widgets/asana_card.dart';
 import 'package:dharana_app/shared/widgets/category_card.dart';
 import 'package:dharana_app/shared/widgets/loading_skeleton.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
       const Duration(minutes: 1),
       (_) {
         if (mounted) {
-          final current = _greeting();
+          final current = _greeting(AppLocalizations.of(context)!);
           final shown = _shownGreeting;
           if (current != shown) {
             setState(() => _shownGreeting = current);
@@ -78,18 +79,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  String _greeting() {
+  String _greeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 6) return 'Доброй ночи';
-    if (hour < 12) return 'Доброе утро';
-    if (hour < 18) return 'Добрый день';
-    return 'Добрый вечер';
+    if (hour < 6) return l10n.greetingGoodNight;
+    if (hour < 12) return l10n.greetingGoodMorning;
+    if (hour < 18) return l10n.greetingGoodDay;
+    return l10n.greetingGoodEvening;
   }
 
-  String get _currentGreeting => _shownGreeting ?? _greeting();
+  String get _currentGreeting =>
+      _shownGreeting ?? _greeting(AppLocalizations.of(context)!);
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: _isLoading
           ? const HomeSkeleton()
@@ -105,12 +108,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '$_currentGreeting, ${_user?.name ?? 'йог'}',
+                            l10n.homeGreeting(
+                                _currentGreeting, _user?.name ?? l10n.yogi),
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Практикуй регулярно',
+                            l10n.practiceRegularly,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
@@ -136,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           _QuickTile(
                             icon: Icons.tune,
-                            label: 'Подбор',
+                            label: l10n.quickFilter,
                             onTap: () {
                               context.push('/filter');
                             },
@@ -144,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 12),
                           _QuickTile(
                             icon: Icons.video_library_outlined,
-                            label: 'Комплексы',
+                            label: l10n.quickComplexes,
                             onTap: () {
                               context.push('/sequences');
                             },
@@ -152,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 12),
                           _QuickTile(
                             icon: Icons.search,
-                            label: 'Поиск',
+                            label: l10n.quickSearch,
                             onTap: () {
                               context.push('/search');
                             },
@@ -169,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           _QuickTile(
                             icon: Icons.menu_book_outlined,
-                            label: 'Основы йоги',
+                            label: l10n.quickBasics,
                             onTap: () {
                               context.push('/basics');
                             },
@@ -177,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 12),
                           _QuickTile(
                             icon: Icons.layers_outlined,
-                            label: '8 ступеней',
+                            label: l10n.quickSteps,
                             onTap: () {
                               context.push('/steps');
                             },
@@ -195,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Асана дня',
+                              l10n.dailyAsana,
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             const SizedBox(height: 12),
@@ -221,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
                       child: Text(
-                        'Категории',
+                        l10n.categories,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
@@ -273,6 +277,7 @@ class _GeneratorBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -307,12 +312,12 @@ class _GeneratorBanner extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Генератор практики',
+                    l10n.generatorTitle,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Сгенерируйте практику под свой уровень и цели',
+                    l10n.generatorSubtitle,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],

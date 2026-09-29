@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/app/theme_controller.dart';
+import 'package:dharana_app/app/language_controller.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
@@ -31,6 +33,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _chartRange = 30;
   String _chartType = 'all';
   static const _chartTypes = <String>['all', 'asana', 'meditation', 'pranayama'];
+
+  String _typeLabel(AppLocalizations l10n, String type) {
+    switch (type) {
+      case 'all':
+        return l10n.all;
+      case 'asana':
+        return l10n.asana;
+      case 'meditation':
+        return l10n.meditation;
+      case 'pranayama':
+        return l10n.pranayama;
+    }
+    return type;
+  }
 
   @override
   void initState() {
@@ -131,22 +147,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final end = first['subscription_end']?.toString() ?? '';
       if (!mounted) return;
       final isConfirmed = status == 'confirmed';
+      final l10n = AppLocalizations.of(context)!;
       await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(isConfirmed ? '🎉 Оплата подтверждена!' : '❌ Заявка отклонена'),
+          title: Text(isConfirmed
+              ? l10n.paymentConfirmedTitle
+              : l10n.paymentRejectedTitle),
           content: Text(
             isConfirmed
-                ? 'Ваш платеж подтвержден. Премиум-подписка активна'
-                    '${end.isEmpty ? '!' : ' до $end'}'
-                : 'К сожалению, мы не смогли подтвердить ваш платёж.\n'
-                    'Свяжитесь с администратором, если вы уверены в оплате, '
-                    'или попробуйте ещё раз.',
+                ? l10n.paymentConfirmedMsg(
+                    end.isEmpty ? '!' : l10n.paymentConfirmedUntil(end))
+                : l10n.paymentRejectedMsg,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Хорошо'),
+              child: Text(l10n.ok),
             ),
           ],
         ),
@@ -158,9 +175,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Профиль'),
+        title: Text(l10n.profile),
         actions: [
           const NotificationBell(),
           IconButton(
@@ -205,7 +223,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 : null,
             child: _user?.avatarUrl == null
                 ? Text(
-                    (_user?.name ?? 'Й')[0].toUpperCase(),
+                    ((_user?.name ?? '').isNotEmpty ? _user!.name : '?')
+                        .toString()[0]
+                        .toUpperCase(),
                     style: TextStyle(
                       fontSize: 40,
                       color: AppTheme.Accent,
@@ -252,10 +272,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildUserInfo() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Text(
-          _user?.name ?? 'Пользователь',
+          _user?.name ?? l10n.userFallback,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         if (_user?.username != null) ...[
@@ -275,7 +296,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
         const SizedBox(height: 8),
         Text(
-          'Участник с ${_user?.createdAt?.substring(0, 10) ?? 'недавно'}',
+          l10n.memberSince(
+              _user?.createdAt?.substring(0, 10) ?? l10n.recently),
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
@@ -283,13 +305,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildStatsSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Статистика', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.statistics,
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -297,22 +321,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildStatItem(
                   icon: Icons.timer_outlined,
                   value: '${_stats?.totalMinutes ?? 0}',
-                  label: 'минут',
+                  label: l10n.minutes,
                 ),
                 _buildStatItem(
                   icon: Icons.calendar_today,
                   value: '${_stats?.totalDays ?? 0}',
-                  label: 'дней',
+                  label: l10n.days,
                 ),
                 _buildStatItem(
                   icon: Icons.local_fire_department_outlined,
                   value: '${_stats?.currentStreak ?? 0}',
-                  label: 'серия',
+                  label: l10n.streak,
                 ),
                 _buildStatItem(
                   icon: Icons.self_improvement,
                   value: '${_stats?.totalSessions ?? 0}',
-                  label: 'сессий',
+                  label: l10n.sessions,
                 ),
               ],
             ),
@@ -348,21 +372,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  static const _typeLabels = <String, String>{
-    'all': 'Все',
-    'asana': 'Асана',
-    'meditation': 'Медитация',
-    'pranayama': 'Пранаяма',
-  };
-
   String? get _chartThirdLabel {
+    final l10n = AppLocalizations.of(context);
     switch (_chartType) {
       case 'all':
-        return 'Упражнения';
+        return l10n?.exercises;
       case 'asana':
-        return 'Асаны';
+        return l10n?.asanas;
       case 'pranayama':
-        return 'Пранаяма';
+        return l10n?.pranayama;
       case 'meditation':
         return null;
     }
@@ -370,11 +388,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   String? get _chartThirdUnit {
+    final l10n = AppLocalizations.of(context);
     if (_chartThirdLabel == null) return null;
-    return _chartType == 'asana' ? 'асан' : 'упражнений';
+    return _chartType == 'asana' ? l10n?.unitAsanas : l10n?.unitExercises;
   }
 
   Widget _buildChartSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -384,7 +404,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Активность', style: Theme.of(context).textTheme.titleLarge),
+                Text(l10n.activity,
+                    style: Theme.of(context).textTheme.titleLarge),
                 PeriodSelector(days: _chartRange, onChanged: (d) {
                   setState(() => _chartRange = d);
                   _loadActivityChart();
@@ -398,7 +419,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 for (final t in _chartTypes)
                   ChoiceChip(
-                    label: Text(_typeLabels[t] ?? t),
+                    label: Text(_typeLabel(l10n, t)),
                     selected: _chartType == t,
                     selectedColor: AppTheme.Accent,
                     labelStyle: TextStyle(
@@ -437,21 +458,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildActionsSection() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         if (_user?.telegramId == null)
           _buildMenuItem(
             context,
             icon: Icons.telegram,
-            title: 'Привязать Telegram',
-            subtitle: 'Вход по коду из бота',
+            title: l10n.linkTelegram,
+            subtitle: l10n.tgLoginDesc,
             onTap: _linkTelegram,
           ),
         if (_user?.isAdmin == true)
           _buildMenuItem(
             context,
             icon: Icons.admin_panel_settings_outlined,
-            title: 'Админ-панель',
+            title: l10n.adminPanel,
             onTap: () {
               context.push('/admin');
             },
@@ -459,7 +481,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _buildMenuItem(
           context,
           icon: Icons.history,
-          title: 'История практик',
+          title: l10n.practiceHistory,
           onTap: () {
             context.push('/practice_history');
           },
@@ -467,17 +489,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _buildMenuItem(
           context,
           icon: Icons.star_outline,
-          title: 'Подписка',
-          subtitle: _isPremium ? 'Premium' : 'Бесплатный план',
+          title: l10n.subscription,
+          subtitle: _isPremium ? 'Premium' : l10n.freePlan,
           onTap: () {
             context.push('/subscription');
           },
         ),
         _buildMenuItem(
           context,
+          icon: Icons.language_outlined,
+          title: l10n.language,
+          subtitle: LanguageController.instance.value.languageCode == 'en'
+              ? l10n.english
+              : l10n.russian,
+          onTap: _showLanguagePicker,
+        ),
+        _buildMenuItem(
+          context,
           icon: Icons.palette_outlined,
-          title: 'Тема',
-          subtitle: _themeLabel,
+          title: l10n.theme,
+          subtitle: _themeLabel(l10n),
           onTap: _showThemePicker,
         ),
         const SizedBox(height: 24),
@@ -490,7 +521,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
           icon: Icon(Icons.logout, color: AppTheme.Danger),
           label: Text(
-            'Выйти',
+            l10n.logout,
             style: TextStyle(color: AppTheme.Danger),
           ),
           style: OutlinedButton.styleFrom(
@@ -529,23 +560,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final controller = TextEditingController();
     final result = await showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return AlertDialog(
         backgroundColor: AppTheme.Surface,
-        title: const Text('Привязать Telegram'),
+        title: Text(l10n.linkTelegram),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '1. Нажмите "Открыть бот"\n2. Бот пришлёт вам код\n3. Введите его ниже:',
+              l10n.tgGuide,
               style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: controller,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                hintText: 'Код из Telegram',
-                prefixIcon: Icon(Icons.pin),
+              decoration: InputDecoration(
+                hintText: l10n.telegramCodeHint,
+                prefixIcon: const Icon(Icons.pin),
               ),
             ),
           ],
@@ -559,39 +592,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
               } catch (e) {
                 if (ctx.mounted) {
                   ScaffoldMessenger.of(ctx).showSnackBar(
-                    const SnackBar(content: Text('Telegram не установлен')),
+                    SnackBar(content: Text(l10n.telegramNotInstalled)),
                   );
                 }
               }
             },
-            child: const Text('Открыть бот'),
+            child: Text(l10n.openBot),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Отмена'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               if (controller.text.isNotEmpty) Navigator.pop(ctx, controller.text);
             },
-            child: const Text('Привязать'),
+            child: Text(l10n.link),
           ),
         ],
-      ),
+        );
+      },
     );
 
     if (result == null || result.isEmpty) return;
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
 
     try {
       await AuthService().verifyTelegramCode(result);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Telegram привязан!')),
+          SnackBar(content: Text(l10n.telegramLinked)),
         );
         _loadProfile();
       }
     } catch (e) {
-      String msg = 'Неверный или просроченный код';
+      String msg = l10n.invalidTgCode;
       if (e is DioException) {
         final detail = e.response?.data;
         if (detail is Map && detail['detail'] != null) {
@@ -606,14 +642,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  String get _themeLabel {
+  String _themeLabel(AppLocalizations l10n) {
     switch (ThemeController.instance.value) {
       case ThemeMode.light:
-        return 'Светлая';
+        return l10n.themeModeLight;
       case ThemeMode.dark:
-        return 'Тёмная';
+        return l10n.themeModeDark;
       default:
-        return 'Системная';
+        return l10n.themeModeSystem;
     }
   }
 
@@ -621,14 +657,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final current = ThemeController.instance.value;
     final selected = await showDialog<ThemeMode>(
       context: context,
-      builder: (ctx) => SimpleDialog(
-        title: const Text('Тема оформления'),
-        children: [
-          _themeOption(ctx, ThemeMode.system, 'Системная', current),
-          _themeOption(ctx, ThemeMode.light, 'Светлая', current),
-          _themeOption(ctx, ThemeMode.dark, 'Тёмная', current),
-        ],
-      ),
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return SimpleDialog(
+          title: Text(l10n.themeTitle),
+          children: [
+            _themeOption(ctx, ThemeMode.system, l10n.themeModeSystem, current),
+            _themeOption(ctx, ThemeMode.light, l10n.themeModeLight, current),
+            _themeOption(ctx, ThemeMode.dark, l10n.themeModeDark, current),
+          ],
+        );
+      },
     );
     if (selected != null) {
       await ThemeController.instance.setTheme(selected);
@@ -636,13 +675,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _showLanguagePicker() async {
+    final current = LanguageController.instance.value;
+    final selected = await showDialog<Locale>(
+      context: context,
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return SimpleDialog(
+          title: Text(l10n.language),
+          children: [
+            _languageOption(ctx, const Locale('ru'), l10n.russian, current),
+            _languageOption(ctx, const Locale('en'), l10n.english, current),
+          ],
+        );
+      },
+    );
+    if (selected != null) {
+      await LanguageController.instance.setLanguage(selected);
+      if (mounted) setState(() {});
+    }
+  }
+
   Widget _themeOption(BuildContext ctx, ThemeMode mode, String label,
       ThemeMode current) {
+    return _optionRow(ctx, label, current == mode, () => Navigator.of(ctx).pop(mode));
+  }
+
+  Widget _languageOption(
+      BuildContext ctx, Locale locale, String label, Locale current) {
+    return _optionRow(ctx, label, current == locale,
+        () => Navigator.of(ctx).pop(locale));
+  }
+
+  Widget _optionRow(
+      BuildContext ctx, String label, bool selected, VoidCallback onTap) {
     return SimpleDialogOption(
-      onPressed: () => Navigator.of(ctx).pop(mode),
+      onPressed: onTap,
       child: Row(
         children: [
-          if (current == mode)
+          if (selected)
             Icon(Icons.check, color: AppTheme.Accent)
           else
             const SizedBox(width: 24),
@@ -712,6 +783,7 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       padding: EdgeInsets.only(
         left: 24,
@@ -723,11 +795,12 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Редактировать профиль', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.editProfile,
+              style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 20),
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(labelText: 'Имя'),
+            decoration: InputDecoration(labelText: l10n.name),
           ),
           const SizedBox(height: 12),
           TextField(
@@ -737,7 +810,7 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
           const SizedBox(height: 12),
           TextField(
             controller: _bioController,
-            decoration: const InputDecoration(labelText: 'О себе'),
+            decoration: InputDecoration(labelText: l10n.about),
             maxLines: 3,
           ),
           const SizedBox(height: 20),
@@ -759,7 +832,7 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
                     } catch (e) {
                       if (!mounted) return;
                       messenger.showSnackBar(
-                        SnackBar(content: Text('Ошибка: $e')),
+                        SnackBar(content: Text(l10n.errorMessage('$e'))),
                       );
                     } finally {
                       if (mounted) setState(() => _isSaving = false);
@@ -767,7 +840,7 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
                   },
             child: _isSaving
                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                : const Text('Сохранить'),
+                : Text(l10n.save),
           ),
         ],
       ),
@@ -792,14 +865,20 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
       final url = await ApiClient().uploadAvatarFromGallery();
       if (url != null && mounted) {
         Navigator.of(context).pop();
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Аватар установлен'), backgroundColor: AppTheme.AccentGreen),
+          SnackBar(
+              content: Text(l10n.avatarSet),
+              backgroundColor: AppTheme.AccentGreen),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
+          SnackBar(
+              content: Text(l10n.errorMessage('$e')),
+              backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -813,14 +892,20 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
       final url = await ApiClient().uploadAvatarFromCamera();
       if (url != null && mounted) {
         Navigator.of(context).pop();
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Аватар установлен'), backgroundColor: AppTheme.AccentGreen),
+          SnackBar(
+              content: Text(l10n.avatarSet),
+              backgroundColor: AppTheme.AccentGreen),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
+          SnackBar(
+              content: Text(l10n.errorMessage('$e')),
+              backgroundColor: AppTheme.Danger),
         );
       }
     } finally {
@@ -830,6 +915,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         left: 24, right: 24, top: 24,
@@ -839,7 +925,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Аватар', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.avatar, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
           if (widget.avatars.isNotEmpty)
             SizedBox(
@@ -902,7 +988,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
                     : OutlinedButton.icon(
                         onPressed: _pickFromGallery,
                         icon: const Icon(Icons.photo_library_outlined),
-                        label: const Text('Галерея'),
+                        label: Text(l10n.gallery),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.all(16),
                           side: BorderSide(color: AppTheme.CardBorder),
@@ -919,7 +1005,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
                     : OutlinedButton.icon(
                         onPressed: _pickFromCamera,
                         icon: const Icon(Icons.camera_alt_outlined),
-                        label: const Text('Камера'),
+                        label: Text(l10n.camera),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.all(16),
                           side: BorderSide(color: AppTheme.CardBorder),

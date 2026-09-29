@@ -36,7 +36,7 @@ class TheoryDetailScreen extends StatelessWidget {
             const SizedBox(height: 20),
           ],
           Text(
-            item.name,
+            item.displayName(Localizations.localeOf(context).languageCode),
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 12),

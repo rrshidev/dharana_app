@@ -1,10 +1,12 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/shared/widgets/share_button.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class TimerSetupScreen extends StatefulWidget {
   const TimerSetupScreen({super.key});
@@ -48,9 +50,12 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
   void _addAsana(Asana asana) {
     final exists = _selectedAsanas.any((a) => a['name'] == asana.name);
     if (exists) return;
+    final lang = LanguageController.instance.value.languageCode;
     setState(() {
       _selectedAsanas.add({
         'name': asana.name,
+        // Только для показа; в payload практики уходит каноническое 'name'.
+        'name_display': asana.displayName(lang),
         'duration_seconds': _defaultAsanaDuration,
         'rest_seconds': _defaultRestDuration,
       });
@@ -70,10 +75,11 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Настройка практики'),
-        actions: const [
+        title: Text(AppLocalizations.of(context)!.timerSetupTitle),
+        actions: [
           ShareButton(
-            message: 'Таймер практики — Dharana\nhttps://dharana.ru/ru/timer',
+            message:
+                '${AppLocalizations.of(context)!.timerSetupShareTitle}\nhttps://dharana.ru/${LanguageController.instance.value.languageCode}/timer',
           ),
         ],
       ),
@@ -91,6 +97,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
   }
 
   Widget _buildTimeSettings() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.all(16),
       child: Padding(
@@ -98,13 +105,14 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Время по умолчанию', style: Theme.of(context).textTheme.titleMedium),
+            Text(l10n.timerSetupDefaultTime,
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
                   child: _buildDurationPicker(
-                    label: 'Асана',
+                    label: l10n.timerAsana,
                     value: _defaultAsanaDuration,
                     onChanged: (v) {
                       setState(() {
@@ -119,7 +127,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildDurationPicker(
-                    label: 'Отдых',
+                    label: l10n.timerRest,
                     value: _defaultRestDuration,
                     onChanged: (v) {
                       setState(() {
@@ -144,6 +152,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
     required int value,
     required ValueChanged<int> onChanged,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     final options = [5, 10, 15, 30, 45, 60, 90, 120, 180, 300];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +174,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
             style: TextStyle(color: AppTheme.TextPrimary),
             items: options.map((s) => DropdownMenuItem(
               value: s,
-              child: Text(_fmt(s)),
+              child: Text(_fmt(l10n, s)),
             )).toList(),
             onChanged: (v) {
               if (v != null) onChanged(v);
@@ -176,11 +185,11 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
     );
   }
 
-  String _fmt(int s) {
-    if (s < 60) return '$sс';
+  String _fmt(AppLocalizations l10n, int s) {
+    if (s < 60) return l10n.secondsShort(s);
     final m = s ~/ 60;
     final sec = s % 60;
-    return sec > 0 ? '$mм $secс' : '$mмин';
+    return sec > 0 ? l10n.minutesSecondsShort(m, sec) : l10n.minutesShort(m);
   }
 
   Widget _asanaPlaceholder() {
@@ -192,6 +201,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
   }
 
   Widget _buildSelectedAsanas() {
+    final l10n = AppLocalizations.of(context)!;
     if (_selectedAsanas.isEmpty) {
       return Expanded(
         child: Center(
@@ -200,7 +210,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
             children: [
               Icon(Icons.playlist_add, size: 48, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
               const SizedBox(height: 12),
-              Text('Добавьте асаны из списка ниже',
+              Text(l10n.timerSetupEmpty,
                 style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
@@ -217,7 +227,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Text('Последовательность (${_selectedAsanas.length})',
+              child: Text(l10n.timerSetupSequence(_selectedAsanas.length),
                 style: Theme.of(context).textTheme.titleMedium),
             ),
             Expanded(
@@ -243,9 +253,13 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                           Icon(Icons.drag_handle, color: AppTheme.TextSecondary, size: 20),
                         ],
                       ),
-                      title: Text(a['name'], maxLines: 1, overflow: TextOverflow.ellipsis),
+                      title: Text(a['name_display'] ?? a['name'],
+                          maxLines: 1, overflow: TextOverflow.ellipsis),
                       subtitle: Text(
-                        '${_fmt(a['duration_seconds'])} асана / ${_fmt(a['rest_seconds'])} отдых',
+                        l10n.timerSetupItem(
+                          _fmt(l10n, a['duration_seconds']),
+                          _fmt(l10n, a['rest_seconds']),
+                        ),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       trailing: IconButton(
@@ -265,6 +279,8 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
   }
 
   Widget _buildAsanaPicker() {
+    final l10n = AppLocalizations.of(context)!;
+    final lang = Localizations.localeOf(context).languageCode;
     final selectedNames = _selectedAsanas.map((a) => a['name']).toSet();
     final available = _allAsanas.where((a) => !selectedNames.contains(a.name)).toList();
 
@@ -277,7 +293,8 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              child: Text('Доступные асаны', style: Theme.of(context).textTheme.titleMedium),
+              child: Text(l10n.timerSetupAvailable,
+                  style: Theme.of(context).textTheme.titleMedium),
             ),
             Expanded(
               child: ListView.builder(
@@ -324,7 +341,8 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                         ),
                       ],
                     ),
-                    title: Text(asana.name, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    title: Text(asana.displayName(lang),
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
                     subtitle: asana.categoryName != null
                         ? Text(asana.categoryName!, style: Theme.of(context).textTheme.bodySmall)
                         : null,
@@ -340,6 +358,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
   }
 
   Widget _buildStartButton() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SizedBox(
@@ -347,7 +366,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
         child: ElevatedButton.icon(
           onPressed: _selectedAsanas.isEmpty ? null : _startPractice,
           icon: const Icon(Icons.play_arrow),
-          label: Text('Начать практику (${_selectedAsanas.length} асан)'),
+          label: Text(l10n.timerSetupStart(_selectedAsanas.length)),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(16),
             disabledBackgroundColor: AppTheme.SurfaceLight,

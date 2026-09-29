@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/core/models/models.dart';
 
 class ApiClient {
@@ -32,6 +33,8 @@ class ApiClient {
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
         }
+        options.headers['Accept-Language'] =
+            LanguageController.instance.value.languageCode;
         handler.next(options);
       },
       onError: (error, handler) {
@@ -126,6 +129,7 @@ class ApiClient {
     final resp = await _dio.post('/practice/generate', data: {
       'difficulty': difficulty,
       'duration_minutes': durationMinutes,
+      'lang': LanguageController.instance.value.languageCode,
       if (focus != null && focus.isNotEmpty) 'focus': focus,
     });
     return resp.data as Map<String, dynamic>;
@@ -250,13 +254,17 @@ class ApiClient {
     }
   }
 
+  // /basics и /steps читают язык ТОЛЬКО из query-параметра lang
+  // (заголовок Accept-Language эти роутеры не обрабатывают).
   Future<List<TheoryItem>> getBasics() async {
-    final resp = await _dio.get('/basics');
+    final resp = await _dio.get('/basics',
+        queryParameters: {'lang': LanguageController.instance.value.languageCode});
     return (resp.data as List).map((e) => TheoryItem.fromJson(e)).toList();
   }
 
   Future<List<TheoryItem>> getSteps() async {
-    final resp = await _dio.get('/steps');
+    final resp = await _dio.get('/steps',
+        queryParameters: {'lang': LanguageController.instance.value.languageCode});
     return (resp.data as List).map((e) => TheoryItem.fromJson(e)).toList();
   }
 

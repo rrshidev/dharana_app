@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 /// Переключатель периода для графиков: 7 / 30 / 90 дней.
 class PeriodSelector extends StatelessWidget {
@@ -10,6 +11,7 @@ class PeriodSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     const options = [7, 30, 90];
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -18,7 +20,7 @@ class PeriodSelector extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ChoiceChip(
-              label: Text('$d д'),
+              label: Text(l10n.periodDays(d)),
               selected: days == d,
               onSelected: (_) => onChanged(d),
               selectedColor: AppTheme.Accent,

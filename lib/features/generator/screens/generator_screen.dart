@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class GeneratorScreen extends StatefulWidget {
   const GeneratorScreen({super.key});
@@ -44,15 +45,17 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
       if (mounted) setState(() => _result = resp);
     } on DioException catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         if (e.response?.statusCode == 403) {
           setState(() => _limitHit = true);
         } else {
-          setState(() => _error = 'Не удалось сгенерировать практику. Попробуйте ещё раз.');
+          setState(() => _error = l10n.generatorError);
         }
       }
     } catch (_) {
       if (mounted) {
-        setState(() => _error = 'Не удалось сгенерировать практику. Попробуйте ещё раз.');
+        final l10n = AppLocalizations.of(context)!;
+        setState(() => _error = l10n.generatorError);
       }
     } finally {
       if (mounted) setState(() => _generating = false);
@@ -85,42 +88,43 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     }
   }
 
-  String _fmtTotal(int seconds) {
+  String _fmtTotal(AppLocalizations l10n, int seconds) {
     final m = seconds ~/ 60;
-    if (m >= 60 && m % 60 == 0) return '${m ~/ 60} час';
-    return '$m минут';
+    if (m >= 60 && m % 60 == 0) return l10n.generatorHour(m ~/ 60);
+    return l10n.generatorMinutes(m);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Генератор практики'),
+        title: Text(l10n.generatorTitle),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
         children: [
           Text(
-            'Подберём последовательность асан под ваш уровень и цели.',
+            l10n.generatorDesc,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
 
           _Section(
-            title: 'Уровень',
-            children: _difficultyChips(),
+            title: l10n.generatorLevel,
+            children: _difficultyChips(l10n),
           ),
           const SizedBox(height: 20),
 
           _Section(
-            title: 'Длительность',
-            children: _durationChips(),
+            title: l10n.generatorDuration,
+            children: _durationChips(l10n),
           ),
           const SizedBox(height: 20),
 
           _Section(
-            title: 'Фокус',
-            children: _focusChips(),
+            title: l10n.generatorFocus,
+            children: _focusChips(l10n),
           ),
           const SizedBox(height: 24),
 
@@ -150,10 +154,10 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: Text(_generating ? 'Составляем последовательность…' : 'Сгенерировать'),
+              child: Text(_generating ? l10n.generatorGenerating : l10n.generatorGenerate),
             )
           else
-            _resultCard(context),
+            _resultCard(context, l10n),
 
           if (_starting)
             const Padding(
@@ -165,12 +169,12 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     );
   }
 
-  List<Widget> _difficultyChips() {
+  List<Widget> _difficultyChips(AppLocalizations l10n) {
     return _difficulties.map((d) {
       final label = switch (d) {
-        'beginner' => 'Начинающий',
-        'intermediate' => 'Средний',
-        _ => 'Продвинутый',
+        'beginner' => l10n.generatorBeginner,
+        'intermediate' => l10n.generatorIntermediate,
+        _ => l10n.generatorAdvanced,
       };
       return _Chip(
         label: label,
@@ -185,10 +189,10 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     }).toList();
   }
 
-  List<Widget> _durationChips() {
+  List<Widget> _durationChips(AppLocalizations l10n) {
     return _durations.map((d) {
       return _Chip(
-        label: '$d минут',
+        label: l10n.generatorMinutes(d),
         selected: _duration == d,
         onTap: () {
           setState(() {
@@ -200,15 +204,15 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     }).toList();
   }
 
-  List<Widget> _focusChips() {
+  List<Widget> _focusChips(AppLocalizations l10n) {
     return _focuses.map((f) {
       final label = switch (f) {
-        '' => 'Без фокуса',
-        'back' => 'Спина',
-        'legs' => 'Ноги',
-        'balance' => 'Баланс',
-        'flexibility' => 'Гибкость',
-        _ => 'Энергия',
+        '' => l10n.generatorNoFocus,
+        'back' => l10n.generatorFocusBack,
+        'legs' => l10n.generatorFocusLegs,
+        'balance' => l10n.generatorFocusBalance,
+        'flexibility' => l10n.generatorFocusFlexibility,
+        _ => l10n.generatorFocusEnergy,
       };
       return _Chip(
         label: label,
@@ -223,7 +227,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
     }).toList();
   }
 
-  Widget _resultCard(BuildContext context) {
+  Widget _resultCard(BuildContext context, AppLocalizations l10n) {
     final result = _result!;
     final items = (result['items'] as List<dynamic>? ?? []);
     final totalSeconds = (result['total_duration_seconds'] as num?)?.toInt() ?? 0;
@@ -235,10 +239,11 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Ваша практика', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.generatorYourPractice,
+                style: Theme.of(context).textTheme.titleLarge),
             TextButton(
               onPressed: () => setState(() => _result = null),
-              child: const Text('Пересобрать'),
+              child: Text(l10n.generatorRebuild),
             ),
           ],
         ),
@@ -254,6 +259,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ...List.generate(items.length, (i) {
+                final l10n = AppLocalizations.of(context)!;
                 final item = items[i] as Map<String, dynamic>;
                 final name = item['name'] ?? '';
                 final dure = (item['duration_seconds'] as num?)?.toInt() ?? 0;
@@ -273,7 +279,9 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
                         child: Text(name, style: Theme.of(context).textTheme.bodyMedium),
                       ),
                       Text(
-                        rest > 0 ? '$dure с + $rest с' : '$dure с',
+                        rest > 0
+                            ? l10n.secPlusRest(dure, rest)
+                            : l10n.secOnly(dure),
                         style: TextStyle(color: AppTheme.TextSecondary, fontSize: 12),
                       ),
                     ],
@@ -284,17 +292,17 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
               Row(
                 children: [
                   Text(
-                    'Асан: ${items.length}',
+                    l10n.generatorAsanCount(items.length),
                     style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
                   ),
                   const Spacer(),
                   Text(
-                    'Итого: ${_fmtTotal(totalSeconds)}',
+                    l10n.generatorTotal(_fmtTotal(l10n, totalSeconds)),
                     style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
                   ),
                   if (calories > 0)
                     Text(
-                      ' · ~$calories ккал',
+                      l10n.generatorCalories(calories),
                       style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
                     ),
                 ],
@@ -308,13 +316,14 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
           style: FilledButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
           ),
-          child: const Text('Начать практику'),
+          child: Text(l10n.startPractice),
         ),
       ],
     );
   }
 
   Widget _limitCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -328,12 +337,12 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
           const Text('⏳', style: TextStyle(fontSize: 32)),
           const SizedBox(height: 8),
           Text(
-            'Лимит на сегодня исчерпан',
+            l10n.generatorLimitTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 6),
           Text(
-            'Бесплатно можно генерировать одну практику в день. Подключите Premium — и практикуйте без ограничений.',
+            l10n.generatorLimitDesc,
             textAlign: TextAlign.center,
             style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
           ),
@@ -342,7 +351,7 @@ class _GeneratorScreenState extends State<GeneratorScreen> {
             width: double.infinity,
             child: FilledButton(
               onPressed: () => context.push('/subscription'),
-              child: const Text('Получить Premium'),
+              child: Text(l10n.generatorGetPremium),
             ),
           ),
         ],

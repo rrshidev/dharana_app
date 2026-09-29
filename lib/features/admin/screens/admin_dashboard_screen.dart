@@ -5,6 +5,7 @@ import 'package:dharana_app/features/admin/screens/admin_content_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_overview_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_payments_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_users_screen.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -18,9 +19,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Админ-панель'),
+        title: Text(l10n.adminPanelTitle),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(0),
           child: SizedBox.shrink(),
@@ -45,27 +47,27 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           NavigationDestination(
             icon: Icon(Icons.dashboard_outlined, color: AppTheme.TextSecondary),
             selectedIcon: Icon(Icons.dashboard, color: AppTheme.Accent),
-            label: 'Обзор',
+            label: l10n.adminTabOverview,
           ),
           NavigationDestination(
             icon: Icon(Icons.people_outline, color: AppTheme.TextSecondary),
             selectedIcon: Icon(Icons.people, color: AppTheme.Accent),
-            label: 'Юзеры',
+            label: l10n.adminTabUsers,
           ),
           NavigationDestination(
             icon: Icon(Icons.request_page_outlined, color: AppTheme.TextSecondary),
             selectedIcon: Icon(Icons.request_page, color: AppTheme.Accent),
-            label: 'Заявки',
+            label: l10n.adminTabPayments,
           ),
           NavigationDestination(
             icon: Icon(Icons.campaign_outlined, color: AppTheme.TextSecondary),
             selectedIcon: Icon(Icons.campaign, color: AppTheme.Accent),
-            label: 'Рассылка',
+            label: l10n.adminTabBroadcast,
           ),
           NavigationDestination(
             icon: Icon(Icons.folder_outlined, color: AppTheme.TextSecondary),
             selectedIcon: Icon(Icons.folder, color: AppTheme.Accent),
-            label: 'Контент',
+            label: l10n.adminTabContent,
           ),
         ],
       ),

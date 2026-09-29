@@ -2,6 +2,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,6 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Center(
         child: Column(
@@ -53,14 +55,14 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Dharana',
+              l10n.appTitle,
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     color: AppTheme.Accent,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Йога энциклопедия',
+              l10n.splashTagline,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 32),

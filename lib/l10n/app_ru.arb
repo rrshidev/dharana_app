@@ -1,0 +1,751 @@
+{
+  "@@locale": "ru",
+  "appTitle": "Dharana",
+  "themeModeSystem": "Системная",
+  "themeModeLight": "Светлая",
+  "themeModeDark": "Тёмная",
+  "profile": "Профиль",
+  "userFallback": "Пользователь",
+  "memberSince": "Участник с {date}",
+  "recently": "недавно",
+  "statistics": "Статистика",
+  "minutes": "минут",
+  "days": "дней",
+  "streak": "серия",
+  "sessions": "сессий",
+  "all": "Все",
+  "asana": "Асана",
+  "asanas": "Асаны",
+  "meditation": "Медитация",
+  "pranayama": "Пранаяма",
+  "exercises": "Упражнения",
+  "unitAsanas": "асан",
+  "unitExercises": "упражнений",
+  "activity": "Активность",
+  "linkTelegram": "Привязать Telegram",
+  "tgLoginDesc": "Вход по коду из бота",
+  "adminPanel": "Админ-панель",
+  "practiceHistory": "История практик",
+  "subscription": "Подписка",
+  "freePlan": "Бесплатный план",
+  "theme": "Тема",
+  "themeTitle": "Тема оформления",
+  "language": "Язык",
+  "russian": "Русский",
+  "english": "English",
+  "logout": "Выйти",
+  "telegramNotInstalled": "Telegram не установлен",
+  "openBot": "Открыть бот",
+  "cancel": "Отмена",
+  "close": "Закрыть",
+  "link": "Привязать",
+  "telegramLinked": "Telegram привязан!",
+  "invalidTgCode": "Неверный или просроченный код",
+  "tgGuide": "1. Нажмите \"Открыть бот\"\n2. Бот пришлёт вам код\n3. Введите его ниже:",
+  "telegramCodeHint": "Код из Telegram",
+  "paymentConfirmedTitle": "🎉 Оплата подтверждена!",
+  "paymentRejectedTitle": "❌ Заявка отклонена",
+  "paymentConfirmedMsg": "Ваш платеж подтвержден. Премиум-подписка активна{end}",
+  "paymentRejectedMsg": "К сожалению, мы не смогли подтвердить ваш платёж.\nСвяжитесь с администратором, если вы уверены в оплате, или попробуйте ещё раз.",
+  "ok": "Хорошо",
+  "editProfile": "Редактировать профиль",
+  "name": "Имя",
+  "about": "О себе",
+  "save": "Сохранить",
+  "errorMessage": "Ошибка: {error}",
+  "errorLoad": "Ошибка загрузки",
+  "avatarSet": "Аватар установлен",
+  "avatar": "Аватар",
+  "gallery": "Галерея",
+  "camera": "Камера",
+  "home": "Главная",
+  "timer": "Таймер",
+  "favorites": "Избранное",
+  "greetingGoodNight": "Доброй ночи",
+  "greetingGoodMorning": "Доброе утро",
+  "greetingGoodDay": "Добрый день",
+  "greetingGoodEvening": "Добрый вечер",
+  "yogi": "йог",
+  "homeGreeting": "{greeting}, {name}",
+  "practiceRegularly": "Практикуй регулярно",
+  "quickFilter": "Подбор",
+  "quickComplexes": "Комплексы",
+  "quickSearch": "Поиск",
+  "quickBasics": "Основы йоги",
+  "quickSteps": "8 ступеней",
+  "dailyAsana": "Асана дня",
+  "categories": "Категории",
+  "generatorTitle": "Генератор практики",
+  "generatorSubtitle": "Сгенерируйте практику под свой уровень и цели",
+  "login": "Войти",
+  "loginToAccount": "Войдите в свой аккаунт",
+  "email": "Email",
+  "password": "Пароль",
+  "forgotPassword": "Забыли пароль?",
+  "noAccount": "Нет аккаунта? ",
+  "registerCta": "Зарегистрируйтесь",
+  "or": "или",
+  "loginWithGoogle": "Войти через Google",
+  "loginWithTelegram": "Войти через Telegram",
+  "loginViaTelegram": "Вход через Telegram",
+  "fillAllFields": "Заполните все поля",
+  "invalidEmailOrPassword": "Неверный email или пароль",
+  "googleLoginFailed": "Не удалось войти через Google",
+  "telegramNotInstalledLong": "Telegram не установлен. Установите Telegram и попробуйте снова.",
+  "createAccount": "Создать аккаунт",
+  "startYogaJourney": "Начните свой путь в йоге",
+  "passwordMinHint": "Пароль (мин. 8 символов)",
+  "register": "Зарегистрироваться",
+  "alreadyHaveAccount": "Уже есть аккаунт? ",
+  "signIn": "Войдите",
+  "checkEmail": "Проверьте правильность email",
+  "nameTooLong": "Имя слишком длинное (не больше 60 символов)",
+  "passwordTooShort": "Пароль должен быть не короче 8 символов",
+  "disposableEmail": "Этот почтовый сервис не подходит. Используйте обычную почту",
+  "emailNotDeliverable": "Похоже, такой почты не существует. Проверьте адрес",
+  "emailAlreadyRegistered": "Email уже используется. Попробуйте войти.",
+  "registrationError": "Ошибка регистрации. Попробуйте ещё раз.",
+  "enterEmail": "Введите email",
+  "resetPasswordTitle": "Восстановление пароля",
+  "resetPasswordDesc": "Введите email, на который зарегистрирован аккаунт. Мы отправим ссылку для сброса пароля.",
+  "sendResetLink": "Отправить ссылку",
+  "checkYourEmail": "Проверьте почту",
+  "resetLinkSent": "Мы отправили ссылку для сброса пароля. Она действует 30 минут.",
+  "backToLogin": "Вернуться ко входу",
+  "emailSentRecently": "Письмо уже отправлено недавно. Подождите минуту",
+  "failSendEmail": "Не удалось отправить письмо. Попробуйте позже",
+  "newPassword": "Новый пароль",
+  "newPasswordHint": "Новый пароль",
+  "repeatPassword": "Повторите пароль",
+  "savePassword": "Сохранить пароль",
+  "passwordChanged": "Пароль изменён",
+  "canLoginNow": "Теперь можно войти с новым паролем.",
+  "newPasswordDesc": "Придумайте новый пароль для входа. Ссылка действует 30 минут.",
+  "passwordsDontMatch": "Пароли не совпадают",
+  "invalidResetToken": "Ссылка недействительна или устарела. Запросите новую",
+  "passwordTooLong": "Пароль слишком длинный (максимум 128 символов)",
+  "failChangePassword": "Не удалось изменить пароль. Попробуйте позже",
+  "categoryEmpty": "В этой категории пока нет асан",
+  "asanaNotFound": "Асана не найдена",
+  "contraindications": "Противопоказания",
+  "description": "Описание",
+  "video": "Видео",
+  "videoPremium": "Видео доступно по подписке",
+  "getPremium": "Оформите Premium для доступа",
+  "startPractice": "Начать практику",
+  "addedToFavorites": "Добавлено в избранное",
+  "removedFromFavorites": "Удалено из избранного",
+  "effectBackPain": "🦴 Спина",
+  "effectCalmMind": "🧘 Успокоение",
+  "effectBoostEnergy": "⚡ Энергия",
+  "effectDigestion": "🌿 Пищеварение",
+  "effectFlexibility": "🤸 Гибкость",
+  "effectBalance": "⚖️ Баланс",
+  "effectStrength": "💪 Сила",
+  "effectStressRelief": "😌 Антистресс",
+  "theoryBasicsTitle": "Основы йоги",
+  "theoryStepsTitle": "8 ступеней йоги",
+  "theoryLoadError": "Не удалось загрузить разделы. Попробуйте позже.",
+  "searchHint": "Поиск асан...",
+  "searchEmpty": "Введите название асаны",
+  "searchNoResults": "Ничего не найдено",
+  "favoritesEmpty": "Нет избранных асан",
+  "favoritesEmptyHint": "Добавляйте асаны в избранное\nнажимая сердечко на деталях",
+  "removedFavorite": "{name} удалено из избранного",
+  "@removedFavorite": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "filterTitle": "Подбор по параметрам",
+  "filterReset": "Сбросить",
+  "filterGoal": "Цель",
+  "filterLevel": "Уровень",
+  "filterPosition": "Позиция",
+  "filterShow": "Показать",
+  "filterParamsNotFound": "параметры не найдены",
+  "filterNoResults": "Ничего не найдено",
+  "filterNoResultsHint": "Попробуйте другие параметры",
+  "filterCountAsanas": "{count, plural, one{Асана} few{Асаны} many{Асан} other{Асан}}",
+  "@filterCountAsanas": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterEffectBackPain": "🦴 Боль в спине",
+  "filterEffectCalmMind": "🧘 Спокойствие",
+  "filterEffectBoostEnergy": "⚡ Энергия",
+  "filterEffectDigestion": "🌿 Пищеварение",
+  "filterEffectFlexibility": "🤸 Гибкость",
+  "filterEffectBalance": "⚖️ Баланс",
+  "filterEffectStrength": "💪 Сила",
+  "filterEffectStressRelief": "😌 Стресс",
+  "filterEffectAbs": "🎯 Пресс",
+  "filterEffectKnees": "🦵 Колени",
+  "filterEffectNeck": "💆 Шея",
+  "filterEffectCirculation": "❤️ Кровообращение",
+  "filterEffectLungs": "🫁 Дыхание",
+  "filterEffectWeightLoss": "🔥 Похудение",
+  "filterDifficultyBeginner": "★ Начинающий",
+  "filterDifficultyIntermediate": "★★ Средний",
+  "filterDifficultyAdvanced": "★★★ Продвинутый",
+  "filterCategorySitLie": "Сидя и лёжа",
+  "filterCategoryStand": "В позах стоя",
+  "filterCategoryHands": "На руках",
+  "filterCategoryBends": "Наклоны",
+  "filterCategoryBackbends": "Прогибы",
+  "filterCategoryPower": "Силовые",
+  "complexesTitle": "Готовые комплексы",
+  "complexesEmpty": "Комплексы пока не добавлены",
+  "complexesShareTitle": "Готовые комплексы йоги — Dharana",
+  "generatorDesc": "Подберём последовательность асан под ваш уровень и цели.",
+  "generatorLevel": "Уровень",
+  "generatorDuration": "Длительность",
+  "generatorFocus": "Фокус",
+  "generatorBeginner": "Начинающий",
+  "generatorIntermediate": "Средний",
+  "generatorAdvanced": "Продвинутый",
+  "generatorMinutes": "{minutes} минут",
+  "@generatorMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "generatorNoFocus": "Без фокуса",
+  "generatorFocusBack": "Спина",
+  "generatorFocusLegs": "Ноги",
+  "generatorFocusBalance": "Баланс",
+  "generatorFocusFlexibility": "Гибкость",
+  "generatorFocusEnergy": "Энергия",
+  "generatorGenerating": "Составляем последовательность…",
+  "generatorGenerate": "Сгенерировать",
+  "generatorError": "Не удалось сгенерировать практику. Попробуйте ещё раз.",
+  "generatorYourPractice": "Ваша практика",
+  "generatorRebuild": "Пересобрать",
+  "generatorAsanCount": "Асан: {count}",
+  "@generatorAsanCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "generatorTotal": "Итого: {duration}",
+  "@generatorTotal": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "generatorCalories": " · ~{calories} ккал",
+  "@generatorCalories": {
+    "placeholders": {
+      "calories": {
+        "type": "int"
+      }
+    }
+  },
+  "generatorHour": "{hours} час",
+  "@generatorHour": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "generatorLimitTitle": "Лимит на сегодня исчерпан",
+  "generatorLimitDesc": "Бесплатно можно генерировать одну практику в день. Подключите Premium — и практикуйте без ограничений.",
+  "generatorGetPremium": "Получить Premium",
+  "timerSetupTitle": "Настройка практики",
+  "timerSetupShareTitle": "Таймер практики — Dharana",
+  "timerSetupDefaultTime": "Время по умолчанию",
+  "timerAsana": "Асана",
+  "timerRest": "Отдых",
+  "timerSetupEmpty": "Добавьте асаны из списка ниже",
+  "timerSetupSequence": "Последовательность ({count})",
+  "@timerSetupSequence": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timerSetupItem": "{asanDuration} асана / {restDuration} отдых",
+  "@timerSetupItem": {
+    "placeholders": {
+      "asanDuration": {
+        "type": "String"
+      },
+      "restDuration": {
+        "type": "String"
+      }
+    }
+  },
+  "timerSetupAvailable": "Доступные асаны",
+  "timerSetupStart": "Начать практику ({count} {count, plural, one{асана} few{асаны} many{асан} other{асан}})",
+  "@timerSetupStart": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "secondsShort": "{value}с",
+  "@secondsShort": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesShort": "{value}мин",
+  "@minutesShort": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "minutesSecondsShort": "{m}м {s}с",
+  "@minutesSecondsShort": {
+    "placeholders": {
+      "m": {
+        "type": "int"
+      },
+      "s": {
+        "type": "int"
+      }
+    }
+  },
+  "timerTitle": "Таймер",
+  "timerStop": "Остановить",
+  "timerEmpty": "Нет асан для практики",
+  "timerEmptyHint": "Добавьте асаны в настройках",
+  "timerSetup": "Настроить",
+  "timerReady": "Готов",
+  "timerFinish": "Завершение",
+  "timerPause": "Пауза",
+  "timerDoneTitle": "Практика завершена!",
+  "timerDoneSummary": "{count} {count, plural, one{асана} few{асаны} many{асан} other{асан}} · {duration}",
+  "@timerDoneSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "timerRestart": "Начать заново",
+  "timerClose": "Закрыть",
+  "timerAgain": "Заново",
+  "timerResume": "Продолжить",
+  "timerSkip": "Далее",
+  "subPremiumActive": "Premium активен",
+  "subActiveUntil": "Действует до {date}",
+  "@subActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "subPlanDesc": "Откройте все видео из каталога, безлимитные последовательности и повтор практик",
+  "subPricePerMonth": "499 ₽ / месяц",
+  "subHowToPay": "Как оплатить: переведите сумму на карту, затем нажмите \"Я оплатил(а) и прикрепить чек\" и загрузите фото/скрин чека. После проверки Premium будет активирован автоматически.",
+  "subRequisitesUnavailable": "Реквизиты недоступны",
+  "subRequisitesTitle": "Реквизиты для оплаты",
+  "subAmount": "Сумма: {amount}",
+  "@subAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "subRecipient": "Получатель: {name}",
+  "@subRecipient": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "subTapToCopy": "Нажмите на карту, чтобы скопировать номер",
+  "subCard": "Карта",
+  "subCardCopied": "Номер карты скопирован",
+  "subUploadReceipt": "Я оплатил(а), прикрепить чек",
+  "subReceiptSent": "Чек получен! Premium будет активирован после проверки.",
+  "subReceiptFailed": "Не удалось отправить чек",
+  "historyLoadMore": "Загрузить ещё",
+  "historyEmpty": "Нет практик",
+  "historyEmptyHint": "Начните практику в таймере",
+  "historyRepeat": "Повторить",
+  "historyRepeatPremium": "Повтор практики доступен по подписке Premium",
+  "historyRepeatPremiumHint": "Оформите Premium, чтобы повторять любые практики",
+  "historyMore": "Подробнее",
+  "notifications": "Уведомления",
+  "notificationsEmpty": "Уведомлений пока нет",
+  "notificationMessageFallback": "Сообщение",
+  "splashTagline": "Йога энциклопедия",
+  "chartNoData": "Нет данных за период",
+  "periodDays": "{days} д",
+  "@periodDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "adminPanelTitle": "Админ-панель",
+  "adminTabOverview": "Обзор",
+  "adminTabUsers": "Юзеры",
+  "adminTabPayments": "Заявки",
+  "adminTabBroadcast": "Рассылка",
+  "adminTabContent": "Контент",
+  "adminStatUsers": "Юзеров",
+  "adminStatPremium": "Премиум",
+  "adminStatPractices": "Практик",
+  "adminStatMinutes": "Минут",
+  "adminStatNewPerWeek": "Новых/нед.",
+  "adminStatConversion": "Конверсия",
+  "adminChartPracticesPerDay": "Практики по дням",
+  "adminChartNewUsersPremium": "Новые пользователи и премиум",
+  "adminSeriesRegistered": "Зарегистрировано",
+  "adminSeriesRegistrations": "Регистрации",
+  "adminChartConversionTitle": "Конверсия в Premium",
+  "adminPremiumAllRatio": "премиум/все",
+  "adminKvTotalUsers": "Всего юзеров",
+  "adminKvNewMonth": "Новых за месяц",
+  "adminKvPracticesMonth": "Практик за месяц",
+  "adminActivityTitle": "Последняя активность",
+  "adminActivityEmpty": "Активности нет",
+  "adminActivityPractice": "Практика: {count} {count, plural, one{асана} few{асаны} many{асан} other{асан}} · {minutes} мин",
+  "@adminActivityPractice": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "adminActivityNewUser": "Новый пользователь: {name}",
+  "@adminActivityNewUser": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminUsersTitle": "Пользователи",
+  "adminUsersSearchHint": "Поиск по имени, email, username",
+  "adminUsersNotFound": "Пользователи не найдены",
+  "adminUserNoName": "Без имени",
+  "adminUserMinutes": "{minutes} мин",
+  "@adminUserMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "adminUserTitle": "Пользователь",
+  "adminStatsTitle": "Статистика",
+  "adminStatPracticeMinutes": "Минут практики",
+  "adminStatPracticeDays": "Дней практики",
+  "adminStatCurrentStreak": "Текущая серия",
+  "adminStatLongestStreak": "Лучшая серия",
+  "adminStatRegisteredAt": "Регистрация",
+  "adminStatusLabel": "Статус",
+  "adminStatusPremium": "Премиум",
+  "adminStatusFree": "Бесплатно",
+  "adminUntilLabel": "До",
+  "adminPremiumRemove": "Снять премиум",
+  "adminPremiumGrant": "Выдать премиум",
+  "adminActionsTitle": "Действия",
+  "adminSendMessage": "Написать сообщение",
+  "adminUnban": "Разбанить",
+  "adminBan": "Забанить",
+  "adminRestore": "Восстановить",
+  "adminDelete": "Удалить",
+  "adminChannelTitle": "Канал доставки",
+  "adminChannelBoth": "Telegram + приложение",
+  "adminChannelAppOnly": "Только приложение (in-app)",
+  "adminChannelTelegramOnly": "Только Telegram",
+  "adminNoTelegramId": "У пользователя нет Telegram ID",
+  "adminMessageTitle": "Сообщение пользователю",
+  "adminMessageHint": "Текст сообщения",
+  "adminAttachImage": "📎 Прикрепить изображение",
+  "adminAttachReplace": "📎 Заменить",
+  "adminRemoveImage": "Убрать",
+  "adminSend": "Отправить",
+  "adminNext": "Далее",
+  "adminReportAppQueued": "in-app: поставлено",
+  "adminReportAppFailed": "in-app: ошибка",
+  "adminReportAppStatus": "in-app: {status}",
+  "@adminReportAppStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "adminReportTgSent": "TG: отправлено",
+  "adminReportTgNoId": "TG: нет ID",
+  "adminReportTgFailed": "TG: ошибка",
+  "adminReportTgNoBot": "TG: бот не настроен",
+  "adminReportTgStatus": "TG: {status}",
+  "@adminReportTgStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "adminConfirmBan": "Забанить пользователя?",
+  "adminConfirmUnban": "Разбанить пользователя?",
+  "adminBanLosesAccess": "Он потеряет доступ к приложению.",
+  "adminConfirmDelete": "Удалить пользователя?",
+  "adminConfirmRestore": "Восстановить пользователя?",
+  "adminDeleteReversible": "Это обратимо, но юзер будет помечен удалённым.",
+  "adminUserBanned": "Пользователь забанен",
+  "adminUserUnbanned": "Бан снят",
+  "adminUserDeleted": "Пользователь удалён",
+  "adminUserRestored": "Пользователь восстановлен",
+  "adminConfirm": "Подтвердить",
+  "adminMinutesChartTitle": "Минут практики",
+  "adminRecentSessions": "Последние практики",
+  "adminNoCompletedSessions": "Нет завершённых практик",
+  "adminSessionAsanas": "{count} {count, plural, one{асана} few{асаны} many{асан} other{асан}}",
+  "@adminSessionAsanas": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adminSessionMeta": "{minutes} мин · {date}",
+  "@adminSessionMeta": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDaysLabel": "Кол-во дней",
+  "adminGrant": "Выдать",
+  "adminPremiumRemoved": "Премиум снят",
+  "adminPremiumGranted": "Премиум выдан",
+  "adminPaymentsTitle": "Заявки на Premium",
+  "adminPaymentsEmpty": "Заявок нет",
+  "adminPaymentsTotal": "Всего",
+  "adminPaymentsPending": "Ожидают",
+  "adminPaymentsApproved": "Одобрено",
+  "adminPaymentsRejected": "Отклонено",
+  "adminPaymentsAll": "Все",
+  "adminPaymentsApprovedPlural": "Одобрены",
+  "adminPaymentsRejectedPlural": "Отклонены",
+  "adminStatusConfirmed": "Одобрено",
+  "adminStatusRejected": "Отклонено",
+  "adminStatusPending": "Ожидает",
+  "adminApprove": "Подтвердить",
+  "adminReject": "Отклонить",
+  "adminConfirmPaymentTitle": "Подтвердить оплату",
+  "adminPremiumDaysLabel": "Кол-во дней Premium",
+  "adminPaymentConfirmed": "Оплата подтверждена{premium}",
+  "@adminPaymentConfirmed": {
+    "placeholders": {
+      "premium": {
+        "type": "String"
+      }
+    }
+  },
+  "adminPaymentConfirmedPremium": ", Premium выдан",
+  "adminPaymentRejected": "Оплата отклонена",
+  "adminBroadcastTitle": "Рассылка",
+  "adminBroadcastCampaigns": "Рассылок",
+  "adminBroadcastRecipients": "Получателей",
+  "adminBroadcastTotalDeliveries": "Всего доставок",
+  "adminBroadcastNew": "Новая рассылка",
+  "adminBroadcastMessageHint": "Текст сообщения для пользователей",
+  "adminBroadcastAudience": "Аудитория",
+  "adminBroadcastFree": "Бесплатные",
+  "adminBroadcastPremium": "Премиум",
+  "adminBroadcastAll": "Все",
+  "adminBroadcastPickAudience": "Выберите хотя бы одну аудиторию",
+  "adminBroadcastChannels": "Каналы",
+  "adminBroadcastInApp": "В приложении",
+  "adminBroadcastPickChannel": "Выберите хотя бы один канал",
+  "adminBroadcastTest": "Тест админу",
+  "adminBroadcastSend": "Разослать",
+  "adminBroadcastEnterMessage": "Введите текст сообщения",
+  "adminBroadcastPickAudienceShort": "Выберите аудиторию",
+  "adminBroadcastPickChannelShort": "Выберите канал",
+  "adminBroadcastConfirmTitle": "Разослать сообщение?",
+  "adminBroadcastAudienceRow": "Аудитория: {audience}",
+  "@adminBroadcastAudienceRow": {
+    "placeholders": {
+      "audience": {
+        "type": "String"
+      }
+    }
+  },
+  "adminBroadcastChannelsRow": "Каналы: {channels}",
+  "@adminBroadcastChannelsRow": {
+    "placeholders": {
+      "channels": {
+        "type": "String"
+      }
+    }
+  },
+  "adminBroadcastCreated": "Рассылка создана. Telegram: {telegram}, Приложение: {app}",
+  "@adminBroadcastCreated": {
+    "placeholders": {
+      "telegram": {
+        "type": "String"
+      },
+      "app": {
+        "type": "String"
+      }
+    }
+  },
+  "adminBroadcastTestResult": "Тест админу: Telegram={telegram}, Приложение={app}",
+  "@adminBroadcastTestResult": {
+    "placeholders": {
+      "telegram": {
+        "type": "String"
+      },
+      "app": {
+        "type": "String"
+      }
+    }
+  },
+  "adminContentTitle": "Контент",
+  "adminTabAsanas": "Асаны",
+  "adminTabSequences": "Комплексы",
+  "adminNewAsana": "Новая асана",
+  "adminAddSequence": "Добавить комплекс",
+  "adminAsanasEmpty": "Асаны не найдены",
+  "adminSequencesEmpty": "Готовые комплексы не найдены",
+  "adminVideoTag": "видео",
+  "adminTooltipPhoto": "Фото",
+  "adminTooltipVideo": "Видео",
+  "adminTooltipEdit": "Редактировать",
+  "adminTooltipDelete": "Удалить",
+  "adminSequenceFree": "Бесплатный",
+  "adminAsanaCreated": "Асана создана",
+  "adminSaved": "Сохранено",
+  "adminEditTitle": "Редактировать: {name}",
+  "@adminEditTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminFieldCategory": "Категория",
+  "adminFieldDescriptionHint": "Описание (для новой — сохранится)",
+  "adminFieldSection": "Раздел",
+  "adminPhotoUpdated": "Фото обновлено",
+  "adminVideoUploaded": "Видео загружено",
+  "adminDeleteAsanaTitle": "Удалить асану «{name}»?",
+  "@adminDeleteAsanaTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDeleteAsanaBody": "Будут удалены описание и фото, а также видео асаны.",
+  "adminAsanaDeleted": "Асана удалена",
+  "adminDeleteFailed": "Не удалось удалить",
+  "adminSequenceAdded": "Комплекс добавлен",
+  "adminNewSequenceTitle": "Новый комплекс",
+  "adminDeleteSequenceTitle": "Удалить комплекс «{name}»?",
+  "@adminDeleteSequenceTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDeleteSequenceBody": "Видео будет удалено безвозвратно.",
+  "adminSequenceDeleted": "Комплекс удалён",
+  "chartMinutesLabel": "Минуты",
+  "chartSessionsLabel": "Сессии",
+  "chartAsanasUnit": "асан",
+  "chartSessionsCount": "{count, plural, one{сессия} few{сессии} other{сессий}}",
+  "@chartSessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareTooltip": "Поделиться",
+  "secOnly": "{value} с",
+  "@secOnly": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "secPlusRest": "{value} с + {rest} с",
+  "@secPlusRest": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "rest": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentConfirmedUntil": " до {date}",
+  "@paymentConfirmedUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptSentMsg": "Чек получен! Premium будет активирован после проверки.",
+  "categoryAsanaCount": "{count, plural, one{{count} асана} few{{count} асаны} other{{count} асан}}",
+  "@categoryAsanaCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareCatalogText": "Каталог асан — {category}",
+  "@shareCatalogText": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "shareFailed": "Не удалось поделиться: {error}",
+  "@shareFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
+}

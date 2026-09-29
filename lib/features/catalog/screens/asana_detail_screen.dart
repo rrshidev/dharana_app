@@ -2,9 +2,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
+import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/shared/widgets/share_button.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 import 'package:video_player/video_player.dart';
 
 class AsanaDetailScreen extends StatefulWidget {
@@ -80,9 +82,12 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
       await _api.toggleFavorite(widget.asanaName);
       if (mounted) {
         setState(() => _isFavorite = !_isFavorite);
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_isFavorite ? 'Добавлено в избранное' : 'Удалено из избранного'),
+            content: Text(_isFavorite
+                ? l10n.addedToFavorites
+                : l10n.removedFromFavorites),
             backgroundColor: AppTheme.SurfaceLight,
             duration: const Duration(seconds: 1),
           ),
@@ -91,7 +96,10 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.errorMessage('$e')),
+              backgroundColor: AppTheme.Danger),
         );
       }
     }
@@ -99,12 +107,14 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final lang = LanguageController.instance.value.languageCode;
     return Scaffold(
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(color: AppTheme.Accent))
           : _asana == null
-              ? const Center(child: Text('Асана не найдена'))
+              ? Center(child: Text(l10n.asanaNotFound))
               : CustomScrollView(
                   slivers: [
                     SliverAppBar(
@@ -113,7 +123,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                       actions: [
                         ShareButton(
                           message:
-                              '${_asana!.name}\nhttps://dharana.ru/ru/asana/${Uri.encodeComponent(widget.asanaName)}',
+                              '${_asana!.displayName(lang)}\nhttps://dharana.ru/$lang/asana/${Uri.encodeComponent(widget.asanaName)}',
                         ),
                         IconButton(
                           icon: Icon(
@@ -163,7 +173,8 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _asana!.name,
+                              _asana!.displayName(
+                                  Localizations.localeOf(context).languageCode),
                               style: Theme.of(context).textTheme.headlineMedium,
                             ),
                             const SizedBox(height: 8),
@@ -195,7 +206,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                 runSpacing: 8,
                                 children: _asana!.effects.map((effect) {
                                   return Chip(
-                                    label: Text(_effectLabel(effect)),
+                                    label: Text(_effectLabel(l10n, effect)),
                                     backgroundColor: AppTheme.SurfaceLight,
                                     side: BorderSide.none,
                                     padding: const EdgeInsets.symmetric(
@@ -225,7 +236,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                             color: AppTheme.Danger, size: 20),
                                         SizedBox(width: 8),
                                         Text(
-                                          'Противопоказания',
+                                          l10n.contraindications,
                                           style: TextStyle(
                                             color: AppTheme.Danger,
                                             fontWeight: FontWeight.w600,
@@ -250,7 +261,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                 _asana!.description!.isNotEmpty) ...[
                               const SizedBox(height: 24),
                               Text(
-                                'Описание',
+                                l10n.description,
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               const SizedBox(height: 12),
@@ -264,7 +275,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                             if (_video != null && _video!.accessible && _isVideoInitialized) ...[
                               const SizedBox(height: 24),
                               Text(
-                                'Видео',
+                                l10n.video,
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               const SizedBox(height: 12),
@@ -311,13 +322,13 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
-                                            'Видео доступно по подписке',
+                                          Text(
+                                            l10n.videoPremium,
                                             style: TextStyle(fontWeight: FontWeight.w600),
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            _video!.message ?? 'Оформите Premium для доступа',
+                                            _video!.message ?? l10n.getPremium,
                                             style: TextStyle(fontSize: 12, color: AppTheme.TextSecondary),
                                           ),
                                         ],
@@ -344,7 +355,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                   );
                                 },
                                 icon: const Icon(Icons.timer_outlined),
-                                label: const Text('Начать практику'),
+                                label: Text(l10n.startPractice),
                               ),
                             ),
                             const SizedBox(height: 100),
@@ -357,17 +368,25 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
     );
   }
 
-  String _effectLabel(String effect) {
-    const labels = {
-      'back_pain': '🦴 Спина',
-      'calm_mind': '🧘 Успокоение',
-      'boost_energy': '⚡ Энергия',
-      'digestion': '🌿 Пищеварение',
-      'flexibility': '🤸 Гибкость',
-      'balance': '⚖️ Баланс',
-      'strength': '💪 Сила',
-      'stress_relief': '😌 Антистресс',
-    };
-    return labels[effect] ?? effect;
+  String _effectLabel(AppLocalizations l10n, String effect) {
+    switch (effect) {
+      case 'back_pain':
+        return l10n.effectBackPain;
+      case 'calm_mind':
+        return l10n.effectCalmMind;
+      case 'boost_energy':
+        return l10n.effectBoostEnergy;
+      case 'digestion':
+        return l10n.effectDigestion;
+      case 'flexibility':
+        return l10n.effectFlexibility;
+      case 'balance':
+        return l10n.effectBalance;
+      case 'strength':
+        return l10n.effectStrength;
+      case 'stress_relief':
+        return l10n.effectStressRelief;
+    }
+    return effect;
   }
 }

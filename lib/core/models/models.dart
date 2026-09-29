@@ -1,5 +1,10 @@
 class Asana {
+  /// Канонический ключ (имя файла). Используется для ВСЕХ обращений к API:
+  /// /asanas/{name}, /favorites/{name}, /videos/asana/{name}, payload практики.
+  /// Никогда не подменять локализованным значением.
   final String name;
+  final String? nameEn;
+  final String? nameRu;
   final String? categoryId;
   final String? categoryName;
   final String? description;
@@ -10,6 +15,8 @@ class Asana {
 
   Asana({
     required this.name,
+    this.nameEn,
+    this.nameRu,
     this.categoryId,
     this.categoryName,
     this.description,
@@ -22,6 +29,8 @@ class Asana {
   factory Asana.fromJson(Map<String, dynamic> json) {
     return Asana(
       name: json['name'] ?? '',
+      nameEn: json['name_en'],
+      nameRu: json['name_ru'],
       categoryId: json['category_id'],
       categoryName: json['category_name'],
       description: json['description'],
@@ -30,6 +39,18 @@ class Asana {
       effects: List<String>.from(json['effects'] ?? []),
       contraindications: List<String>.from(json['contraindications'] ?? []),
     );
+  }
+
+  /// Название для показа пользователю в текущей локали.
+  /// Если перевода нет — откатываемся на исправленное русское, затем на ключ.
+  String displayName(String lang) {
+    if (lang == 'en') {
+      final en = nameEn;
+      if (en != null && en.isNotEmpty) return en;
+    }
+    final ru = nameRu;
+    if (ru != null && ru.isNotEmpty) return ru;
+    return name;
   }
 }
 
@@ -57,6 +78,7 @@ class Category {
 }
 
 class TheoryItem {
+  /// Канонический ключ раздела (без числового префикса).
   final String name;
   final String? nameEn;
   final String content;
@@ -76,6 +98,15 @@ class TheoryItem {
       content: json['content'] ?? '',
       imageUrl: json['image_url'],
     );
+  }
+
+  /// Заголовок раздела в текущей локали с откатом на русский.
+  String displayName(String lang) {
+    if (lang == 'en') {
+      final en = nameEn;
+      if (en != null && en.isNotEmpty) return en;
+    }
+    return name;
   }
 }
 

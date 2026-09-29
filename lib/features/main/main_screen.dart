@@ -5,6 +5,7 @@ import 'package:dharana_app/features/timer/screens/timer_setup_screen.dart';
 import 'package:dharana_app/features/favorites/screens/favorites_screen.dart';
 import 'package:dharana_app/features/profile/screens/profile_screen.dart';
 import 'package:dharana_app/shared/widgets/notification_bell.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -49,22 +50,22 @@ class _MainScreenState extends State<MainScreen> {
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home, color: AppTheme.Accent),
-            label: 'Главная',
+            label: AppLocalizations.of(context)!.home,
           ),
           NavigationDestination(
             icon: Icon(Icons.timer_outlined),
             selectedIcon: Icon(Icons.timer, color: AppTheme.Accent),
-            label: 'Таймер',
+            label: AppLocalizations.of(context)!.timer,
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite_outline),
             selectedIcon: Icon(Icons.favorite, color: AppTheme.Accent),
-            label: 'Избранное',
+            label: AppLocalizations.of(context)!.favorites,
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outlined),
             selectedIcon: Icon(Icons.person, color: AppTheme.Accent),
-            label: 'Профиль',
+            label: AppLocalizations.of(context)!.profile,
           ),
         ],
       ),

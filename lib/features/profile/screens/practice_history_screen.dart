@@ -1,9 +1,11 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class PracticeHistoryScreen extends StatefulWidget {
   const PracticeHistoryScreen({super.key});
@@ -50,7 +52,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('История практик')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.practiceHistory)),
       body: _isLoading && _sessions.isEmpty
           ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
           : RefreshIndicator(
@@ -77,7 +79,8 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                             ? CircularProgressIndicator(color: AppTheme.Accent, strokeWidth: 2)
                             : TextButton(
                                 onPressed: _loadData,
-                                child: const Text('Загрузить ещё'),
+                                child: Text(
+                                    AppLocalizations.of(context)!.historyLoadMore),
                               ),
                       ),
                     ),
@@ -88,6 +91,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
   }
 
   Widget _buildStatsSummary() {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -97,22 +101,22 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
             _buildStatItem(
               icon: Icons.timer_outlined,
               value: '${_stats?.totalMinutes ?? 0}',
-              label: 'минут',
+              label: l10n.minutes,
             ),
             _buildStatItem(
               icon: Icons.calendar_today,
               value: '${_stats?.totalDays ?? 0}',
-              label: 'дней',
+              label: l10n.days,
             ),
             _buildStatItem(
               icon: Icons.local_fire_department_outlined,
               value: '${_stats?.currentStreak ?? 0}',
-              label: 'серия',
+              label: l10n.streak,
             ),
             _buildStatItem(
               icon: Icons.self_improvement,
               value: '${_stats?.totalSessions ?? 0}',
-              label: 'сессий',
+              label: l10n.sessions,
             ),
           ],
         ),
@@ -144,30 +148,35 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
   }
 
   Widget _buildEmptyState() {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 48),
       child: Column(
         children: [
           Icon(Icons.history, size: 64, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 16),
-          Text('Нет практик', style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.historyEmpty, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
-          Text('Начните практику в таймере', style: Theme.of(context).textTheme.bodyMedium),
+          Text(l10n.historyEmptyHint, style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );
   }
 
   Widget _buildSessionCard(PracticeSession session) {
+    final l10n = AppLocalizations.of(context)!;
+    final lang = LanguageController.instance.value.languageCode;
     final date = session.completedAt != null
-        ? DateFormat('d MMMM yyyy, HH:mm', 'ru').format(DateTime.parse(session.completedAt!))
+        ? DateFormat('d MMMM yyyy, HH:mm', lang).format(DateTime.parse(session.completedAt!))
         : session.startedAt != null
-            ? DateFormat('d MMMM yyyy, HH:mm', 'ru').format(DateTime.parse(session.startedAt!))
+            ? DateFormat('d MMMM yyyy, HH:mm', lang).format(DateTime.parse(session.startedAt!))
             : '';
     final duration = session.totalDurationSeconds;
     final m = duration ~/ 60;
     final s = duration % 60;
-    final durationStr = m > 0 ? '$mм ${s > 0 ? '$sс' : ''}' : '$sс';
+    final durationStr = m > 0
+        ? '${l10n.minutesShort(m)} ${s > 0 ? l10n.secondsShort(s) : ''}'
+        : l10n.secondsShort(s);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -227,7 +236,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                   child: OutlinedButton.icon(
                     onPressed: () => _repeatSession(session),
                     icon: const Icon(Icons.replay, size: 18),
-                    label: const Text('Повторить'),
+                    label: Text(l10n.historyRepeat),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       side: BorderSide(color: AppTheme.Accent),
@@ -248,6 +257,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
   }
 
   Widget _buildPremiumUpsell() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
@@ -262,7 +272,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Повтор практики доступен по подписке Premium',
+              l10n.historyRepeatPremium,
               style: TextStyle(fontSize: 13, color: AppTheme.TextSecondary),
             ),
           ),
@@ -270,12 +280,12 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Оформите Premium, чтобы повторять любые практики'),
+                  content: Text(l10n.historyRepeatPremiumHint),
                   backgroundColor: AppTheme.SurfaceLight,
                 ),
               );
             },
-            child: Text('Подробнее', style: TextStyle(color: AppTheme.Accent)),
+            child: Text(l10n.historyMore, style: TextStyle(color: AppTheme.Accent)),
           ),
         ],
       ),

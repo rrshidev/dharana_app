@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/shared/widgets/notification_bell.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class SubscriptionScreen extends StatefulWidget {
   const SubscriptionScreen({super.key});
@@ -42,22 +43,23 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       final end = first['subscription_end']?.toString() ?? '';
       if (!mounted) return;
       final isConfirmed = status == 'confirmed';
+      final l10n = AppLocalizations.of(context)!;
       showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(isConfirmed ? '🎉 Оплата подтверждена!' : '❌ Заявка отклонена'),
+          title: Text(isConfirmed
+              ? l10n.paymentConfirmedTitle
+              : l10n.paymentRejectedTitle),
           content: Text(
             isConfirmed
-                ? 'Ваш платеж подтвержден. Премиум-подписка активна'
-                    '${end.isEmpty ? '!' : ' до $end'}'
-                : 'К сожалению, мы не смогли подтвердить ваш платёж.\n'
-                    'Свяжитесь с администратором, если вы уверены в оплате, '
-                    'или попробуйте ещё раз.',
+                ? l10n.paymentConfirmedMsg(
+                    end.isEmpty ? '!' : l10n.paymentConfirmedUntil(end))
+                : l10n.paymentRejectedMsg,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Хорошо'),
+              child: Text(l10n.ok),
             ),
           ],
         ),
@@ -90,7 +92,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.errorMessage(e))),
         );
       }
     }
@@ -100,9 +102,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Подписка'),
+        title: Text(l10n.subscription),
         actions: const [NotificationBell()],
       ),
       body: _isLoading
@@ -126,9 +129,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      'Как оплатить: переведите сумму на карту, затем нажмите '
-                      '"Я оплатил(а) и прикрепить чек" и загрузите фото/скрин чека. '
-                      'После проверки Premium будет активирован автоматически.',
+                      l10n.subHowToPay,
                       style: TextStyle(fontSize: 13, color: AppTheme.TextSecondary),
                     ),
                   ),
@@ -139,6 +140,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   Widget _buildPlanCard() {
+    final l10n = AppLocalizations.of(context)!;
     final end = _status?['subscription_end'] ?? '';
     final endStr = end is String && end.length >= 10 ? end.substring(0, 10) : '';
     return Card(
@@ -157,7 +159,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    _isPremium ? 'Premium активен' : 'Бесплатный план',
+                    _isPremium ? l10n.subPremiumActive : l10n.freePlan,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -165,11 +167,11 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             ),
             const SizedBox(height: 12),
             if (_isPremium && endStr.isNotEmpty)
-              Text('Действует до $endStr',
+              Text(l10n.subActiveUntil(endStr),
                   style: Theme.of(context).textTheme.bodyMedium)
             else
               Text(
-                'Откройте все видео из каталога, безлимитные последовательности и повтор практик',
+                l10n.subPlanDesc,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             if (_isPremium)
@@ -177,7 +179,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             else ...[
               const SizedBox(height: 12),
               Text(
-                '499 ₽ / месяц',
+                l10n.subPricePerMonth,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.Accent),
               ),
             ],
@@ -188,12 +190,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   Widget _buildRequisitesCard() {
+    final l10n = AppLocalizations.of(context)!;
     final price = '499 ₽';
     if (_requisites.isEmpty) {
       return Card(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: Text('Реквизиты недоступны',
+          child: Text(l10n.subRequisitesUnavailable,
               style: TextStyle(color: AppTheme.TextSecondary)),
         ),
       );
@@ -204,20 +207,20 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Реквизиты для оплаты', style: TextStyle(
+            Text(l10n.subRequisitesTitle, style: TextStyle(
               fontSize: 16, fontWeight: FontWeight.w600, color: AppTheme.TextPrimary)),
             const SizedBox(height: 4),
-            Text('Сумма: $price',
+            Text(l10n.subAmount(price),
                 style: TextStyle(color: AppTheme.TextSecondary)),
             if (_requisites.first['holder']?.toString().isNotEmpty == true) ...[
               const SizedBox(height: 12),
               Text(
-                'Получатель: ${_requisites.first['holder']}',
+                l10n.subRecipient(_requisites.first['holder'].toString()),
                 style: TextStyle(
                   fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.TextPrimary),
               ),
               const SizedBox(height: 4),
-              Text('Нажмите на карту, чтобы скопировать номер',
+              Text(l10n.subTapToCopy,
                   style: TextStyle(fontSize: 12, color: AppTheme.TextSecondary)),
             ],
             const SizedBox(height: 16),
@@ -230,12 +233,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   Widget _buildRequisiteTile(Map<String, dynamic> r) {
+    final l10n = AppLocalizations.of(context)!;
     final bank = r['bank']?.toString() ?? '';
     final number = r['card']?.toString() ?? r['card_number']?.toString() ?? r['number']?.toString() ?? '';
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Icon(Icons.credit_card, color: AppTheme.Accent),
-      title: Text(bank.isEmpty ? 'Карта' : bank),
+      title: Text(bank.isEmpty ? l10n.subCard : bank),
       subtitle: number.isNotEmpty
           ? Text(number, style: TextStyle(fontSize: 13, color: AppTheme.TextSecondary))
           : null,
@@ -243,7 +247,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         if (number.isNotEmpty) {
           Clipboard.setData(ClipboardData(text: number));
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Номер карты скопирован')),
+            SnackBar(content: Text(l10n.subCardCopied)),
           );
         }
       },
@@ -251,6 +255,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   }
 
   Widget _buildPaymentButton() {
+    final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       width: double.infinity,
       child: _isUploading
@@ -261,7 +266,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           : ElevatedButton.icon(
               onPressed: _pickAndUploadReceipt,
               icon: const Icon(Icons.upload_file),
-              label: const Text('Я оплатил(а), прикрепить чек'),
+              label: Text(l10n.subUploadReceipt),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _isPremium ? AppTheme.SurfaceLight : AppTheme.Accent,
                 foregroundColor: AppTheme.Background,
@@ -285,17 +290,18 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Чек получен! Premium будет активирован после проверки.'),
+            content: Text(AppLocalizations.of(context)!.receiptSentMsg),
             backgroundColor: AppTheme.AccentGreen,
           ),
         );
       }
     } on DioException catch (e) {
-      String msg = 'Не удалось отправить чек';
-      if (e.response?.data is Map && e.response!.data['detail'] != null) {
-        msg = e.response!.data['detail'].toString();
-      }
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        String msg = l10n.subReceiptFailed;
+        if (e.response?.data is Map && e.response!.data['detail'] != null) {
+          msg = e.response!.data['detail'].toString();
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(msg), backgroundColor: AppTheme.Danger),
         );
@@ -303,7 +309,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: AppTheme.Danger),
+          SnackBar(
+              content:
+                  Text(AppLocalizations.of(context)!.errorMessage('$e')),
+              backgroundColor: AppTheme.Danger),
         );
       }
     } finally {

@@ -1,8 +1,10 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/shared/widgets/share_button.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 import 'package:video_player/video_player.dart';
 
 class SequencesScreen extends StatefulWidget {
@@ -39,12 +41,15 @@ class _SequencesScreenState extends State<SequencesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final lang = LanguageController.instance.value.languageCode;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Готовые комплексы'),
-        actions: const [
+        title: Text(l10n.complexesTitle),
+        actions: [
           ShareButton(
-            message: 'Готовые комплексы йоги — Dharana\nhttps://dharana.ru/ru/complexes',
+            message:
+                '${l10n.complexesShareTitle}\nhttps://dharana.ru/$lang/complexes',
           ),
         ],
       ),
@@ -58,7 +63,7 @@ class _SequencesScreenState extends State<SequencesScreen> {
                       Icon(Icons.video_library_outlined, size: 64, color: AppTheme.TextSecondary),
                       const SizedBox(height: 16),
                       Text(
-                        'Комплексы пока не добавлены',
+                        l10n.complexesEmpty,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.TextSecondary),
                       ),
                     ],

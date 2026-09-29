@@ -2,6 +2,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class AdminUser {
   final int id;
@@ -91,7 +92,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           _loading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.errorMessage('$e'))),
         );
       }
     }
@@ -99,9 +100,10 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Пользователи'),
+        title: Text(l10n.adminUsersTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -117,7 +119,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
               controller: _searchController,
               onSubmitted: (q) => _load(q, searching: true),
               decoration: InputDecoration(
-                hintText: 'Поиск по имени, email, username',
+                hintText: l10n.adminUsersSearchHint,
                 prefixIcon: const Icon(Icons.search),
                 isDense: true,
                 suffixIcon: IconButton(
@@ -136,7 +138,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
                 : _searching
                     ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
                     : _users.isEmpty
-                        ? const Center(child: Text('Пользователи не найдены'))
+                        ? Center(child: Text(l10n.adminUsersNotFound))
                         : RefreshIndicator(
                             onRefresh: () => _load(_searchController.text),
                             color: AppTheme.Accent,
@@ -153,6 +155,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
   }
 
   Widget _buildCard(AdminUser u) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       color: AppTheme.Surface,
       margin: const EdgeInsets.only(bottom: 8),
@@ -168,7 +171,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             style: TextStyle(color: AppTheme.Accent, fontWeight: FontWeight.bold),
           ),
         ),
-        title: Text(u.name ?? 'Без имени'),
+        title: Text(u.name ?? l10n.adminUserNoName),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -188,7 +191,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             else if (u.isPremium)
               Icon(Icons.workspace_premium, color: AppTheme.Accent, size: 18),
             Text(
-              '${u.totalPracticeMinutes} мин',
+              l10n.adminUserMinutes(u.totalPracticeMinutes),
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],

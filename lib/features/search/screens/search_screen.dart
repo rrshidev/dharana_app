@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -48,13 +49,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: TextField(
           controller: _controller,
           autofocus: true,
           decoration: InputDecoration(
-            hintText: 'Поиск асан...',
+            hintText: l10n.searchHint,
             border: InputBorder.none,
             suffixIcon: _controller.text.isNotEmpty
                 ? IconButton(
@@ -93,7 +95,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       Icon(Icons.search, size: 64, color: AppTheme.TextSecondary.withValues(alpha: 0.3)),
                       const SizedBox(height: 16),
                       Text(
-                        'Введите название асаны',
+                        l10n.searchEmpty,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
@@ -102,7 +104,7 @@ class _SearchScreenState extends State<SearchScreen> {
               : _results.isEmpty
                   ? Center(
                       child: Text(
-                        'Ничего не найдено',
+                        l10n.searchNoResults,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     )
@@ -140,7 +142,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                   child: Icon(Icons.self_improvement,
                                       color: AppTheme.Accent),
                                 ),
-                          title: Text(asana.name),
+                          title: Text(
+                              asana.displayName(
+                                  Localizations.localeOf(context).languageCode)),
                           subtitle: Text(
                             AppTheme.starsText(asana.difficulty),
                             style: AppTheme.difficultyStars(asana.difficulty),

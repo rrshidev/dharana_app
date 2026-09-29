@@ -3,6 +3,7 @@ import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
 import 'package:dharana_app/features/admin/widgets/period_selector.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class AdminOverviewScreen extends StatefulWidget {
   const AdminOverviewScreen({super.key});
@@ -55,7 +56,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
       if (mounted) {
         setState(() => _loading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки: $e')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.errorLoad)),
         );
       }
     }
@@ -65,7 +66,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Обзор'),
+        title: Text(AppLocalizations.of(context)!.adminTabOverview),
         actions: [
           IconButton(icon: const Icon(Icons.refresh), onPressed: _loadAll),
         ],
@@ -100,6 +101,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
   }
 
   Widget _buildStatCards() {
+    final l10n = AppLocalizations.of(context)!;
     final s = _stats ?? {};
     final practicesTrend = _ints('practices');
     final usersTrend = _ints('new_users');
@@ -110,7 +112,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
             _statCard(
               icon: Icons.people_outline,
               value: '${s['total_users'] ?? 0}',
-              label: 'Юзеров',
+              label: l10n.adminStatUsers,
               spark: usersTrend,
               sparkColor: AppTheme.Accent,
             ),
@@ -118,7 +120,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
             _statCard(
               icon: Icons.workspace_premium_outlined,
               value: '${s['premium_users'] ?? 0}',
-              label: 'Премиум',
+              label: l10n.adminStatPremium,
               spark: _ints('new_premium'),
               sparkColor: AppTheme.AccentGreen,
             ),
@@ -130,7 +132,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
             _statCard(
               icon: Icons.self_improvement,
               value: '${s['total_sessions'] ?? 0}',
-              label: 'Практик',
+              label: l10n.adminStatPractices,
               spark: practicesTrend,
               sparkColor: AppTheme.Accent,
             ),
@@ -138,7 +140,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
             _statCard(
               icon: Icons.schedule,
               value: '${s['total_practice_minutes'] ?? 0}',
-              label: 'Минут',
+              label: l10n.adminStatMinutes,
               spark: _periodMinutes(practicesTrend),
               sparkColor: AppTheme.AccentGreen,
             ),
@@ -150,7 +152,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
             _statCard(
               icon: Icons.person_add_alt_1,
               value: '${s['new_users_week'] ?? 0}',
-              label: 'Новых/нед.',
+              label: l10n.adminStatNewPerWeek,
               spark: usersTrend,
               sparkColor: AppTheme.Accent,
             ),
@@ -158,7 +160,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
             _statCard(
               icon: Icons.percent,
               value: '${s['conversion_rate'] ?? 0}%',
-              label: 'Конверсия',
+              label: l10n.adminStatConversion,
               spark: [],
               sparkColor: AppTheme.Accent,
             ),
@@ -219,33 +221,35 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
   }
 
   Widget _buildPracticesChart() {
+    final l10n = AppLocalizations.of(context)!;
     final days = _days ?? [];
     final practices = _ints('practices');
     return ChartCard(
-      title: 'Практики по дням',
+      title: l10n.adminChartPracticesPerDay,
       child: AreaTrendChart(data: practices, labels: days),
     );
   }
 
   Widget _buildUsersChart() {
+    final l10n = AppLocalizations.of(context)!;
     final days = _days ?? [];
     return ChartCard(
-      title: 'Новые пользователи и премиум',
+      title: l10n.adminChartNewUsersPremium,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MultiLineChart(
             series: [
-              ChartSeries(name: 'Зарегистрировано', color: AppTheme.Accent, data: _ints('new_users')),
-              ChartSeries(name: 'Премиум', color: AppTheme.AccentGreen, data: _ints('new_premium')),
+              ChartSeries(name: l10n.adminSeriesRegistered, color: AppTheme.Accent, data: _ints('new_users')),
+              ChartSeries(name: l10n.adminStatPremium, color: AppTheme.AccentGreen, data: _ints('new_premium')),
             ],
             labels: days,
           ),
           const SizedBox(height: 10),
           ChartLegend(
             series: [
-              ChartSeries(name: 'Регистрации', color: AppTheme.Accent, data: []),
-              ChartSeries(name: 'Премиум', color: AppTheme.AccentGreen, data: []),
+              ChartSeries(name: l10n.adminSeriesRegistrations, color: AppTheme.Accent, data: []),
+              ChartSeries(name: l10n.adminStatPremium, color: AppTheme.AccentGreen, data: []),
             ],
           ),
         ],
@@ -254,22 +258,23 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
   }
 
   Widget _buildConversion() {
+    final l10n = AppLocalizations.of(context)!;
     final s = _stats ?? {};
     final rate = (s['conversion_rate'] as num?)?.toDouble() ?? 0;
     return ChartCard(
-      title: 'Конверсия в Premium',
+      title: l10n.adminChartConversionTitle,
       child: Row(
         children: [
-          DonutRate(value: rate, centerLabel: '${rate.round()}%', subLabel: 'премиум/все'),
+          DonutRate(value: rate, centerLabel: '${rate.round()}%', subLabel: l10n.adminPremiumAllRatio),
           const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _kv('Всего юзеров', '${s['total_users'] ?? 0}'),
-                _kv('Премиум', '${s['premium_users'] ?? 0}'),
-                _kv('Новых за месяц', '${s['new_users_month'] ?? 0}'),
-                _kv('Практик за месяц', '${s['sessions_month'] ?? 0}'),
+                _kv(l10n.adminKvTotalUsers, '${s['total_users'] ?? 0}'),
+                _kv(l10n.adminStatPremium, '${s['premium_users'] ?? 0}'),
+                _kv(l10n.adminKvNewMonth, '${s['new_users_month'] ?? 0}'),
+                _kv(l10n.adminKvPracticesMonth, '${s['sessions_month'] ?? 0}'),
               ],
             ),
           ),
@@ -292,11 +297,12 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
   }
 
   Widget _buildActivity() {
+    final l10n = AppLocalizations.of(context)!;
     final list = _activity.take(10).toList();
     return ChartCard(
-      title: 'Последняя активность',
+      title: l10n.adminActivityTitle,
       child: list.isEmpty
-          ? Text('Активности нет', style: TextStyle(color: AppTheme.TextSecondary))
+          ? Text(l10n.adminActivityEmpty, style: TextStyle(color: AppTheme.TextSecondary))
           : Column(
               children: list.map(_activityRow).toList(),
             ),
@@ -304,6 +310,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
   }
 
   Widget _activityRow(dynamic e) {
+    final l10n = AppLocalizations.of(context)!;
     final type = e['type'];
     final isPractice = type == 'practice';
     return Padding(
@@ -319,8 +326,12 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
           Expanded(
             child: Text(
               isPractice
-                  ? 'Практика: ${e['asanas_count'] ?? 0} асан · ${((e['duration_seconds'] ?? 0) / 60).round()} мин'
-                  : 'Новый пользователь: ${e['user_name'] ?? '?'}',
+                  ? l10n.adminActivityPractice(
+                      (e['asanas_count'] as num?)?.toInt() ?? 0,
+                      ((e['duration_seconds'] as num?)?.toInt() ?? 0) ~/ 60,
+                    )
+                  : l10n.adminActivityNewUser(
+                      e['user_name']?.toString() ?? '?'),
               style: TextStyle(fontSize: 13, color: AppTheme.TextPrimary),
             ),
           ),

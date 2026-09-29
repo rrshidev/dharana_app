@@ -4,6 +4,7 @@ import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      setState(() => _error = 'Заполните все поля');
+      setState(() => _error = AppLocalizations.of(context)!.fillAllFields);
       return;
     }
 
@@ -36,7 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
         context.go('/main');
       }
     } catch (e) {
-      setState(() => _error = 'Неверный email или пароль');
+      setState(
+          () => _error = AppLocalizations.of(context)!.invalidEmailOrPassword);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -50,12 +52,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final auth = await _authService.loginWithGoogle();
-      if (auth == null) return; // пользователь отменил выбор аккаунта
+      if (auth == null) return;
       if (mounted) {
         context.go('/main');
       }
     } catch (e) {
-      setState(() => _error = 'Не удалось войти через Google');
+      setState(() => _error = AppLocalizations.of(context)!.googleLoginFailed);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -65,51 +67,58 @@ class _LoginScreenState extends State<LoginScreen> {
     final controller = TextEditingController();
     final result = await showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.Surface,
-        title: const Text('Вход через Telegram'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '1. Нажмите "Открыть бот"\n2. Бот пришлёт вам код\n3. Введите его ниже:',
-              style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                hintText: 'Код из Telegram',
-                prefixIcon: Icon(Icons.pin),
+      builder: (ctx) {
+        final l10n = AppLocalizations.of(ctx)!;
+        return AlertDialog(
+          backgroundColor: AppTheme.Surface,
+          title: Text(l10n.loginViaTelegram),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.tgGuide,
+                style: TextStyle(color: AppTheme.TextSecondary, fontSize: 13),
               ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: controller,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: l10n.telegramCodeHint,
+                  prefixIcon: const Icon(Icons.pin),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                final uri =
+                    Uri.parse('https://t.me/yogaasana_bot?start=auth');
+                try {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                } catch (e) {
+                  if (ctx.mounted) {
+                    ScaffoldMessenger.of(ctx).showSnackBar(
+                      SnackBar(
+                          content: Text(l10n.telegramNotInstalledLong)),
+                    );
+                  }
+                }
+              },
+              child: Text(l10n.openBot),
+            ),
+            TextButton(
+              onPressed: () {
+                if (controller.text.isNotEmpty) {
+                  Navigator.pop(ctx, controller.text);
+                }
+              },
+              child: Text(l10n.login),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              final uri = Uri.parse('https://t.me/yogaasana_bot?start=auth');
-              try {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              } catch (e) {
-                if (ctx.mounted) {
-                  ScaffoldMessenger.of(ctx).showSnackBar(
-                    const SnackBar(content: Text('Telegram не установлен. Установите Telegram и попробуйте снова.')),
-                  );
-                }
-              }
-            },
-            child: const Text('Открыть бот'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) Navigator.pop(ctx, controller.text);
-            },
-            child: const Text('Войти'),
-          ),
-        ],
-      ),
+        );
+      },
     );
 
     if (result == null || result.isEmpty) return;
@@ -138,11 +147,12 @@ class _LoginScreenState extends State<LoginScreen> {
         return detail['detail'].toString();
       }
     }
-    return 'Неверный или просроченный код';
+    return AppLocalizations.of(context)!.invalidTgCode;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: LayoutBuilder(
@@ -185,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
                     Center(
                       child: Text(
-                        'Войдите в свой аккаунт',
+                        l10n.loginToAccount,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ),
@@ -193,18 +203,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        hintText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                      decoration: InputDecoration(
+                        hintText: l10n.email,
+                        prefixIcon: const Icon(Icons.email_outlined),
                       ),
                     ),
                     const SizedBox(height: 16),
                     TextField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: const InputDecoration(
-                        hintText: 'Пароль',
-                        prefixIcon: Icon(Icons.lock_outline),
+                      decoration: InputDecoration(
+                        hintText: l10n.password,
+                        prefixIcon: const Icon(Icons.lock_outline),
                       ),
                     ),
                     Align(
@@ -219,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: Text(
-                          'Забыли пароль?',
+                          l10n.forgotPassword,
                           style: TextStyle(
                             color: AppTheme.Accent,
                             fontSize: 13,
@@ -248,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: AppTheme.Background,
                               ),
                             )
-                          : const Text('Войти'),
+                          : Text(l10n.login),
                     ),
                     const SizedBox(height: 16),
                     TextButton(
@@ -257,11 +267,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: RichText(
                         text: TextSpan(
-                          text: 'Нет аккаунта? ',
+                          text: l10n.noAccount,
                           style: TextStyle(color: AppTheme.TextSecondary),
                           children: [
                             TextSpan(
-                              text: 'Зарегистрируйтесь',
+                              text: l10n.registerCta,
                               style: TextStyle(
                                 color: AppTheme.Accent,
                                 fontWeight: FontWeight.w600,
@@ -277,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Expanded(child: Divider(color: AppTheme.CardBorder)),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text('или', style: TextStyle(color: AppTheme.TextSecondary)),
+                          child: Text(l10n.or, style: TextStyle(color: AppTheme.TextSecondary)),
                         ),
                         Expanded(child: Divider(color: AppTheme.CardBorder)),
                       ],
@@ -288,7 +298,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _isLoading ? null : _loginWithGoogle,
                         icon: const _GoogleG(),
-                        label: const Text('Войти через Google'),
+                        label: Text(l10n.loginWithGoogle),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           side: BorderSide(color: AppTheme.CardBorder),
@@ -305,8 +315,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _isLoading ? null : _loginWithTelegram,
                         icon: const Icon(Icons.telegram, color: Color(0xFF0088CC)),
-                        label: const Text(
-                          'Войти через Telegram',
+                        label: Text(
+                          l10n.loginWithTelegram,
                           style: TextStyle(color: Color(0xFF0088CC)),
                         ),
                         style: OutlinedButton.styleFrom(

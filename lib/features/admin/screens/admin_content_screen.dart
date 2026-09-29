@@ -6,15 +6,35 @@ import 'package:image_picker/image_picker.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 const _categories = <String, String>{
-  'sit_lie+': 'Асаны сидя и лёжа',
-  'stay+': 'Асаны стоя',
-  'hand+': 'Балансы на руках',
-  'coup+': 'Перевёрнутые асаны',
-  'sag+': 'Прогибы',
-  'power+': 'Силовые асаны',
+  'sit_lie+': 'sit_lie+',
+  'stay+': 'stay+',
+  'hand+': 'hand+',
+  'coup+': 'coup+',
+  'sag+': 'sag+',
+  'power+': 'power+',
 };
+
+String _categoryLabel(AppLocalizations l10n, String id) {
+  switch (id) {
+    case 'sit_lie+':
+      return l10n.filterCategorySitLie;
+    case 'stay+':
+      return l10n.filterCategoryStand;
+    case 'hand+':
+      return l10n.filterCategoryHands;
+    case 'coup+':
+      return l10n.filterCategoryBends;
+    case 'sag+':
+      return l10n.filterCategoryBackbends;
+    case 'power+':
+      return l10n.filterCategoryPower;
+    default:
+      return id;
+  }
+}
 
 class AdminContentScreen extends StatefulWidget {
   const AdminContentScreen({super.key});
@@ -76,9 +96,10 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Контент'),
+        title: Text(l10n.adminContentTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -91,9 +112,9 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
           Padding(
             padding: const EdgeInsets.all(12),
             child: SegmentedButton<int>(
-              segments: const [
-                ButtonSegment(value: 0, label: Text('Асаны')),
-                ButtonSegment(value: 1, label: Text('Комплексы')),
+              segments: [
+                ButtonSegment(value: 0, label: Text(l10n.adminTabAsanas)),
+                ButtonSegment(value: 1, label: Text(l10n.adminTabSequences)),
               ],
               selected: {_tab},
               onSelectionChanged: (s) => setState(() => _tab = s.first),
@@ -113,14 +134,14 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         foregroundColor: AppTheme.Background,
         onPressed: _tab == 0 ? _createAsana : _addSequence,
         icon: const Icon(Icons.add),
-        label: Text(_tab == 0 ? 'Новая асана' : 'Добавить комплекс'),
+        label: Text(_tab == 0 ? l10n.adminNewAsana : l10n.adminAddSequence),
       ),
     );
   }
 
   Widget _asanasView() {
     if (_asanas.isEmpty) {
-      return const Center(child: Text('Асаны не найдены'));
+      return Center(child: Text(AppLocalizations.of(context)!.adminAsanasEmpty));
     }
     return RefreshIndicator(
       onRefresh: _loadAsanas,
@@ -135,7 +156,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
 
   Widget _sequencesView() {
     if (_sequences.isEmpty) {
-      return const Center(child: Text('Готовые комплексы не найдены'));
+      return Center(child: Text(AppLocalizations.of(context)!.adminSequencesEmpty));
     }
     return RefreshIndicator(
       onRefresh: _loadSequences,
@@ -149,6 +170,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
   }
 
   Widget _asanaCard(AdminAsana a) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -172,8 +194,8 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         ),
         title: Text(a.name),
         subtitle: Text(
-          '${_categories[a.categoryId] ?? a.categoryId}'
-          '${a.hasVideo ? ' · видео' : ''}'
+          '${_categoryLabel(l10n, a.categoryId)}'
+          '${a.hasVideo ? ' · ${l10n.adminVideoTag}' : ''}'
           '${a.difficulty > 1 ? ' · ${AppTheme.starsText(a.difficulty)}' : ''}',
           style: const TextStyle(fontSize: 12),
         ),
@@ -182,22 +204,22 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
           children: [
             IconButton(
               icon: Icon(Icons.photo_outlined, color: AppTheme.Accent),
-              tooltip: 'Фото',
+              tooltip: l10n.adminTooltipPhoto,
               onPressed: () => _uploadAsanaPhoto(a),
             ),
             IconButton(
               icon: Icon(Icons.video_call_outlined, color: AppTheme.AccentGreen),
-              tooltip: 'Видео',
+              tooltip: l10n.adminTooltipVideo,
               onPressed: () => _uploadAsanaVideo(a),
             ),
             IconButton(
               icon: Icon(Icons.edit_outlined, color: AppTheme.TextSecondary),
-              tooltip: 'Редактировать',
+              tooltip: l10n.adminTooltipEdit,
               onPressed: () => _editAsana(a),
             ),
             IconButton(
               icon: Icon(Icons.delete_outline, color: AppTheme.Danger),
-              tooltip: 'Удалить',
+              tooltip: l10n.adminTooltipDelete,
               onPressed: () => _deleteAsana(a),
             ),
           ],
@@ -207,6 +229,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
   }
 
   Widget _sequenceCard(AdminSequence s) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -216,7 +239,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         ),
         title: Text(s.name),
         subtitle: Text(
-          s.isPremium ? 'Premium' : 'Бесплатный',
+          s.isPremium ? 'Premium' : l10n.adminSequenceFree,
           style: TextStyle(
             fontSize: 12,
             color: s.isPremium ? AppTheme.Accent : AppTheme.AccentGreen,
@@ -227,12 +250,12 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
           children: [
             IconButton(
               icon: Icon(Icons.edit_outlined, color: AppTheme.TextSecondary),
-              tooltip: 'Редактировать',
+              tooltip: l10n.adminTooltipEdit,
               onPressed: () => _editSequence(s),
             ),
             IconButton(
               icon: Icon(Icons.delete_outline, color: AppTheme.Danger),
-              tooltip: 'Удалить',
+              tooltip: l10n.adminTooltipDelete,
               onPressed: () => _deleteSequence(s),
             ),
           ],
@@ -244,6 +267,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
   // ---- Асаны ----
 
   Future<void> _createAsana() async {
+    final l10n = AppLocalizations.of(context)!;
     final form = await _showAsanaForm();
     if (form == null) return;
     final name = form['name'] ?? '';
@@ -255,14 +279,15 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         categoryId: categoryId,
         description: description,
       );
-      _toast('Асана создана');
+      _toast(l10n.adminAsanaCreated);
       await _loadAsanas();
     } catch (e) {
-      _toast('Ошибка: $e', error: true);
+      _toast(l10n.errorMessage('$e'), error: true);
     }
   }
 
   Future<void> _editAsana(AdminAsana a) async {
+    final l10n = AppLocalizations.of(context)!;
     // Prefill the current description from the public detail endpoint.
     String currentDescription = '';
     try {
@@ -280,10 +305,10 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
     final description = form['description'] ?? '';
     try {
       await _api.updateAsanaInfo(name, description: description);
-      _toast('Сохранено');
+      _toast(l10n.adminSaved);
       await _loadAsanas();
     } catch (e) {
-      _toast('Ошибка: $e', error: true);
+      _toast(l10n.errorMessage('$e'), error: true);
     }
   }
 
@@ -291,6 +316,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
     String? initialName,
     String initialDescription = '',
   }) async {
+    final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController(text: initialName ?? '');
     final descCtrl = TextEditingController(text: initialDescription);
     String category = 'stay+';
@@ -306,22 +332,26 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         return StatefulBuilder(
           builder: (ctx, setDlgState) {
             return AlertDialog(
-              title: Text(initialName == null ? 'Новая асана' : 'Редактировать: $initialName'),
+              title: Text(initialName == null
+                  ? l10n.adminNewAsana
+                  : l10n.adminEditTitle(initialName)),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: nameCtrl,
-                      decoration: const InputDecoration(labelText: 'Название'),
+                      decoration: InputDecoration(labelText: l10n.name),
                       enabled: initialName == null,
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
                       initialValue: category,
-                      decoration: const InputDecoration(labelText: 'Категория'),
-                      items: _categories.entries
-                          .map((e) => DropdownMenuItem(value: e.key, child: Text(e.value)))
+                      decoration:
+                          InputDecoration(labelText: l10n.adminFieldCategory),
+                      items: _categories.keys
+                          .map((e) => DropdownMenuItem(
+                              value: e, child: Text(_categoryLabel(l10n, e))))
                           .toList(),
                       onChanged: initialName == null
                           ? (v) => setDlgState(() => category = v ?? category)
@@ -332,8 +362,8 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
                       controller: descCtrl,
                       minLines: 3,
                       maxLines: 6,
-                      decoration: const InputDecoration(
-                        labelText: 'Описание (для новой — сохранится)',
+                      decoration: InputDecoration(
+                        labelText: l10n.adminFieldDescriptionHint,
                         alignLabelWithHint: true,
                       ),
                     ),
@@ -341,7 +371,8 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
                 ),
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+                TextButton(
+                    onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(
                     ctx,
@@ -351,7 +382,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
                       'description': descCtrl.text.trim(),
                     },
                   ),
-                  child: const Text('Сохранить'),
+                  child: Text(l10n.save),
                 ),
               ],
             );
@@ -363,44 +394,49 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
   }
 
   Future<void> _uploadAsanaPhoto(AdminAsana a) async {
+    final l10n = AppLocalizations.of(context)!;
     final path = await _pickImageFile();
     if (path == null) return;
     try {
       await _api.uploadAsanaPhoto(a.name, File(path));
-      _toast('Фото обновлено');
+      _toast(l10n.adminPhotoUpdated);
       await _loadAsanas();
     } catch (e) {
-      _toast('Ошибка: $e', error: true);
+      _toast(l10n.errorMessage('$e'), error: true);
     }
   }
 
   Future<void> _uploadAsanaVideo(AdminAsana a) async {
+    final l10n = AppLocalizations.of(context)!;
     final path = await _pickVideoFile();
     if (path == null) return;
     try {
       await _api.uploadAsanaVideo(a.name, File(path));
-      _toast('Видео загружено');
+      _toast(l10n.adminVideoUploaded);
       await _loadAsanas();
     } catch (e) {
-      _toast('Ошибка: $e', error: true);
+      _toast(l10n.errorMessage('$e'), error: true);
     }
   }
 
   Future<void> _deleteAsana(AdminAsana a) async {
-    final ok = await _confirm('Удалить асану «${a.name}»?', 'Будут удалены описание и фото, а также видео асаны.');
+    final l10n = AppLocalizations.of(context)!;
+    final ok = await _confirm(l10n.adminDeleteAsanaTitle(a.name),
+        l10n.adminDeleteAsanaBody);
     if (!ok) return;
     final done = await _api.deleteAsana(a.name);
     if (done) {
-      _toast('Асана удалена');
+      _toast(l10n.adminAsanaDeleted);
       await _loadAsanas();
     } else {
-      _toast('Не удалось удалить', error: true);
+      _toast(l10n.adminDeleteFailed, error: true);
     }
   }
 
   // ---- Комплексы ----
 
   Future<void> _addSequence() async {
+    final l10n = AppLocalizations.of(context)!;
     final videoPath = await _pickVideoFile();
     if (videoPath == null) return;
     final form = await _showSequenceForm();
@@ -413,14 +449,15 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         section: section,
         video: File(videoPath),
       );
-      _toast('Комплекс добавлен');
+      _toast(l10n.adminSequenceAdded);
       await _loadSequences();
     } catch (e) {
-      _toast('Ошибка: $e', error: true);
+      _toast(l10n.errorMessage('$e'), error: true);
     }
   }
 
   Future<void> _editSequence(AdminSequence s) async {
+    final l10n = AppLocalizations.of(context)!;
     final form = await _showSequenceForm(
       initialName: s.name,
       initialPremium: s.isPremium,
@@ -434,10 +471,10 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         name: name,
         section: section,
       );
-      _toast('Сохранено');
+      _toast(l10n.adminSaved);
       await _loadSequences();
     } catch (e) {
-      _toast('Ошибка: $e', error: true);
+      _toast(l10n.errorMessage('$e'), error: true);
     }
   }
 
@@ -445,6 +482,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
     String? initialName,
     bool initialPremium = false,
   }) async {
+    final l10n = AppLocalizations.of(context)!;
     final nameCtrl = TextEditingController(text: initialName ?? '');
     bool premium = initialPremium;
     final result = await showDialog<Map<String, String>>(
@@ -453,21 +491,26 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
         return StatefulBuilder(
           builder: (ctx, setDlgState) {
             return AlertDialog(
-              title: Text(initialName == null ? 'Новый комплекс' : 'Редактировать: $initialName'),
+              title: Text(initialName == null
+                  ? l10n.adminNewSequenceTitle
+                  : l10n.adminEditTitle(initialName)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: nameCtrl,
-                    decoration: const InputDecoration(labelText: 'Название'),
+                    decoration: InputDecoration(labelText: l10n.name),
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
                     initialValue: premium ? 'premium' : 'free',
-                    decoration: const InputDecoration(labelText: 'Раздел'),
-                    items: const [
-                      DropdownMenuItem(value: 'free', child: Text('Бесплатный')),
-                      DropdownMenuItem(value: 'premium', child: Text('Premium')),
+                    decoration:
+                        InputDecoration(labelText: l10n.adminFieldSection),
+                    items: [
+                      DropdownMenuItem(
+                          value: 'free', child: Text(l10n.adminSequenceFree)),
+                      const DropdownMenuItem(
+                          value: 'premium', child: Text('Premium')),
                     ],
                     onChanged: (v) => setDlgState(
                       () => premium = v == 'premium',
@@ -476,13 +519,14 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
                 ],
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Отмена')),
+                TextButton(
+                    onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancel)),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(
                     ctx,
                     {'name': nameCtrl.text.trim(), 'section': premium ? 'premium' : 'free'},
                   ),
-                  child: const Text('Сохранить'),
+                  child: Text(l10n.save),
                 ),
               ],
             );
@@ -494,29 +538,33 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
   }
 
   Future<void> _deleteSequence(AdminSequence s) async {
-    final ok = await _confirm('Удалить комплекс «${s.name}»?', 'Видео будет удалено безвозвратно.');
+    final l10n = AppLocalizations.of(context)!;
+    final ok = await _confirm(l10n.adminDeleteSequenceTitle(s.name),
+        l10n.adminDeleteSequenceBody);
     if (!ok) return;
     final done = await _api.deleteSequenceVideo(s.id);
     if (done) {
-      _toast('Комплекс удалён');
+      _toast(l10n.adminSequenceDeleted);
       await _loadSequences();
     } else {
-      _toast('Не удалось удалить', error: true);
+      _toast(l10n.adminDeleteFailed, error: true);
     }
   }
 
   Future<bool> _confirm(String title, String body) async {
+    final l10n = AppLocalizations.of(context)!;
     final res = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(title),
         content: Text(body),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.cancel)),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppTheme.Danger),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Удалить'),
+            child: Text(l10n.adminDelete),
           ),
         ],
       ),

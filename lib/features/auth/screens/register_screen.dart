@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
+import 'package:dharana_app/l10n/app_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -20,24 +21,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _error;
 
   Future<void> _register() async {
+    final l10n = AppLocalizations.of(context);
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
-      setState(() => _error = 'Заполните все поля');
+      setState(() => _error = l10n!.fillAllFields);
       return;
     }
     if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email)) {
-      setState(() => _error = 'Проверьте правильность email');
+      setState(() => _error = l10n!.checkEmail);
       return;
     }
     if (name.length > 60) {
-      setState(() => _error = 'Имя слишком длинное (не больше 60 символов)');
+      setState(() => _error = l10n!.nameTooLong);
       return;
     }
     if (password.length < 8) {
-      setState(() => _error = 'Пароль должен быть не короче 8 символов');
+      setState(() => _error = l10n!.passwordTooShort);
       return;
     }
 
@@ -66,26 +68,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
         detail = data['detail'] as String;
       }
     }
+    final l10n = AppLocalizations.of(context);
     switch (detail) {
       case 'PASSWORD_TOO_SHORT':
-        return 'Пароль должен быть не короче 8 символов';
+        return l10n!.passwordTooShort;
       case 'EMAIL_INVALID':
-        return 'Проверьте правильность email';
+        return l10n!.checkEmail;
       case 'EMAIL_DISPOSABLE':
-        return 'Этот почтовый сервис не подходит. Используйте обычную почту';
+        return l10n!.disposableEmail;
       case 'EMAIL_NOT_DELIVERABLE':
-        return 'Похоже, такой почты не существует. Проверьте адрес';
+        return l10n!.emailNotDeliverable;
       case 'Email already registered':
-        return 'Email уже используется. Попробуйте войти.';
+        return l10n!.emailAlreadyRegistered;
       case 'NAME_TOO_LONG':
-        return 'Имя слишком длинное (не больше 60 символов)';
+        return l10n!.nameTooLong;
       default:
-        return 'Ошибка регистрации. Попробуйте ещё раз.';
+        return l10n!.registrationError;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -100,20 +104,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Создать аккаунт',
+                l10n.createAccount,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 8),
               Text(
-                'Начните свой путь в йоге',
+                l10n.startYogaJourney,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 32),
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  hintText: 'Имя',
-                  prefixIcon: Icon(Icons.person_outline),
+                decoration: InputDecoration(
+                  hintText: l10n.name,
+                  prefixIcon: const Icon(Icons.person_outline),
                 ),
               ),
               const SizedBox(height: 16),
@@ -129,9 +133,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: 'Пароль (мин. 8 символов)',
-                  prefixIcon: Icon(Icons.lock_outline),
+                decoration: InputDecoration(
+                  hintText: l10n.passwordMinHint,
+                  prefixIcon: const Icon(Icons.lock_outline),
                 ),
               ),
               if (_error != null) ...[
@@ -154,18 +158,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           color: AppTheme.Background,
                         ),
                       )
-                    : const Text('Зарегистрироваться'),
+                    : Text(l10n.register),
               ),
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Уже есть аккаунт? ',
+                    text: l10n.alreadyHaveAccount,
                     style: TextStyle(color: AppTheme.TextSecondary),
                     children: [
                       TextSpan(
-                        text: 'Войдите',
+                        text: l10n.signIn,
                         style: TextStyle(
                           color: AppTheme.Accent,
                           fontWeight: FontWeight.w600,
