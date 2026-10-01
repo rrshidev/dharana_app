@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ? const HomeSkeleton()
           : RefreshIndicator(
               onRefresh: _loadData,
-              color: AppTheme.Accent,
+              color: AppTheme.AccentInk,
               child: CustomScrollView(
                 slivers: [
                   SliverToBoxAdapter(
@@ -301,10 +301,10 @@ class _GeneratorBanner extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppTheme.Accent.withValues(alpha: 0.15),
+                color: AppTheme.AccentInk.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(Icons.auto_awesome, color: AppTheme.Accent),
+              child: Icon(Icons.auto_awesome, color: AppTheme.AccentInk),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -357,7 +357,7 @@ class _QuickTile extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Icon(icon, color: AppTheme.Accent, size: 26),
+              Icon(icon, color: AppTheme.AccentInk, size: 26),
               const SizedBox(height: 8),
               Text(
                 label,

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/home/screens/home_screen.dart';
 import 'package:dharana_app/features/timer/screens/timer_setup_screen.dart';
@@ -49,22 +49,22 @@ class _MainScreenState extends State<MainScreen> {
         destinations: [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home, color: AppTheme.Accent),
+            selectedIcon: Icon(Icons.home, color: AppTheme.AccentInk),
             label: AppLocalizations.of(context)!.home,
           ),
           NavigationDestination(
             icon: Icon(Icons.timer_outlined),
-            selectedIcon: Icon(Icons.timer, color: AppTheme.Accent),
+            selectedIcon: Icon(Icons.timer, color: AppTheme.AccentInk),
             label: AppLocalizations.of(context)!.timer,
           ),
           NavigationDestination(
             icon: Icon(Icons.favorite_outline),
-            selectedIcon: Icon(Icons.favorite, color: AppTheme.Accent),
+            selectedIcon: Icon(Icons.favorite, color: AppTheme.AccentInk),
             label: AppLocalizations.of(context)!.favorites,
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outlined),
-            selectedIcon: Icon(Icons.person, color: AppTheme.Accent),
+            selectedIcon: Icon(Icons.person, color: AppTheme.AccentInk),
             label: AppLocalizations.of(context)!.profile,
           ),
         ],

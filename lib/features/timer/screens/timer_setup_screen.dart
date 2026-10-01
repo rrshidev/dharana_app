@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/language_controller.dart';
@@ -84,7 +84,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : Column(
               children: [
                 _buildTimeSettings(),
@@ -196,7 +196,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
     return Container(
       color: AppTheme.SurfaceLight,
       child: Icon(Icons.self_improvement,
-          color: AppTheme.Accent.withValues(alpha: 0.8), size: 20),
+          color: AppTheme.AccentInk.withValues(alpha: 0.8), size: 20),
     );
   }
 
@@ -329,7 +329,7 @@ class _TimerSetupScreenState extends State<TimerSetupScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
-                              color: AppTheme.Accent,
+                              color: AppTheme.AccentInk,
                               shape: BoxShape.circle,
                             ),
                             child: Icon(

@@ -48,9 +48,11 @@ flutter:
           weight: 600
         - asset: assets/fonts/Inter-Variable.ttf
           weight: 700
-    - family: Nunito
+    - family: CormorantGaramond
       fonts:
-        - asset: assets/fonts/Nunito-Variable.ttf
+        - asset: assets/fonts/CormorantGaramond-400.ttf
+          weight: 400
+        - asset: assets/fonts/CormorantGaramond-500.ttf
+          weight: 500
+        - asset: assets/fonts/CormorantGaramond-600.ttf
           weight: 600
-        - asset: assets/fonts/Nunito-Variable.ttf
-          weight: 700

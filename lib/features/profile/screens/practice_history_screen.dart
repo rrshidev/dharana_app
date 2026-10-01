@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
@@ -54,14 +54,14 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.practiceHistory)),
       body: _isLoading && _sessions.isEmpty
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : RefreshIndicator(
               onRefresh: () async {
                 _offset = 0;
                 _sessions.clear();
                 await _loadData();
               },
-              color: AppTheme.Accent,
+              color: AppTheme.AccentInk,
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
@@ -76,7 +76,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Center(
                         child: _isLoading
-                            ? CircularProgressIndicator(color: AppTheme.Accent, strokeWidth: 2)
+                            ? CircularProgressIndicator(color: AppTheme.AccentInk, strokeWidth: 2)
                             : TextButton(
                                 onPressed: _loadData,
                                 child: Text(
@@ -131,7 +131,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
   }) {
     return Column(
       children: [
-        Icon(icon, color: AppTheme.Accent, size: 24),
+        Icon(icon, color: AppTheme.AccentInk, size: 24),
         const SizedBox(height: 8),
         Text(
           value,
@@ -192,7 +192,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                       ? Icons.check_circle
                       : Icons.pause_circle,
                   color: session.status == 'completed'
-                      ? AppTheme.AccentGreen
+                      ? AppTheme.AccentGreenInk
                       : AppTheme.TextSecondary,
                   size: 20,
                 ),
@@ -205,7 +205,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                 Text(
                   durationStr,
                   style: TextStyle(
-                    color: AppTheme.Accent,
+                    color: AppTheme.AccentInk,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -239,8 +239,8 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                     label: Text(l10n.historyRepeat),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      side: BorderSide(color: AppTheme.Accent),
-                      foregroundColor: AppTheme.Accent,
+                      side: BorderSide(color: AppTheme.AccentInk),
+                      foregroundColor: AppTheme.AccentInk,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -262,13 +262,13 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppTheme.Accent.withValues(alpha: 0.08),
+        color: AppTheme.AccentInk.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppTheme.Accent.withValues(alpha: 0.4)),
+        border: Border.all(color: AppTheme.AccentInk.withValues(alpha: 0.4)),
       ),
       child: Row(
         children: [
-          Icon(Icons.lock_outline, color: AppTheme.Accent, size: 20),
+          Icon(Icons.lock_outline, color: AppTheme.AccentInk, size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
@@ -285,7 +285,7 @@ class _PracticeHistoryScreenState extends State<PracticeHistoryScreen> {
                 ),
               );
             },
-            child: Text(l10n.historyMore, style: TextStyle(color: AppTheme.Accent)),
+            child: Text(l10n.historyMore, style: TextStyle(color: AppTheme.AccentInk)),
           ),
         ],
       ),

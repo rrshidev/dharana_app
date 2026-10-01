@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: AppTheme.Accent,
+                          color: AppTheme.AccentInk,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Icon(
@@ -188,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         'Dharana',
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                              color: AppTheme.Accent,
+                              color: AppTheme.AccentInk,
                             ),
                       ),
                     ),
@@ -231,7 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           l10n.forgotPassword,
                           style: TextStyle(
-                            color: AppTheme.Accent,
+                            color: AppTheme.AccentInk,
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                           ),
@@ -273,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextSpan(
                               text: l10n.registerCta,
                               style: TextStyle(
-                                color: AppTheme.Accent,
+                                color: AppTheme.AccentInk,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

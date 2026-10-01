@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
@@ -122,7 +122,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
           ),
           Expanded(
             child: _loading
-                ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+                ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
                 : _tab == 0
                     ? _asanasView()
                     : _sequencesView(),
@@ -131,7 +131,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: AppTheme.Accent,
-        foregroundColor: AppTheme.Background,
+        foregroundColor: AppTheme.AccentOn,
         onPressed: _tab == 0 ? _createAsana : _addSequence,
         icon: const Icon(Icons.add),
         label: Text(_tab == 0 ? l10n.adminNewAsana : l10n.adminAddSequence),
@@ -145,7 +145,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
     }
     return RefreshIndicator(
       onRefresh: _loadAsanas,
-      color: AppTheme.Accent,
+      color: AppTheme.AccentInk,
       child: ListView.builder(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 90),
         itemCount: _asanas.length,
@@ -160,7 +160,7 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
     }
     return RefreshIndicator(
       onRefresh: _loadSequences,
-      color: AppTheme.Accent,
+      color: AppTheme.AccentInk,
       child: ListView.builder(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 90),
         itemCount: _sequences.length,
@@ -203,12 +203,12 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: Icon(Icons.photo_outlined, color: AppTheme.Accent),
+              icon: Icon(Icons.photo_outlined, color: AppTheme.AccentInk),
               tooltip: l10n.adminTooltipPhoto,
               onPressed: () => _uploadAsanaPhoto(a),
             ),
             IconButton(
-              icon: Icon(Icons.video_call_outlined, color: AppTheme.AccentGreen),
+              icon: Icon(Icons.video_call_outlined, color: AppTheme.AccentGreenInk),
               tooltip: l10n.adminTooltipVideo,
               onPressed: () => _uploadAsanaVideo(a),
             ),
@@ -235,14 +235,14 @@ class _AdminContentScreenState extends State<AdminContentScreen> {
       child: ListTile(
         leading: Icon(
           s.isPremium ? Icons.workspace_premium : Icons.play_circle_outline,
-          color: s.isPremium ? AppTheme.Accent : AppTheme.AccentGreen,
+          color: s.isPremium ? AppTheme.AccentInk : AppTheme.AccentGreenInk,
         ),
         title: Text(s.name),
         subtitle: Text(
           s.isPremium ? 'Premium' : l10n.adminSequenceFree,
           style: TextStyle(
             fontSize: 12,
-            color: s.isPremium ? AppTheme.Accent : AppTheme.AccentGreen,
+            color: s.isPremium ? AppTheme.AccentInk : AppTheme.AccentGreenInk,
           ),
         ),
         trailing: Row(

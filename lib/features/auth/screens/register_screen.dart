@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
@@ -171,7 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextSpan(
                         text: l10n.signIn,
                         style: TextStyle(
-                          color: AppTheme.Accent,
+                          color: AppTheme.AccentInk,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

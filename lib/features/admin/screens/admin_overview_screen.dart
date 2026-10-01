@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
@@ -72,10 +72,10 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
         ],
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : RefreshIndicator(
               onRefresh: _loadAll,
-              color: AppTheme.Accent,
+              color: AppTheme.AccentInk,
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                 children: [
@@ -114,7 +114,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['total_users'] ?? 0}',
               label: l10n.adminStatUsers,
               spark: usersTrend,
-              sparkColor: AppTheme.Accent,
+              sparkColor: AppTheme.AccentInk,
             ),
             const SizedBox(width: 10),
             _statCard(
@@ -122,7 +122,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['premium_users'] ?? 0}',
               label: l10n.adminStatPremium,
               spark: _ints('new_premium'),
-              sparkColor: AppTheme.AccentGreen,
+              sparkColor: AppTheme.AccentGreenInk,
             ),
           ],
         ),
@@ -134,7 +134,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['total_sessions'] ?? 0}',
               label: l10n.adminStatPractices,
               spark: practicesTrend,
-              sparkColor: AppTheme.Accent,
+              sparkColor: AppTheme.AccentInk,
             ),
             const SizedBox(width: 10),
             _statCard(
@@ -142,7 +142,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['total_practice_minutes'] ?? 0}',
               label: l10n.adminStatMinutes,
               spark: _periodMinutes(practicesTrend),
-              sparkColor: AppTheme.AccentGreen,
+              sparkColor: AppTheme.AccentGreenInk,
             ),
           ],
         ),
@@ -154,7 +154,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['new_users_week'] ?? 0}',
               label: l10n.adminStatNewPerWeek,
               spark: usersTrend,
-              sparkColor: AppTheme.Accent,
+              sparkColor: AppTheme.AccentInk,
             ),
             const SizedBox(width: 10),
             _statCard(
@@ -162,7 +162,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
               value: '${s['conversion_rate'] ?? 0}%',
               label: l10n.adminStatConversion,
               spark: [],
-              sparkColor: AppTheme.Accent,
+              sparkColor: AppTheme.AccentInk,
             ),
           ],
         ),
@@ -197,7 +197,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
             children: [
               Row(
                 children: [
-                  Icon(icon, color: AppTheme.Accent, size: 18),
+                  Icon(icon, color: AppTheme.AccentInk, size: 18),
                   const Spacer(),
                   if (spark.isNotEmpty) Sparkline(data: spark, color: sparkColor),
                 ],
@@ -240,16 +240,16 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
         children: [
           MultiLineChart(
             series: [
-              ChartSeries(name: l10n.adminSeriesRegistered, color: AppTheme.Accent, data: _ints('new_users')),
-              ChartSeries(name: l10n.adminStatPremium, color: AppTheme.AccentGreen, data: _ints('new_premium')),
+              ChartSeries(name: l10n.adminSeriesRegistered, color: AppTheme.AccentInk, data: _ints('new_users')),
+              ChartSeries(name: l10n.adminStatPremium, color: AppTheme.AccentGreenInk, data: _ints('new_premium')),
             ],
             labels: days,
           ),
           const SizedBox(height: 10),
           ChartLegend(
             series: [
-              ChartSeries(name: l10n.adminSeriesRegistrations, color: AppTheme.Accent, data: []),
-              ChartSeries(name: l10n.adminStatPremium, color: AppTheme.AccentGreen, data: []),
+              ChartSeries(name: l10n.adminSeriesRegistrations, color: AppTheme.AccentInk, data: []),
+              ChartSeries(name: l10n.adminStatPremium, color: AppTheme.AccentGreenInk, data: []),
             ],
           ),
         ],
@@ -319,7 +319,7 @@ class _AdminOverviewScreenState extends State<AdminOverviewScreen> {
         children: [
           Icon(
             isPractice ? Icons.self_improvement : Icons.person_add,
-            color: isPractice ? AppTheme.AccentGreen : AppTheme.Accent,
+            color: isPractice ? AppTheme.AccentGreenInk : AppTheme.AccentInk,
             size: 18,
           ),
           const SizedBox(width: 10),

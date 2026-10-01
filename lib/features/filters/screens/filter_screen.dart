@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
@@ -164,7 +164,7 @@ class _FilterScreenState extends State<FilterScreen> {
               });
             },
             child: Text(l10n.filterReset,
-                style: TextStyle(color: AppTheme.Accent)),
+                style: TextStyle(color: AppTheme.AccentInk)),
           ),
         ],
       ),
@@ -188,7 +188,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       onSelected: (selected) {
                         setState(() => _selectedEffect = selected ? key : null);
                       },
-                      selectedColor: AppTheme.Accent,
+                      selectedColor: AppTheme.AccentInk,
                       backgroundColor: AppTheme.SurfaceLight,
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.white : AppTheme.TextSecondary,
@@ -210,7 +210,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       onSelected: (selected) {
                         setState(() => _selectedDifficulty = selected ? key : null);
                       },
-                      selectedColor: AppTheme.Accent,
+                      selectedColor: AppTheme.AccentInk,
                       backgroundColor: AppTheme.SurfaceLight,
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.white : AppTheme.TextSecondary,
@@ -232,7 +232,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       onSelected: (selected) {
                         setState(() => _selectedCategory = selected ? key : null);
                       },
-                      selectedColor: AppTheme.Accent,
+                      selectedColor: AppTheme.AccentInk,
                       backgroundColor: AppTheme.SurfaceLight,
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.white : AppTheme.TextSecondary,
@@ -315,7 +315,7 @@ class _FilterScreenState extends State<FilterScreen> {
                           child: Text(
                             '${index + 1}',
                             style: TextStyle(
-                              color: AppTheme.Accent,
+                              color: AppTheme.AccentInk,
                               fontWeight: FontWeight.w700,
                               fontSize: 16,
                             ),

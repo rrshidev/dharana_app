@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
@@ -234,7 +234,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle, color: AppTheme.AccentGreen, size: 64),
+            Icon(Icons.check_circle, color: AppTheme.AccentGreenInk, size: 64),
             const SizedBox(height: 16),
             Text(l10n.timerDoneTitle, style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 8),
@@ -308,9 +308,9 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
       case TimerMode.idle:
         return AppTheme.TextSecondary;
       case TimerMode.asana:
-        return AppTheme.Accent;
+        return AppTheme.AccentInk;
       case TimerMode.rest:
-        return AppTheme.AccentGreen;
+        return AppTheme.AccentGreenInk;
       case TimerMode.compensation:
         return const Color(0xFF7B8CDE);
       case TimerMode.paused:
@@ -521,12 +521,12 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
             height: size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isLarge ? AppTheme.Accent : AppTheme.SurfaceLight,
+              color: isLarge ? AppTheme.AccentInk : AppTheme.SurfaceLight,
               border: Border.all(color: AppTheme.CardBorder),
             ),
             child: Icon(
               icon,
-              color: isLarge ? AppTheme.Background : AppTheme.TextPrimary,
+              color: isLarge ? AppTheme.AccentOn : AppTheme.TextPrimary,
               size: isLarge ? 32 : 24,
             ),
           ),
@@ -575,7 +575,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                           ? Icons.play_circle
                           : Icons.circle_outlined,
                   color: isCompleted
-                      ? AppTheme.AccentGreen
+                      ? AppTheme.AccentGreenInk
                       : isCurrent
                           ? _modeColor()
                           : AppTheme.TextSecondary,
@@ -588,7 +588,7 @@ class _TimerScreenState extends State<TimerScreen> with TickerProviderStateMixin
                     style: TextStyle(
                       fontSize: 13,
                       color: isCompleted
-                          ? AppTheme.AccentGreen
+                          ? AppTheme.AccentGreenInk
                           : isCurrent
                               ? AppTheme.TextPrimary
                               : AppTheme.TextSecondary,

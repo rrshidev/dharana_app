@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/l10n/app_localizations.dart';
 
@@ -23,10 +23,10 @@ class PeriodSelector extends StatelessWidget {
               label: Text(l10n.periodDays(d)),
               selected: days == d,
               onSelected: (_) => onChanged(d),
-              selectedColor: AppTheme.Accent,
+              selectedColor: AppTheme.AccentInk,
               labelStyle: TextStyle(
                 fontSize: 12,
-                color: days == d ? AppTheme.Background : AppTheme.TextPrimary,
+                color: days == d ? Colors.white : AppTheme.TextPrimary,
                 fontWeight: FontWeight.w600,
               ),
               visualDensity: VisualDensity.compact,

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/app/theme.dart';
@@ -67,12 +67,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.favorites)),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : _favorites.isEmpty
               ? _buildEmptyState()
               : RefreshIndicator(
                   onRefresh: _loadFavorites,
-                  color: AppTheme.Accent,
+                  color: AppTheme.AccentInk,
                   child: ListView.builder(
                     padding: const EdgeInsets.all(20),
                     itemCount: _favorites.length,

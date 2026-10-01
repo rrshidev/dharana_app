@@ -86,7 +86,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     Icon(
                       Icons.check_circle_outline,
                       size: 56,
-                      color: AppTheme.Accent,
+                      color: AppTheme.AccentInk,
                     ),
                     const SizedBox(height: 16),
                     Text(

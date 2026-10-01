@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
@@ -59,7 +59,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         child: Icon(
                           Icons.campaign_outlined,
                           size: 20,
-                          color: isRead ? AppTheme.TextSecondary : AppTheme.Accent,
+                          color: isRead ? AppTheme.TextSecondary : AppTheme.AccentInk,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -111,7 +111,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                           height: 8,
                           margin: const EdgeInsets.only(top: 6),
                           decoration: BoxDecoration(
-                            color: AppTheme.Accent,
+                            color: AppTheme.AccentInk,
                             shape: BoxShape.circle,
                           ),
                         ),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
@@ -413,14 +413,14 @@ class _Chip extends StatelessWidget {
           color: selected ? AppTheme.Accent.withValues(alpha: 0.12) : Colors.transparent,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: selected ? AppTheme.Accent : AppTheme.CardBorder,
+            color: selected ? AppTheme.AccentInk : AppTheme.CardBorder,
           ),
         ),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 14,
-            color: selected ? AppTheme.Accent : AppTheme.TextSecondary,
+            color: selected ? AppTheme.AccentInk : AppTheme.TextSecondary,
             fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
           ),
         ),

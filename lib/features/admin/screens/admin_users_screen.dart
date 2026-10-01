@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
@@ -134,14 +134,14 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           ),
           Expanded(
             child: _loading
-                ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+                ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
                 : _searching
-                    ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+                    ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
                     : _users.isEmpty
                         ? Center(child: Text(l10n.adminUsersNotFound))
                         : RefreshIndicator(
                             onRefresh: () => _load(_searchController.text),
-                            color: AppTheme.Accent,
+                            color: AppTheme.AccentInk,
                             child: ListView.builder(
                               padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
                               itemCount: _users.length,
@@ -168,7 +168,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
           backgroundColor: AppTheme.SurfaceLight,
           child: Text(
             (u.name ?? '?').isNotEmpty ? (u.name ?? '?')[0].toUpperCase() : '?',
-            style: TextStyle(color: AppTheme.Accent, fontWeight: FontWeight.bold),
+            style: TextStyle(color: AppTheme.AccentInk, fontWeight: FontWeight.bold),
           ),
         ),
         title: Text(u.name ?? l10n.adminUserNoName),
@@ -189,7 +189,7 @@ class _AdminUsersScreenState extends State<AdminUsersScreen> {
             else if (u.isBanned)
               Icon(Icons.block, color: AppTheme.Danger, size: 18)
             else if (u.isPremium)
-              Icon(Icons.workspace_premium, color: AppTheme.Accent, size: 18),
+              Icon(Icons.workspace_premium, color: AppTheme.AccentInk, size: 18),
             Text(
               l10n.adminUserMinutes(u.totalPracticeMinutes),
               style: Theme.of(context).textTheme.bodySmall,

@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -109,10 +109,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         actions: const [NotificationBell()],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : RefreshIndicator(
               onRefresh: _load,
-              color: AppTheme.Accent,
+              color: AppTheme.AccentInk,
               child: ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
@@ -153,7 +153,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               children: [
                 Icon(
                   _isPremium ? Icons.workspace_premium : Icons.workspace_premium_outlined,
-                  color: _isPremium ? AppTheme.Accent : AppTheme.TextSecondary,
+                  color: _isPremium ? AppTheme.AccentInk : AppTheme.TextSecondary,
                   size: 30,
                 ),
                 const SizedBox(width: 12),
@@ -180,7 +180,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               const SizedBox(height: 12),
               Text(
                 l10n.subPricePerMonth,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.Accent),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.AccentInk),
               ),
             ],
           ],
@@ -238,7 +238,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     final number = r['card']?.toString() ?? r['card_number']?.toString() ?? r['number']?.toString() ?? '';
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(Icons.credit_card, color: AppTheme.Accent),
+      leading: Icon(Icons.credit_card, color: AppTheme.AccentInk),
       title: Text(bank.isEmpty ? l10n.subCard : bank),
       subtitle: number.isNotEmpty
           ? Text(number, style: TextStyle(fontSize: 13, color: AppTheme.TextSecondary))
@@ -261,15 +261,17 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       child: _isUploading
           ? Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
-              child: Center(child: CircularProgressIndicator(color: AppTheme.Accent)),
+              child: Center(child: CircularProgressIndicator(color: AppTheme.AccentInk)),
             )
           : ElevatedButton.icon(
               onPressed: _pickAndUploadReceipt,
               icon: const Icon(Icons.upload_file),
               label: Text(l10n.subUploadReceipt),
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isPremium ? AppTheme.SurfaceLight : AppTheme.Accent,
-                foregroundColor: AppTheme.Background,
+                backgroundColor:
+                    _isPremium ? AppTheme.SurfaceLight : AppTheme.Accent,
+                foregroundColor:
+                    _isPremium ? AppTheme.TextPrimary : AppTheme.AccentOn,
               ),
             ),
     );
@@ -291,7 +293,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.receiptSentMsg),
-            backgroundColor: AppTheme.AccentGreen,
+            backgroundColor: AppTheme.AccentGreenOn,
           ),
         );
       }

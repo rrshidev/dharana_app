@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
@@ -54,7 +54,7 @@ class _SequencesScreenState extends State<SequencesScreen> {
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : _sequences.isEmpty
               ? Center(
                   child: Column(
@@ -144,7 +144,7 @@ class _SequenceCardState extends State<_SequenceCard> {
               child: Center(
                 child: widget.sequence.accessible
                     ? IconButton(
-                        icon: Icon(Icons.play_circle_outline, size: 56, color: AppTheme.Accent),
+                        icon: Icon(Icons.play_circle_outline, size: 56, color: AppTheme.AccentInk),
                         onPressed: _togglePlay,
                       )
                     : Icon(Icons.lock, size: 40, color: AppTheme.TextSecondary),
@@ -167,12 +167,12 @@ class _SequenceCardState extends State<_SequenceCard> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: AppTheme.Accent.withValues(alpha: 0.2),
+                            color: AppTheme.AccentInk.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             'Premium',
-                            style: TextStyle(fontSize: 11, color: AppTheme.Accent, fontWeight: FontWeight.w600),
+                            style: TextStyle(fontSize: 11, color: AppTheme.AccentInk, fontWeight: FontWeight.w600),
                           ),
                         ),
                     ],
@@ -182,7 +182,7 @@ class _SequenceCardState extends State<_SequenceCard> {
                   IconButton(
                     icon: Icon(_isPlaying ? Icons.pause : Icons.play_arrow),
                     onPressed: _togglePlay,
-                    color: AppTheme.Accent,
+                    color: AppTheme.AccentInk,
                   ),
               ],
             ),

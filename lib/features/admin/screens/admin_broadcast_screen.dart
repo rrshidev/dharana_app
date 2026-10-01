@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/features/admin/widgets/admin_charts.dart';
@@ -70,11 +70,11 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
         : 0;
     return Row(
       children: [
-        _miniStat('$campaigns', l10n.adminBroadcastCampaigns, AppTheme.Accent, menu: true),
+        _miniStat('$campaigns', l10n.adminBroadcastCampaigns, AppTheme.AccentInk, menu: true),
         const SizedBox(width: 8),
-        _miniStat('$recipients', l10n.adminBroadcastRecipients, AppTheme.AccentGreen, menu: false),
+        _miniStat('$recipients', l10n.adminBroadcastRecipients, AppTheme.AccentGreenInk, menu: false),
         const SizedBox(width: 8),
-        _miniStat('$total', l10n.adminBroadcastTotalDeliveries, AppTheme.Accent, menu: false),
+        _miniStat('$total', l10n.adminBroadcastTotalDeliveries, AppTheme.AccentInk, menu: false),
       ],
     );
   }
@@ -123,7 +123,8 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.adminBroadcastFree),
             value: _bcAudFree,
-            activeColor: AppTheme.Accent,
+            activeColor: AppTheme.AccentInk,
+            checkColor: Colors.white,
             onChanged: (v) => setState(() => _bcAudFree = v ?? true),
           ),
           CheckboxListTile(
@@ -131,7 +132,8 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.adminBroadcastPremium),
             value: _bcAudPremium,
-            activeColor: AppTheme.Accent,
+            activeColor: AppTheme.AccentInk,
+            checkColor: Colors.white,
             onChanged: (v) => setState(() => _bcAudPremium = v ?? true),
           ),
           if (!_bcAudFree && !_bcAudPremium)
@@ -144,7 +146,8 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             contentPadding: EdgeInsets.zero,
             title: const Text('Telegram'),
             value: _bcChanTg,
-            activeColor: AppTheme.Accent,
+            activeColor: AppTheme.AccentInk,
+            checkColor: Colors.white,
             onChanged: (v) => setState(() => _bcChanTg = v ?? true),
           ),
           CheckboxListTile(
@@ -152,7 +155,8 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.adminBroadcastInApp),
             value: _bcChanApp,
-            activeColor: AppTheme.Accent,
+            activeColor: AppTheme.AccentInk,
+            checkColor: Colors.white,
             onChanged: (v) => setState(() => _bcChanApp = v ?? true),
           ),
           if (!_bcChanTg && !_bcChanApp)
@@ -171,14 +175,14 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
           SizedBox(
             width: double.infinity,
             child: _sending
-                ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+                ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
                 : ElevatedButton.icon(
                     onPressed: _send,
                     icon: const Icon(Icons.campaign_outlined),
                     label: Text(l10n.adminBroadcastSend),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.Accent,
-                      foregroundColor: AppTheme.Background,
+                      foregroundColor: AppTheme.AccentOn,
                     ),
                   ),
           ),
@@ -265,7 +269,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
         _snack(
           l10n.adminBroadcastCreated(
               '${data['count_telegram'] ?? 0}', '${data['count_app'] ?? 0}'),
-          AppTheme.AccentGreen,
+          AppTheme.AccentGreenOn,
         );
         _messageController.clear();
         _loadSeries();
@@ -298,7 +302,7 @@ class _AdminBroadcastScreenState extends State<AdminBroadcastScreen> {
         _snack(
           l10n.adminBroadcastTestResult(
               '${data['telegram'] ?? '?'}', '${data['app'] ?? '?'}'),
-          AppTheme.Accent,
+          AppTheme.AccentOn,
         );
       }
     } catch (e) {

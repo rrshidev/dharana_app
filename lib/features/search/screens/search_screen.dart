@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -86,7 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(color: AppTheme.Accent))
+              child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : !_hasSearched
               ? Center(
                   child: Column(
@@ -128,7 +128,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       height: 48,
                                       color: AppTheme.SurfaceLight,
                                       child: Icon(Icons.self_improvement,
-                                          color: AppTheme.Accent),
+                                          color: AppTheme.AccentInk),
                                     ),
                                   ),
                                 )
@@ -140,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Icon(Icons.self_improvement,
-                                      color: AppTheme.Accent),
+                                      color: AppTheme.AccentInk),
                                 ),
                           title: Text(
                               asana.displayName(

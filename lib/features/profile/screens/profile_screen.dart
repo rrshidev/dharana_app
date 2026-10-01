@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -188,10 +188,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : RefreshIndicator(
               onRefresh: _loadProfile,
-              color: AppTheme.Accent,
+              color: AppTheme.AccentInk,
               child: ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
@@ -228,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         .toUpperCase(),
                     style: TextStyle(
                       fontSize: 40,
-                      color: AppTheme.Accent,
+                      color: AppTheme.AccentInk,
                       fontWeight: FontWeight.w700,
                     ),
                   )
@@ -242,7 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: AppTheme.Accent,
+                  color: AppTheme.AccentInk,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.camera_alt, size: 16, color: AppTheme.Background),
@@ -353,7 +353,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }) {
     return Column(
       children: [
-        Icon(icon, color: AppTheme.Accent, size: 24),
+        Icon(icon, color: AppTheme.AccentInk, size: 24),
         const SizedBox(height: 8),
         Text(
           value,
@@ -421,9 +421,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ChoiceChip(
                     label: Text(_typeLabel(l10n, t)),
                     selected: _chartType == t,
-                    selectedColor: AppTheme.Accent,
+                    selectedColor: AppTheme.AccentInk,
                     labelStyle: TextStyle(
-                      color: _chartType == t ? AppTheme.Background : AppTheme.TextSecondary,
+                      color: _chartType == t ? Colors.white : AppTheme.TextSecondary,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -444,7 +444,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _chartLoading
                 ? SizedBox(
                     height: 200,
-                    child: Center(child: CircularProgressIndicator(color: AppTheme.Accent)),
+                    child: Center(child: CircularProgressIndicator(color: AppTheme.AccentInk)),
                   )
                 : ActivityChart(
                     days: _chartDays,
@@ -545,7 +545,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         onTap: onTap,
-        leading: Icon(icon, color: AppTheme.Accent),
+        leading: Icon(icon, color: AppTheme.AccentInk),
         title: Text(title),
         subtitle: subtitle != null
             ? Text(subtitle, style: Theme.of(context).textTheme.bodySmall)
@@ -714,7 +714,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Row(
         children: [
           if (selected)
-            Icon(Icons.check, color: AppTheme.Accent)
+            Icon(Icons.check, color: AppTheme.AccentInk)
           else
             const SizedBox(width: 24),
           const SizedBox(width: 12),
@@ -869,7 +869,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text(l10n.avatarSet),
-              backgroundColor: AppTheme.AccentGreen),
+              backgroundColor: AppTheme.AccentGreenOn),
         );
       }
     } catch (e) {
@@ -896,7 +896,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text(l10n.avatarSet),
-              backgroundColor: AppTheme.AccentGreen),
+              backgroundColor: AppTheme.AccentGreenOn),
         );
       }
     } catch (e) {
@@ -944,7 +944,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: avatar.isPrimary ? AppTheme.Accent : AppTheme.CardBorder,
+                            color: avatar.isPrimary ? AppTheme.AccentInk : AppTheme.CardBorder,
                             width: avatar.isPrimary ? 2 : 1,
                           ),
                           image: DecorationImage(
@@ -984,7 +984,7 @@ class _AvatarPickerSheetState extends State<_AvatarPickerSheet> {
             children: [
               Expanded(
                 child: _isUploading
-                    ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+                    ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
                     : OutlinedButton.icon(
                         onPressed: _pickFromGallery,
                         icon: const Icon(Icons.photo_library_outlined),

@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dharana_app/app/theme.dart';
@@ -57,13 +57,13 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.adminUserTitle)),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : RefreshIndicator(
               onRefresh: () async {
                 await _load();
                 await _loadActivity();
               },
-              color: AppTheme.Accent,
+              color: AppTheme.AccentInk,
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
@@ -96,7 +96,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
             user['name']?.toString().isNotEmpty == true
                 ? user['name'].toString()[0].toUpperCase()
                 : '?',
-            style: TextStyle(fontSize: 24, color: AppTheme.Accent, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 24, color: AppTheme.AccentInk, fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(width: 16),
@@ -148,7 +148,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
           SizedBox(
             width: double.infinity,
             child: _isUpdating
-                ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+                ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
                 : ElevatedButton.icon(
                     onPressed: _togglePremium,
                     icon: const Icon(Icons.workspace_premium_outlined, size: 18),
@@ -156,8 +156,10 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                         ? l10n.adminPremiumRemove
                         : l10n.adminPremiumGrant),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isPremium ? AppTheme.SurfaceLight : AppTheme.Accent,
-                      foregroundColor: AppTheme.Background,
+                      backgroundColor:
+                          isPremium ? AppTheme.SurfaceLight : AppTheme.Accent,
+                      foregroundColor:
+                          isPremium ? AppTheme.TextPrimary : AppTheme.AccentOn,
                     ),
                   ),
           ),
@@ -177,7 +179,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
           ? Padding(
               padding: EdgeInsets.all(16),
               child: Center(
-                child: CircularProgressIndicator(color: AppTheme.Accent),
+                child: CircularProgressIndicator(color: AppTheme.AccentInk),
               ),
             )
           : Column(
@@ -202,7 +204,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               isBanned ? AppTheme.AccentGreen : AppTheme.Danger,
-                          foregroundColor: AppTheme.Background,
+                          foregroundColor:
+                              isBanned ? AppTheme.AccentGreenOn : Colors.white,
                         ),
                       ),
                     ),
@@ -218,7 +221,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
                             Text(isDeleted ? l10n.adminRestore : l10n.adminDelete),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.Danger,
-                          foregroundColor: AppTheme.Background,
+                          foregroundColor: Colors.white,
                         ),
                       ),
                     ),
@@ -394,7 +397,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(parts.where((p) => p.isNotEmpty).join(' · ')),
-            backgroundColor: AppTheme.AccentGreen,
+            backgroundColor: AppTheme.AccentGreenOn,
           ),
         );
       }
@@ -445,7 +448,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
           SnackBar(
             content: Text(
                 ban ? l10n.adminUserBanned : l10n.adminUserUnbanned),
-            backgroundColor: AppTheme.AccentGreen,
+            backgroundColor: AppTheme.AccentGreenOn,
           ),
         );
       }
@@ -483,7 +486,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
           SnackBar(
             content: Text(
                 del ? l10n.adminUserDeleted : l10n.adminUserRestored),
-            backgroundColor: AppTheme.AccentGreen,
+            backgroundColor: AppTheme.AccentGreenOn,
           ),
         );
       }
@@ -534,8 +537,8 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
         _loadActivity();
       }),
       child: _activityLoading
-          ? SizedBox(height: 160, child: Center(child: CircularProgressIndicator(color: AppTheme.Accent)))
-          : AreaTrendChart(data: minutes, labels: labels, color: AppTheme.AccentGreen, showBottomLabels: true),
+          ? SizedBox(height: 160, child: Center(child: CircularProgressIndicator(color: AppTheme.AccentInk)))
+          : AreaTrendChart(data: minutes, labels: labels, color: AppTheme.AccentGreenInk, showBottomLabels: true),
     );
   }
 
@@ -630,7 +633,7 @@ class _AdminUserDetailScreenState extends State<AdminUserDetailScreen> {
             content: Text(isPremium
                 ? l10n.adminPremiumRemoved
                 : l10n.adminPremiumGranted),
-            backgroundColor: AppTheme.AccentGreen,
+            backgroundColor: AppTheme.AccentGreenOn,
           ),
         );
       }

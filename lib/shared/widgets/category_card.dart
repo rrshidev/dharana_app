@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:dharana_app/l10n/app_localizations.dart';
@@ -33,7 +33,7 @@ class CategoryCard extends StatelessWidget {
             children: [
               Icon(
                 _icons[category.id] ?? Icons.self_improvement,
-                color: AppTheme.Accent,
+                color: AppTheme.AccentInk,
                 size: 28,
               ),
               const Spacer(),

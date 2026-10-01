@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/l10n/app_localizations.dart';
@@ -71,8 +71,8 @@ class ActivityChart extends StatelessWidget {
     final n = days.length;
 
     final lineColors = [
-      AppTheme.Accent,
-      AppTheme.AccentGreen,
+      AppTheme.AccentInk,
+      AppTheme.AccentGreenInk,
       const Color(0xFF6FA8DC),
     ];
 

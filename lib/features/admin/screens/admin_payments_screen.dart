@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/core/api/api_client.dart';
@@ -61,7 +61,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
         actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _load)],
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator(color: AppTheme.Accent))
+          ? Center(child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
               children: [
@@ -88,11 +88,11 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
     final rejected = _countStatus('rejected');
     return Row(
       children: [
-        _miniStat('${_payments.length}', l10n.adminPaymentsTotal, AppTheme.Accent),
+        _miniStat('${_payments.length}', l10n.adminPaymentsTotal, AppTheme.AccentInk),
         const SizedBox(width: 8),
-        _miniStat('$pending', l10n.adminPaymentsPending, AppTheme.Accent),
+        _miniStat('$pending', l10n.adminPaymentsPending, AppTheme.AccentInk),
         const SizedBox(width: 8),
-        _miniStat('$confirmed', l10n.adminPaymentsApproved, AppTheme.AccentGreen),
+        _miniStat('$confirmed', l10n.adminPaymentsApproved, AppTheme.AccentGreenInk),
         const SizedBox(width: 8),
         _miniStat('$rejected', l10n.adminPaymentsRejected, AppTheme.Danger),
       ],
@@ -145,10 +145,10 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
         label: Text(label),
         selected: selected,
         onSelected: (_) => setState(() => _filter = value),
-        selectedColor: AppTheme.Accent,
+        selectedColor: AppTheme.AccentInk,
         labelStyle: TextStyle(
           fontSize: 12,
-          color: selected ? AppTheme.Background : AppTheme.TextSecondary,
+          color: selected ? Colors.white : AppTheme.TextSecondary,
         ),
       ),
     );
@@ -192,7 +192,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
               children: [
                 Icon(
                   pending ? Icons.hourglass_top : Icons.credit_card,
-                  color: pending ? AppTheme.Accent : AppTheme.TextSecondary,
+                  color: pending ? AppTheme.AccentInk : AppTheme.TextSecondary,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -209,7 +209,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                       color: pending
                           ? AppTheme.TextSecondary
                           : status == 'confirmed'
-                              ? AppTheme.AccentGreen
+                              ? AppTheme.AccentGreenInk
                               : AppTheme.Danger,
                     ),
                   ),
@@ -262,8 +262,8 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                       icon: const Icon(Icons.check, size: 18),
                       label: Text(l10n.adminApprove),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.AccentGreen,
-                        side: BorderSide(color: AppTheme.AccentGreen),
+                        foregroundColor: AppTheme.AccentGreenInk,
+                        side: BorderSide(color: AppTheme.AccentGreenInk),
                       ),
                     ),
                   ),
@@ -346,7 +346,7 @@ class _AdminPaymentsScreenState extends State<AdminPaymentsScreen> {
                     ? l10n.adminPaymentConfirmedPremium
                     : '')
                 : l10n.adminPaymentRejected),
-            backgroundColor: status == 'confirmed' ? AppTheme.AccentGreen : AppTheme.Danger,
+            backgroundColor: status == 'confirmed' ? AppTheme.AccentGreenInk : AppTheme.Danger,
           ),
         );
       }

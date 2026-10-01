@@ -1,4 +1,4 @@
-﻿import 'package:fl_chart/fl_chart.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 import 'package:dharana_app/l10n/app_localizations.dart';
@@ -550,7 +550,7 @@ class DonutRate extends StatelessWidget {
                     sections: [
                       PieChartSectionData(
                         value: (value * t).clamp(0, 100),
-                        color: AppTheme.AccentGreen,
+                        color: AppTheme.AccentGreenInk,
                         showTitle: false,
                         radius: size * 0.46,
                       ),

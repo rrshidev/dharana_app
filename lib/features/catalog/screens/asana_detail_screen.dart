@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dharana_app/app/theme.dart';
@@ -112,7 +112,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
     return Scaffold(
       body: _isLoading
           ? Center(
-              child: CircularProgressIndicator(color: AppTheme.Accent))
+              child: CircularProgressIndicator(color: AppTheme.AccentInk))
           : _asana == null
               ? Center(child: Text(l10n.asanaNotFound))
               : CustomScrollView(
@@ -150,7 +150,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                       child: Icon(
                                         Icons.self_improvement,
                                         size: 80,
-                                        color: AppTheme.Accent,
+                                        color: AppTheme.AccentInk,
                                       ),
                                     ),
                                   ),
@@ -161,7 +161,7 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                 child: Icon(
                                   Icons.self_improvement,
                                   size: 80,
-                                  color: AppTheme.Accent,
+                                  color: AppTheme.AccentInk,
                                 ),
                               ),
                       ),
@@ -312,11 +312,11 @@ class _AsanaDetailScreenState extends State<AsanaDetailScreen> {
                                 decoration: BoxDecoration(
                                   color: AppTheme.SurfaceLight,
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: AppTheme.Accent.withValues(alpha: 0.3)),
+                                  border: Border.all(color: AppTheme.AccentInk.withValues(alpha: 0.3)),
                                 ),
                                 child: Row(
                                   children: [
-                                    Icon(Icons.lock, color: AppTheme.Accent),
+                                    Icon(Icons.lock, color: AppTheme.AccentInk),
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Column(
