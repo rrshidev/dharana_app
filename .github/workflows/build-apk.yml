@@ -16,7 +16,8 @@ on:
 #   - assetlinks.json (https://dharana.ru/.well-known/assetlinks.json, SHA-256 CA:15:BD:...)
 #   - Android OAuth-клиент Google (SHA-1 AD:7D:54:...)
 # Поэтому APK из артефакта годится для QA, но НЕ для замены https://dharana.ru/download/dharana.apk.
-# Публичную сборку делаем локально: .\build_apk.ps1 (стабильный developer-keystore).
+# Публичную сборку делаем локально: .\build_apk.ps1 (стабильный developer-keystore,
+# та же строка API_BASE_URL + проверка, что хост реально вшит в APK).
 
 jobs:
   build:
@@ -47,7 +48,22 @@ jobs:
       - name: Build release APK
         run: |
           flutter build apk --release \
-            --dart-define=GOOGLE_WEB_CLIENT_ID=914006620256-t7uqhvlqqlikgesrl59cghv3d1l93gft.apps.googleusercontent.com
+            --dart-define=GOOGLE_WEB_CLIENT_ID=914006620256-t7uqhvlqqlikgesrl59cghv3d1l93gft.apps.googleusercontent.com \
+            --dart-define=API_BASE_URL=https://api.dharana.ru
+
+      # Строка API_BASE_URL обязана попасть в libapp.so: без неё приложение
+      # ходит на http://localhost:8000 (дефолт String.fromEnvironment) и на
+      # реальном телефоне не работает. Ловим это на сборке, а не на проде.
+      - name: Verify API base URL inside APK
+        run: |
+          set -euo pipefail
+          unzip -p build/app/outputs/flutter-apk/app-release.apk lib/arm64-v8a/libapp.so > /tmp/libapp.so
+          if grep -qa "api.dharana.ru" /tmp/libapp.so; then
+            echo "OK: API base = https://api.dharana.ru"
+          else
+            echo "::error::В APK нет api.dharana.ru — база API осталась localhost"
+            exit 1
+          fi
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
