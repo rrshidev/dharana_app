@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:dharana_app/app/theme.dart';
 
@@ -84,16 +82,17 @@ class _SocialIconPainter extends CustomPainter {
       !identical(old.paths, paths);
 }
 
-/// «G»: окружность с разрывом справа и горизонтальной перекладиной внутрь.
+/// «G» по форме оригинала: окружность с разрывом справа сверху и
+/// горизонтальной перекладиной на середине высоты.
 Path _googlePath() {
   return Path()
     ..arcTo(
-      Rect.fromCircle(center: const Offset(11.98, 12.2), radius: 6.6),
-      -0.729,
-      -(2 * math.pi - 1.458),
+      Rect.fromCircle(center: const Offset(12, 12), radius: 6.5),
+      -0.700,
+      -5.583,
       true,
     )
-    ..lineTo(12.3, 16.6);
+    ..lineTo(12.2, 12.0);
 }
 
 /// Телеграм: контур «бумажного самолётика» (скруглённые углы — дуги радиуса 1).
