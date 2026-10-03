@@ -5,6 +5,8 @@ import 'package:dharana_app/features/auth/services/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/l10n/app_localizations.dart';
+import 'package:dharana_app/shared/widgets/social_button.dart';
+import 'package:dharana_app/shared/widgets/social_icon.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -106,7 +108,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 }
               },
-              child: Text(l10n.openBot),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SocialIcon(
+                    network: SocialNetwork.telegram,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(l10n.openBot),
+                ],
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -293,40 +305,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: _isLoading ? null : _loginWithGoogle,
-                        icon: const _GoogleG(),
-                        label: Text(l10n.loginWithGoogle),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          side: BorderSide(color: AppTheme.CardBorder),
-                          foregroundColor: AppTheme.TextPrimary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
+                    SocialButton(
+                      network: SocialNetwork.google,
+                      label: l10n.loginWithGoogle,
+                      onPressed: _isLoading ? null : _loginWithGoogle,
                     ),
                     const SizedBox(height: 12),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: _isLoading ? null : _loginWithTelegram,
-                        icon: const Icon(Icons.telegram, color: Color(0xFF0088CC)),
-                        label: Text(
-                          l10n.loginWithTelegram,
-                          style: TextStyle(color: Color(0xFF0088CC)),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          side: const BorderSide(color: Color(0xFF0088CC)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
+                    SocialButton(
+                      network: SocialNetwork.telegram,
+                      label: l10n.loginWithTelegram,
+                      onPressed: _isLoading ? null : _loginWithTelegram,
                     ),
                     const SizedBox(height: 16),
                   ],
@@ -344,33 +332,5 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-}
-
-/// Упрощённая «G» Google (в стиле официальной кнопки) без внешних ассетов.
-class _GoogleG extends StatelessWidget {
-  const _GoogleG();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 22,
-      height: 22,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFFD2D2D2)),
-      ),
-      child: const Text(
-        'G',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF4285F4),
-          height: 1,
-        ),
-      ),
-    );
   }
 }
