@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:dio/dio.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,13 +58,24 @@ class AuthService {
     ),
     'vk': (
       authorizeUrl: 'https://id.vk.ru/authorize',
-      scope: 'email',
+      // Пустой scope, как на сайте: запрошенный VK email в ответе user_info
+      // всё равно не приходит, а лишний согласу��щий экран мешает входу.
+      scope: '',
     ),
   };
 
   /// Провайдеры, требующие PKCE (S256). У VK ID без code_challenge authorize
   /// отдаёт "code_challenge or code_challenge_method is invalid".
   static const Set<String> _pkceProviders = {'vk'};
+
+  /// Обмен authorization code → access_token у VK ID. Серверный обмен невозможен
+  /// (эндпоинт требует `device_id`, а `/oauth2/user_info` проверяет уже готовый
+  /// токен), поэтому код меняет сам клиент — ровно как их SDK.
+  static const String vkTokenUrl = 'https://id.vk.ru/oauth2/auth';
+
+  /// VK ID ждёт `code_challenge_method=sha256` (так шлёт их SDK; `S256` из
+  /// документации тоже принимается, но проверенное значение — это).
+  static const Map<String, String> _pkceMethods = {'vk': 'sha256'};
 
   /// Nonce последнего начатого OAuth-флоу: приложение само сверяет state в
   /// колбэке (в вебе это делает double-submit кука, здесь её нет — Cookies
@@ -93,13 +106,14 @@ final query = <String, String>{
  'state': state,
 };
 if (_pkceProviders.contains(provider)) {
- final verifier = _randomNonce() + _randomNonce();
- _pendingCodeVerifier = verifier;
- query['code_challenge'] = _pkceChallenge(verifier);
- query['code_challenge_method'] = 'S256';
-} else {
- _pendingCodeVerifier = null;
-}
+      final verifier = _randomNonce() + _randomNonce();
+      _pendingCodeVerifier = verifier;
+      query['code_challenge'] = _pkceChallenge(verifier);
+      query['code_challenge_method'] =
+          _pkceMethods[provider] ?? 'S256';
+    } else {
+      _pendingCodeVerifier = null;
+    }
 
 final uri = Uri.parse(config.authorizeUrl).replace(queryParameters: query);
 final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -113,11 +127,15 @@ if (!launched) {
 
   /// Завершает флоу по ссылке из колбэка: сверяет state, обменивает код на
   /// JWT. Возвращает true, если это был наш OAuth-колбэк (и его удалось).
-  Future<bool> completeOAuthCallback(Uri uri) async {
+Future<bool> completeOAuthCallback(Uri uri) async {
+    // Лог для диагностики: что именно провайдер вернул в App Link.
+    debugPrint('OAuth callback: $uri');
 final provider = _pendingProvider;
-final expectedState = _pendingState;
-if (provider == null || expectedState == null) return false;
-if (!uri.path.endsWith('/app/auth/$provider/callback')) return false;
+    final expectedState = _pendingState;
+    if (provider == null || expectedState == null) return false;
+    // Пути бывают двух видов: App Link `/app/auth/{p}/callback` и запасной
+    // вариант по собственной схеме `/auth/{p}/callback` (см. AndroidManifest).
+    if (!uri.path.endsWith('/auth/$provider/callback')) return false;
 
 final codeVerifier = _pendingCodeVerifier;
 
@@ -135,19 +153,83 @@ _pendingCodeVerifier = null;
     if (state == null || state != expectedState) {
       throw Exception('OAUTH_INVALID_STATE');
     }
-    final code = uri.queryParameters['code'];
+final code = uri.queryParameters['code'];
     if (code == null || code.isEmpty) {
       throw Exception('OAUTH_NO_CODE');
     }
 
-final response = await _api.dio.post('/auth/$provider', data: {
- 'code': code,
- 'redirect_uri': appCallbackUrl(provider),
- if (codeVerifier != null) 'code_verifier': codeVerifier,
- });
+    // VK ID: обмен кода на токен делаем сами — серверный обмен невозможен
+    // (нужен device_id из колбэка), а /auth/vk на бэкенде проверяет готовый
+    // access_token. Остальные провайдеры (Яндекс) обменивает бэкенд.
+    if (provider == 'vk') {
+      final deviceId = uri.queryParameters['device_id'];
+      final token = await _exchangeVkCode(code, deviceId, state, codeVerifier);
+      final vkResponse = await _api.dio.post('/auth/vk', data: {
+        'access_token': token,
+      });
+      final auth = AuthResponse.fromJson(vkResponse.data);
+      await _api.saveToken(auth.accessToken);
+      return true;
+    }
+
+    final response = await _api.dio.post('/auth/$provider', data: {
+      'code': code,
+      'redirect_uri': appCallbackUrl(provider),
+      if (codeVerifier != null) 'code_verifier': codeVerifier,
+      // У Яндекса credentials выдаются на каждую платформу отдельно, поэтому
+      // код обменяет сервер secret'ом ИМЕННО этого клиента.
+      if (yandexClientId.isNotEmpty) 'client_id': yandexClientId,
+    });
     final auth = AuthResponse.fromJson(response.data);
     await _api.saveToken(auth.accessToken);
     return true;
+  }
+
+  /// `POST id.vk.ru/oauth2/auth` — public client, без client_secret (по PKCE).
+  Future<String> _exchangeVkCode(
+    String code,
+    String? deviceId,
+    String state,
+    String? codeVerifier,
+  ) async {
+    if (deviceId == null || deviceId.isEmpty) {
+      throw Exception('OAUTH_NO_DEVICE_ID');
+    }
+    if (codeVerifier == null || codeVerifier.isEmpty) {
+      throw Exception('OAUTH_NO_VERIFIER');
+    }
+    final dio = Dio();
+    final response = await dio.post(
+      vkTokenUrl,
+      queryParameters: {
+        'grant_type': 'authorization_code',
+        'redirect_uri': appCallbackUrl('vk'),
+        'client_id': vkClientId,
+        'code_verifier': codeVerifier,
+        'state': state,
+        'device_id': deviceId,
+      },
+      data: 'code=$code',
+      options: Options(
+        contentType: 'application/x-www-form-urlencoded',
+        headers: {'Accept': 'application/json'},
+        responseType: ResponseType.plain,
+      ),
+    );
+    final body = response.data is String
+        ? jsonDecode(response.data as String)
+        : response.data;
+    if (body is! Map || body['error'] != null) {
+      debugPrint(
+        'VK token exchange failed: ${response.statusCode} ${response.data}',
+      );
+      throw Exception('OAUTH_VK_TOKEN_FAILED');
+    }
+    final token = body['access_token'];
+    if (token is! String || token.isEmpty) {
+      throw Exception('OAUTH_VK_TOKEN_FAILED');
+    }
+    return token;
   }
 
 /// Отменяет ожидание возврата из браузера (пользователь вернулся сам).

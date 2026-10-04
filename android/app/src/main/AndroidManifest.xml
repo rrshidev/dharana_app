@@ -52,6 +52,19 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="https" android:host="www.dharana.ru" android:pathPrefix="/app/auth"/>
             </intent-filter>
+            <!-- Запасной путь возврата из браузера: собственная схема dharana://.
+                 Нужен потому, что autoVerify-App Links на части прошивок
+                 (realme/Android 11 — проверено 2026-10-05) не верифицируются:
+                 ссылка https://dharana.ru/app/auth/{provider}/callback уходила в
+                 браузер, а приложение её не получало. Схема работает без
+                 верификации: колбэк-страница на сайте перенаправляет на
+                 dharana://app/auth/{provider}/callback с code/state. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="dharana" android:host="app" android:pathPrefix="/auth"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

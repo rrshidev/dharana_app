@@ -180,9 +180,15 @@ class _DharanaAppState extends State<DharanaApp> {
   /// Колбэк входа через провайдера: ОС открыл приложение по App Link
   /// https://dharana.ru/app/auth/{provider}/callback?code=…&state=…
   bool _handleOAuthLink(Uri uri) {
-    if (uri.host != 'dharana.ru' && uri.host != 'www.dharana.ru') return false;
-    if (!uri.path.contains('/app/auth/')) return false;
+    // Основной путь — App Link https://dharana.ru/app/auth/{provider}/callback.
+    // Запасной — собственная схема dharana://app/auth/{provider}/callback
+    // (её присылает колбэк-страница сайта, когда App Links не верифицированы).
+    final isAppLink = (uri.host == 'dharana.ru' || uri.host == 'www.dharana.ru') &&
+        uri.path.contains('/app/auth/');
+    final isSchemeLink = uri.scheme == 'dharana' && uri.path.contains('/auth/');
+    if (!isAppLink && !isSchemeLink) return false;
     if (_oauthInProgress) return true;
+    debugPrint('OAuth deep link received: $uri');
 
     _oauthInProgress = true;
     AuthService()
@@ -215,6 +221,14 @@ class _DharanaAppState extends State<DharanaApp> {
         text.contains('OAUTH_NO_CODE')) {
       return l10n?.oauthInvalidState ??
           'This sign-in link has expired, please try again';
+    }
+    if (text.contains('OAUTH_NO_DEVICE_ID')) {
+      return l10n?.oauthVkNoDeviceId ??
+          "VK didn't return the device data. Please try again";
+    }
+    if (text.contains('OAUTH_VK_TOKEN_FAILED')) {
+      return l10n?.oauthVkTokenFailed ??
+          'VK rejected the sign-in. Please try again';
     }
     return l10n?.oauthFailed ?? "Couldn't sign in";
   }

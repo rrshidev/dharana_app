@@ -344,16 +344,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             : () => _loginWithProvider('vk'),
                       ),
                     ],
-                    if (AuthService.isProviderConfigured('vk')) ...[
-                      const SizedBox(height: 12),
-                      SocialButton(
-                        network: SocialNetwork.max,
-                        label: l10n.loginWithMax,
-                        onPressed: _isLoading
-                            ? null
-                            : () => _loginWithProvider('vk'),
-                      ),
-                    ],
+                    // MAX отдельного OAuth не имеет (это тот же вход VK ID).
+                    // Кнопку вернём вместе с ботом в MAX.
                     if (AuthService.isProviderConfigured('yandex')) ...[
                       const SizedBox(height: 12),
                       SocialButton(

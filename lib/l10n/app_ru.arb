@@ -91,6 +91,8 @@
   "oauthDenied": "Вход отменён",
   "oauthInvalidState": "Ссылка входа устарела, попробуйте ещё раз",
   "oauthFailed": "Не удалось войти",
+  "oauthVkNoDeviceId": "VK не вернул данные устройства. Попробуйте ещё раз",
+  "oauthVkTokenFailed": "VK отклонил вход. Попробуйте ещё раз",
   "oauthWaiting": "Завершите вход в браузере и вернитесь в приложение",
   "loginWithGoogle": "Войти через Google",
   "loginWithTelegram": "Войти через Telegram",

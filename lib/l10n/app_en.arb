@@ -91,6 +91,8 @@
   "oauthDenied": "Sign-in was cancelled",
   "oauthInvalidState": "This sign-in link has expired, please try again",
   "oauthFailed": "Couldn't sign in",
+  "oauthVkNoDeviceId": "VK didn't return the device data. Please try again",
+  "oauthVkTokenFailed": "VK rejected the sign-in. Please try again",
   "oauthWaiting": "Finish signing in the browser and come back to the app",
   "loginWithGoogle": "Continue with Google",
   "loginWithTelegram": "Continue with Telegram",
