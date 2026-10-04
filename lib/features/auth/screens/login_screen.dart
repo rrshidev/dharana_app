@@ -65,6 +65,22 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  /// Вход через провайдера с редиректом (Яндекс, VK/MAX): открываем браузер,
+  /// приложение получаем обратно через App Link — колбэк разбирает app.dart.
+  Future<void> _loginWithProvider(String provider) async {
+    setState(() => _error = null);
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      await _authService.beginOAuthLogin(provider);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.oauthWaiting)),
+      );
+    } catch (e) {
+      if (mounted) setState(() => _error = l10n.oauthFailed);
+    }
+  }
+
   Future<void> _loginWithTelegram() async {
     final controller = TextEditingController();
     final result = await showDialog<String>(
@@ -316,6 +332,38 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: l10n.loginWithTelegram,
                       onPressed: _isLoading ? null : _loginWithTelegram,
                     ),
+                    // Кнопки редирект-входа показываем, только если ключ
+                    // провайдера реально задан на сборке.
+                    if (AuthService.isProviderConfigured('vk')) ...[
+                      const SizedBox(height: 12),
+                      SocialButton(
+                        network: SocialNetwork.vk,
+                        label: l10n.loginWithVk,
+                        onPressed: _isLoading
+                            ? null
+                            : () => _loginWithProvider('vk'),
+                      ),
+                    ],
+                    if (AuthService.isProviderConfigured('vk')) ...[
+                      const SizedBox(height: 12),
+                      SocialButton(
+                        network: SocialNetwork.max,
+                        label: l10n.loginWithMax,
+                        onPressed: _isLoading
+                            ? null
+                            : () => _loginWithProvider('vk'),
+                      ),
+                    ],
+                    if (AuthService.isProviderConfigured('yandex')) ...[
+                      const SizedBox(height: 12),
+                      SocialButton(
+                        network: SocialNetwork.yandex,
+                        label: l10n.loginWithYandex,
+                        onPressed: _isLoading
+                            ? null
+                            : () => _loginWithProvider('yandex'),
+                      ),
+                    ],
                     const SizedBox(height: 16),
                   ],
                 ),

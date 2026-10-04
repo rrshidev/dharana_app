@@ -36,6 +36,22 @@
                 <data android:scheme="https" android:host="dharana.ru" android:pathPrefix="/reset-password"/>
                 <data android:scheme="https" android:host="dharana.ru" android:pathPrefix="/ru/reset-password"/>
             </intent-filter>
+            <!-- App Links для колбэка входа через провайдера (Яндекс, VK/MAX):
+                 браузер возвращается на dharana.ru/app/auth/{provider}/callback
+                 и ОС открывает приложение. Отдельный префикс (НЕ /api/auth) —
+                 иначе ОС перехватил бы и веб-вход на телефоне. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https" android:host="dharana.ru" android:pathPrefix="/app/auth"/>
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https" android:host="www.dharana.ru" android:pathPrefix="/app/auth"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

@@ -14,6 +14,7 @@ import 'package:dharana_app/features/auth/screens/login_screen.dart';
 import 'package:dharana_app/features/auth/screens/register_screen.dart';
 import 'package:dharana_app/features/auth/screens/reset_password_screen.dart';
 import 'package:dharana_app/features/auth/screens/reset_password_form_screen.dart';
+import 'package:dharana_app/features/auth/services/auth_service.dart';
 import 'package:dharana_app/features/main/main_screen.dart';
 import 'package:dharana_app/features/catalog/screens/category_screen.dart';
 import 'package:dharana_app/features/catalog/screens/asana_detail_screen.dart';
@@ -153,9 +154,12 @@ class _DharanaAppState extends State<DharanaApp> {
   }
 
   bool _formOpen = false;
+  bool _oauthInProgress = false;
 
   void _handleLink(Uri uri) {
-    if (!mounted || _formOpen) return;
+    if (!mounted) return;
+    if (_handleOAuthLink(uri)) return;
+    if (_formOpen) return;
     final isResetHost =
         uri.host == 'dharana.ru' || uri.host == 'www.dharana.ru';
     if (!isResetHost) return;
@@ -171,6 +175,48 @@ class _DharanaAppState extends State<DharanaApp> {
     _router
         .push('/reset_password_form', extra: token)
         .whenComplete(() => _formOpen = false);
+  }
+
+  /// Колбэк входа через провайдера: ОС открыл приложение по App Link
+  /// https://dharana.ru/app/auth/{provider}/callback?code=…&state=…
+  bool _handleOAuthLink(Uri uri) {
+    if (uri.host != 'dharana.ru' && uri.host != 'www.dharana.ru') return false;
+    if (!uri.path.contains('/app/auth/')) return false;
+    if (_oauthInProgress) return true;
+
+    _oauthInProgress = true;
+    AuthService()
+        .completeOAuthCallback(uri)
+        .then((ok) {
+          if (!mounted || !ok) return;
+          _router.go('/main');
+        })
+        .catchError((Object error) {
+          final messenger =
+              _navigatorKey.currentContext == null
+                  ? null
+                  : ScaffoldMessenger.maybeOf(_navigatorKey.currentContext!);
+          messenger?.showSnackBar(
+            SnackBar(content: Text(_oauthErrorMessage(error))),
+          );
+        })
+        .whenComplete(() => _oauthInProgress = false);
+    return true;
+  }
+
+  String _oauthErrorMessage(Object error) {
+    final text = error is Exception ? error.toString() : '';
+    final context = _navigatorKey.currentContext;
+    final l10n = context == null ? null : AppLocalizations.of(context);
+    if (text.contains('OAUTH_DENIED')) {
+      return l10n?.oauthDenied ?? 'Sign-in was cancelled';
+    }
+    if (text.contains('OAUTH_INVALID_STATE') ||
+        text.contains('OAUTH_NO_CODE')) {
+      return l10n?.oauthInvalidState ??
+          'This sign-in link has expired, please try again';
+    }
+    return l10n?.oauthFailed ?? "Couldn't sign in";
   }
 
   @override

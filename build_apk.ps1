@@ -1,6 +1,8 @@
-﻿# Сборка APK Dharana (Android) с Google Web Client ID для google_sign_in
-# и ПРОД-API (обязательно: без dart-define приложение ходит на http://localhost:8000
-# и на реальном телефоне не работает — ловушка 2026-09-26, опубликован был такой APK).
+﻿# Сборка APK Dharana (Android) с Google Web Client ID для google_sign_in,
+# Client ID Яндекс/VK для редирект-входа и ПРОД-API (обязательно: без dart-define
+# приложение ходит на http://localhost:8000 и на реальном телефоне не работает —
+# ловушка 2026-09-26, опубликован был такой APK).
+# Без YandexClientId/VkClientId кнопок входа через провайдеров не будет.
 # Использование:
 #   .\build_apk.ps1                      # release-APK, API = https://api.dharana.ru
 #   .\build_apk.ps1 -Debug               # debug-APK (быстрая отладка на устройстве)
@@ -9,7 +11,10 @@
 param(
   [switch]$Debug,
   [string]$ApiBaseUrl = "https://api.dharana.ru",
-  [string]$GoogleWebClientId = "914006620256-t7uqhvlqqlikgesrl59cghv3d1l93gft.apps.googleusercontent.com"
+  [string]$GoogleWebClientId = "914006620256-t7uqhvlqqlikgesrl59cghv3d1l93gft.apps.googleusercontent.com",
+  [string]$YandexClientId = "",
+  [string]$VkClientId = "",
+  [string]$SiteBaseUrl = "https://dharana.ru"
 )
 
 $ErrorActionPreference = "Stop"
@@ -54,8 +59,11 @@ function Assert-ApkApiHost([string]$Path, [string]$ExpectedHost) {
 
 $defines = @(
   "--dart-define=GOOGLE_WEB_CLIENT_ID=$GoogleWebClientId",
-  "--dart-define=API_BASE_URL=$ApiBaseUrl"
+  "--dart-define=API_BASE_URL=$ApiBaseUrl",
+  "--dart-define=SITE_BASE_URL=$SiteBaseUrl"
 )
+if ($YandexClientId) { $defines += "--dart-define=YANDEX_CLIENT_ID=$YandexClientId" }
+if ($VkClientId) { $defines += "--dart-define=VK_CLIENT_ID=$VkClientId" }
 
 # Gradle пишет в stderr обычные предупреждения — при ErrorActionPreference=Stop
 # PowerShell 5.1 превращает их в NativeCommandError. На время сборки снижаем строгость.

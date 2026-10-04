@@ -6,7 +6,7 @@ import 'package:dharana_app/app/theme.dart';
 ///
 /// Чтобы добавить соцсеть (VK, MAX и т.д.): дописать значение в [SocialNetwork]
 /// и путь в [_socialPaths] — кнопки, подложки и hover берут стиль отсюда.
-enum SocialNetwork { google, telegram }
+enum SocialNetwork { google, telegram, vk, max, yandex }
 
 class SocialIcon extends StatelessWidget {
   const SocialIcon({
@@ -121,7 +121,65 @@ Path _telegramFoldPath() {
     ..lineTo(12.3, 15.2);
 }
 
+/// VK: контур `V` и `K` раздельно, без скруглений.
+Path _vkPath1() {
+  return Path()
+    ..moveTo(3, 6.2)
+    ..lineTo(7.4, 18.2)
+    ..lineTo(11.8, 6.2);
+}
+
+Path _vkPath2() {
+  return Path()
+    ..moveTo(13.6, 6.2)
+    ..lineTo(13.6, 18.2);
+}
+
+Path _vkPath3() {
+  return Path()
+    ..moveTo(19.8, 6.2)
+    ..lineTo(14.4, 12.2)
+    ..lineTo(19.8, 18.2);
+}
+
+/// MAX: `M` из двух вертикалей и двух склонов (иконка условная).
+Path _maxPath() {
+  return Path()
+    ..moveTo(4, 18.5)
+    ..lineTo(4, 5.5)
+    ..lineTo(9, 13.5)
+    ..lineTo(14, 5.5)
+    ..lineTo(14, 18.5);
+}
+
+/// Яндекс: «Я» — стойка справа, петля окружности слева, диагональ вниз.
+Path _yandexStem() {
+  return Path()
+    ..moveTo(14, 21)
+    ..lineTo(14, 3)
+    ..lineTo(9.6, 3);
+}
+
+/// Петля: полуокружность радиуса 5.4 (диаметр = 10.8 = разнице координат)
+/// из верхней точки в нижнюю, выпуклая влево — counterclockwise.
+Path _yandexLoop() {
+  return Path()
+    ..moveTo(9.6, 3)
+    ..arcToPoint(const Offset(9.6, 13.8),
+        radius: const Radius.circular(5.4), clockwise: false)
+    ..lineTo(14, 13.8);
+}
+
+Path _yandexLeg() {
+  return Path()
+    ..moveTo(9.6, 13.8)
+    ..lineTo(4.4, 21);
+}
+
 final Map<SocialNetwork, List<Path>> _socialPaths = {
   SocialNetwork.google: [_googlePath()],
   SocialNetwork.telegram: [_telegramPath(), _telegramFoldPath()],
+  SocialNetwork.vk: [_vkPath1(), _vkPath2(), _vkPath3()],
+  SocialNetwork.max: [_maxPath()],
+  SocialNetwork.yandex: [_yandexStem(), _yandexLoop(), _yandexLeg()],
 };
