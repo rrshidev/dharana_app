@@ -18,6 +18,11 @@ on:
 # Поэтому APK из артефакта годится для QA, но НЕ для замены https://dharana.ru/download/dharana.apk.
 # Публичную сборку делаем локально: .\build_apk.ps1 (стабильный developer-keystore,
 # та же строка API_BASE_URL + проверка, что хост реально вшит в APK).
+#
+# Client ID Яндекс/VK лежат в переменных репозитория (Settings -> Secrets and
+# variables -> Actions -> Variables): YANDEX_CLIENT_ID, VK_CLIENT_ID. Без них
+# экран входа собирается БЕЗ кнопок этих провайдеров (случай 2026-10-05), поэтому
+# шаг ниже валит сборку, если переменных нет.
 
 jobs:
   build:
@@ -45,27 +50,54 @@ jobs:
       - name: Analyze
         run: flutter analyze
 
-      - name: Build release APK
+      - name: Check OAuth client ids are configured
+        env:
+          YANDEX_CLIENT_ID: ${{ vars.YANDEX_CLIENT_ID }}
+          VK_CLIENT_ID: ${{ vars.VK_CLIENT_ID }}
         run: |
-          flutter build apk --release \
-            --dart-define=GOOGLE_WEB_CLIENT_ID=914006620256-t7uqhvlqqlikgesrl59cghv3d1l93gft.apps.googleusercontent.com \
-            --dart-define=API_BASE_URL=https://api.dharana.ru
+          set -euo pipefail
+          missing=""
+          [ -n "${YANDEX_CLIENT_ID}" ] || missing="${missing} YANDEX_CLIENT_ID"
+          [ -n "${VK_CLIENT_ID}" ] || missing="${missing} VK_CLIENT_ID"
+          if [ -n "${missing}" ]; then
+            echo "::error::Не заданы переменные репозитория:${missing}. Без них в APK не будет кнопок входа."
+            exit 1
+          fi
 
       # Строка API_BASE_URL обязана попасть в libapp.so: без неё приложение
       # ходит на http://localhost:8000 (дефолт String.fromEnvironment) и на
       # реальном телефоне не работает. Ловим это на сборке, а не на проде.
-      - name: Verify API base URL inside APK
+      # Client ID проверяются так же: пустой dart-define = нет кнопки входа.
+      - name: Build release APK
+        env:
+          YANDEX_CLIENT_ID: ${{ vars.YANDEX_CLIENT_ID }}
+          VK_CLIENT_ID: ${{ vars.VK_CLIENT_ID }}
+        run: |
+          set -euo pipefail
+          flutter build apk --release \
+            --dart-define=GOOGLE_WEB_CLIENT_ID=914006620256-t7uqhvlqqlikgesrl59cghv3d1l93gft.apps.googleusercontent.com \
+            --dart-define=API_BASE_URL=https://api.dharana.ru \
+            --dart-define=SITE_BASE_URL=https://dharana.ru \
+            --dart-define=YANDEX_CLIENT_ID="$YANDEX_CLIENT_ID" \
+            --dart-define=VK_CLIENT_ID="$VK_CLIENT_ID"
+
+      - name: Verify defines inside APK
+        env:
+          YANDEX_CLIENT_ID: ${{ vars.YANDEX_CLIENT_ID }}
+          VK_CLIENT_ID: ${{ vars.VK_CLIENT_ID }}
         run: |
           set -euo pipefail
           unzip -p build/app/outputs/flutter-apk/app-release.apk lib/arm64-v8a/libapp.so > /tmp/libapp.so
-          if grep -qa "api.dharana.ru" /tmp/libapp.so; then
-            echo "OK: API base = https://api.dharana.ru"
-          else
-            echo "::error::В APK нет api.dharana.ru — база API осталась localhost"
-            exit 1
-          fi
+          for value in api.dharana.ru dharana.ru "$YANDEX_CLIENT_ID" "$VK_CLIENT_ID"; do
+            if grep -qa "$value" /tmp/libapp.so; then
+              echo "OK: $value"
+            else
+              echo "::error::В APK нет '$value' — сборка не готова к публикации"
+              exit 1
+            fi
+          done
 
-      - name: Upload APK artifact
+      - name: Upload APK artifact (QA only, другой ключ подписи)
         uses: actions/upload-artifact@v4
         with:
           name: dharana-apk
