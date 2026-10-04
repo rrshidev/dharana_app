@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -59,11 +60,16 @@ class AuthService {
     ),
   };
 
+  /// Провайдеры, требующие PKCE (S256). У VK ID без code_challenge authorize
+  /// отдаёт "code_challenge or code_challenge_method is invalid".
+  static const Set<String> _pkceProviders = {'vk'};
+
   /// Nonce последнего начатого OAuth-флоу: приложение само сверяет state в
   /// колбэке (в вебе это делает double-submit кука, здесь её нет — Cookies
   /// браузера нам не подконтрольны).
   static String? _pendingState;
   static String? _pendingProvider;
+  static String? _pendingCodeVerifier;
 
   /// Открывает страницу входа провайдера в системном браузере. Возвращаться
   /// приложение будет через App Link — обработка в app.dart (_handleLink).
@@ -75,39 +81,51 @@ class AuthService {
       throw Exception('$provider client id is not set');
     }
 
-    final state = _randomNonce();
-    _pendingState = state;
-    _pendingProvider = provider;
+final state = _randomNonce();
+_pendingState = state;
+_pendingProvider = provider;
 
-    final uri = Uri.parse(config.authorizeUrl).replace(
-      queryParameters: {
-        'client_id': clientId,
-        'redirect_uri': appCallbackUrl(provider),
-        'response_type': 'code',
-        'scope': config.scope,
-        'state': state,
-      },
-    );
-    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (!launched) {
-      _pendingState = null;
-      _pendingProvider = null;
-      throw Exception('Could not open the browser');
-    }
-  }
+final query = <String, String>{
+ 'client_id': clientId,
+ 'redirect_uri': appCallbackUrl(provider),
+ 'response_type': 'code',
+ 'scope': config.scope,
+ 'state': state,
+};
+if (_pkceProviders.contains(provider)) {
+ final verifier = _randomNonce() + _randomNonce();
+ _pendingCodeVerifier = verifier;
+ query['code_challenge'] = _pkceChallenge(verifier);
+ query['code_challenge_method'] = 'S256';
+} else {
+ _pendingCodeVerifier = null;
+}
+
+final uri = Uri.parse(config.authorizeUrl).replace(queryParameters: query);
+final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+if (!launched) {
+ _pendingState = null;
+ _pendingProvider = null;
+ _pendingCodeVerifier = null;
+ throw Exception('Could not open the browser');
+}
+}
 
   /// Завершает флоу по ссылке из колбэка: сверяет state, обменивает код на
   /// JWT. Возвращает true, если это был наш OAuth-колбэк (и его удалось).
   Future<bool> completeOAuthCallback(Uri uri) async {
-    final provider = _pendingProvider;
-    final expectedState = _pendingState;
-    if (provider == null || expectedState == null) return false;
-    if (!uri.path.endsWith('/app/auth/$provider/callback')) return false;
+final provider = _pendingProvider;
+final expectedState = _pendingState;
+if (provider == null || expectedState == null) return false;
+if (!uri.path.endsWith('/app/auth/$provider/callback')) return false;
 
-    // Разовый: любой второй колбэк (например, повторное открытие ссылки из
-    // истории браузера) уже не наш.
-    _pendingState = null;
-    _pendingProvider = null;
+final codeVerifier = _pendingCodeVerifier;
+
+// Разовый: любой второй колбэк (например, повторное открытие ссылки из
+// истории браузера) уже не наш.
+_pendingState = null;
+_pendingProvider = null;
+_pendingCodeVerifier = null;
 
     final error = uri.queryParameters['error'];
     if (error != null && error.isNotEmpty) {
@@ -122,26 +140,34 @@ class AuthService {
       throw Exception('OAUTH_NO_CODE');
     }
 
-    final response = await _api.dio.post('/auth/$provider', data: {
-      'code': code,
-      'redirect_uri': appCallbackUrl(provider),
-    });
+final response = await _api.dio.post('/auth/$provider', data: {
+ 'code': code,
+ 'redirect_uri': appCallbackUrl(provider),
+ if (codeVerifier != null) 'code_verifier': codeVerifier,
+ });
     final auth = AuthResponse.fromJson(response.data);
     await _api.saveToken(auth.accessToken);
     return true;
   }
 
-  /// Отменяет ожидание возврата из браузера (пользователь вернулся сам).
-  static void cancelOAuthLogin() {
-    _pendingState = null;
-    _pendingProvider = null;
-  }
+/// Отменяет ожидание возврата из браузера (пользователь вернулся сам).
+static void cancelOAuthLogin() {
+_pendingState = null;
+_pendingProvider = null;
+_pendingCodeVerifier = null;
+}
 
-  static String _randomNonce() {
-    final random = Random.secure();
-    final bytes = List<int>.generate(16, (_) => random.nextInt(256));
-    return base64Url.encode(bytes).replaceAll('=', '');
-  }
+static String _randomNonce() {
+final random = Random.secure();
+final bytes = List<int>.generate(16, (_) => random.nextInt(256));
+return base64Url.encode(bytes).replaceAll('=', '');
+}
+
+/// PKCE: code_challenge = BASE64URL(SHA-256(verifier)) без padding.
+static String _pkceChallenge(String verifier) {
+final digest = sha256.convert(utf8.encode(verifier)).bytes;
+return base64Url.encode(digest).replaceAll('=', '');
+}
 
   Future<AuthResponse> register(String email, String password, String name) async {
     final response = await _api.dio.post('/auth/register', data: {
