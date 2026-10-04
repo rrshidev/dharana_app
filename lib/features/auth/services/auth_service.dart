@@ -54,7 +54,7 @@ class AuthService {
       scope: 'login:email login:info',
     ),
     'vk': (
-      authorizeUrl: 'https://id.vk.com/oauth2/authorize',
+      authorizeUrl: 'https://id.vk.ru/authorize',
       scope: 'email',
     ),
   };
