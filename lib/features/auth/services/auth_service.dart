@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -73,9 +74,11 @@ class AuthService {
   /// токен), поэтому код меняет сам клиент — ровно как их SDK.
   static const String vkTokenUrl = 'https://id.vk.ru/oauth2/auth';
 
-  /// VK ID ждёт `code_challenge_method=sha256` (так шлёт их SDK; `S256` из
-  /// документации тоже принимается, но проверенное значение — это).
-  static const Map<String, String> _pkceMethods = {'vk': 'sha256'};
+  /// VK ID принимает `code_challenge_method` только `S256`/`s256`: значение
+  /// `sha256` заставляет их SPA падать на «Ошибка загрузки» ещё до формы
+  /// входа — в любом движке (проверено 2026-10-06 в Chrome и Firefox).
+  /// Нижний регистр `s256` — как в ссылках их собственного SAK-клиента.
+  static const Map<String, String> _pkceMethods = {'vk': 's256'};
 
   /// Nonce последнего начатого OAuth-флоу: приложение само сверяет state в
   /// колбэке (в вебе это делает double-submit кука, здесь её нет — Cookies
@@ -115,15 +118,31 @@ if (_pkceProviders.contains(provider)) {
       _pendingCodeVerifier = null;
     }
 
-final uri = Uri.parse(config.authorizeUrl).replace(queryParameters: query);
-final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-if (!launched) {
- _pendingState = null;
- _pendingProvider = null;
- _pendingCodeVerifier = null;
- throw Exception('Could not open the browser');
-}
-}
+    final uri = Uri.parse(config.authorizeUrl).replace(queryParameters: query);
+      try {
+        // VK: в Chrome Custom Tab (flutter_custom_tabs по умолчанию открывает
+        // Chrome, а не дефолтный браузер). Ранний «Ошибка загрузки» был НЕ
+        // движком браузера: страница VK падала из-за code_challenge_method=
+        // sha256 в любом движке (см. заметку у _pkceMethods). Chrome Custom Tab
+        // оставляем как стабильный выбор движка и корректный возврат по
+        // dharana:// через мост колбэк-страницы.
+        // Яндекс — в системном браузере: подтверждённый рабочий путь.
+        if (provider == 'vk') {
+          await custom_tabs.launchUrl(uri);
+        } else {
+          final launched = await launchUrl(
+            uri,
+            mode: LaunchMode.externalApplication,
+          );
+          if (!launched) throw Exception('Could not open the browser');
+        }
+      } catch (_) {
+        _pendingState = null;
+        _pendingProvider = null;
+        _pendingCodeVerifier = null;
+        rethrow;
+      }
+    }
 
   /// Завершает флоу по ссылке из колбэка: сверяет state, обменивает код на
   /// JWT. Возвращает true, если это был наш OAuth-колбэк (и его удалось).
@@ -198,6 +217,11 @@ final code = uri.queryParameters['code'];
     if (codeVerifier == null || codeVerifier.isEmpty) {
       throw Exception('OAUTH_NO_VERIFIER');
     }
+    // Public client, без client_secret (PKCE). client_id и redirect_uri
+    // ОБЯЗАТЕЛЬНЫ: без них эндпоинт отвечает HTTP 500 с пустым телом
+    // (проверено 2026-10-06), а Dio бросает исключение, которое маскируется
+    // под общую ошибку входа. Код приходит в v2-формате (vk2.a.*) — это
+    // ок, сервер сам определяет flow по коду.
     final dio = Dio();
     final response = await dio.post(
       vkTokenUrl,

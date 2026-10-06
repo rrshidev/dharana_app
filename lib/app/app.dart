@@ -46,6 +46,20 @@ class _DharanaAppState extends State<DharanaApp> {
     initialLocation: '/',
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
+      // OAuth-колбэк приходит в приложение и на холодном старте становится
+      // стартовой локацией go_router (deep link). Полноценно его разбирает
+      // _handleOAuthLink (app_links), поэтому роутер не должен показывать
+      // «no routes for location» — сразу уходим на сплэш. Путей два:
+      // App Link https://dharana.ru/app/auth/{provider}/callback и запасная
+      // собственная схема dharana://app/auth/{provider}/callback.
+      GoRoute(
+        path: '/app/auth/:provider/callback',
+        redirect: (context, state) => '/',
+      ),
+      GoRoute(
+        path: '/auth/:provider/callback',
+        redirect: (context, state) => '/',
+      ),
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/register',
