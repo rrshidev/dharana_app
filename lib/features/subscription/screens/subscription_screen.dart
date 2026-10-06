@@ -23,6 +23,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   Map<String, dynamic>? _status;
   List<Map<String, dynamic>> _requisites = [];
   bool _isUploading = false;
+  int _planIndex = 0;
+
+  static const _planPrices = [349, 890, 2690];
 
   @override
   void initState() {
@@ -178,10 +181,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
               const SizedBox(height: 12)
             else ...[
               const SizedBox(height: 12),
-              Text(
-                l10n.subPricePerMonth,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppTheme.AccentInk),
-              ),
+              _buildPlanSelector(l10n),
             ],
           ],
         ),
@@ -189,9 +189,67 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
     );
   }
 
+  Widget _buildPlanSelector(AppLocalizations l10n) {
+    final labels = [l10n.subPlanMonth, l10n.subPlanQuarter, l10n.subPlanYear];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (var i = 0; i < labels.length; i++)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                color: _planIndex == i
+                    ? AppTheme.Accent.withValues(alpha: 0.12)
+                    : AppTheme.SurfaceLight,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: _planIndex == i
+                      ? AppTheme.AccentInk.withValues(alpha: 0.6)
+                      : AppTheme.CardBorder,
+                ),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () => setState(() => _planIndex = i),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  child: Row(
+                    children: [
+                      Icon(
+                        _planIndex == i
+                            ? Icons.radio_button_checked
+                            : Icons.radio_button_unchecked,
+                        size: 20,
+                        color: _planIndex == i
+                            ? AppTheme.AccentInk
+                            : AppTheme.TextSecondary,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          labels[i],
+                          style: TextStyle(
+                            color: AppTheme.TextPrimary,
+                            fontWeight: _planIndex == i
+                                ? FontWeight.w600
+                                : FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
   Widget _buildRequisitesCard() {
     final l10n = AppLocalizations.of(context)!;
-    final price = '499 ₽';
+    final price = '${_planPrices[_planIndex]} ₽';
     if (_requisites.isEmpty) {
       return Card(
         child: Padding(
@@ -287,7 +345,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
         paymentMethod: _requisites.isNotEmpty
             ? (_requisites.first['bank']?.toString() ?? '')
             : '',
-        amount: '499',
+        amount: '${_planPrices[_planIndex]}',
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -368,7 +368,10 @@
     }
   },
   "subPlanDesc": "Unlock all catalog videos, unlimited sequences and practice repeats",
-  "subPricePerMonth": "499 ₽ / month",
+  "subPricePerMonth": "349 ₽ / month",
+  "subPlanMonth": "1 month — 349 ₽",
+  "subPlanQuarter": "3 months — 890 ₽",
+  "subPlanYear": "1 year — 2690 ₽",
   "subHowToPay": "How to pay: transfer the amount to the card, then tap \"I paid and attach receipt\" and upload a photo/screenshot of the receipt. After verification Premium will be activated automatically.",
   "subRequisitesUnavailable": "Payment details unavailable",
   "subRequisitesTitle": "Payment details",
