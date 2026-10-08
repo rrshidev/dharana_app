@@ -759,5 +759,13 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settings": "Настройки",
+  "dailyAsanaHint": "Присылаем одну асану в день в Telegram-бот",
+  "dailyAsanaEnable": "Получать рассылку",
+  "dailyAsanaTime": "Время",
+  "dailyAsanaTimezone": "Часовой пояс",
+  "dailyAsanaNotLinked": "Привяжите Telegram в профиле, чтобы получать рассылку в бот",
+  "dailyAsanaSaved": "Сохранено",
+  "dailyAsanaSaveFailed": "Не удалось сохранить"
 }

@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _isLoading = true);
     try {
       final categoriesResp = await _api.dio.get('/categories');
-      final dailyResp = await _api.dio.get('/asanas/random');
+      final dailyResp = await _api.dio.get('/asanas/day');
       final user = await AuthService().getCurrentUser();
 
       if (mounted) {

@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:dharana_app/app/theme.dart';
-import 'package:dharana_app/app/theme_controller.dart';
-import 'package:dharana_app/app/language_controller.dart';
 import 'package:dharana_app/l10n/app_localizations.dart';
 import 'package:dharana_app/core/api/api_client.dart';
 import 'package:dharana_app/core/models/models.dart';
@@ -183,7 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const NotificationBell(),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () => _showEditProfileSheet(),
+            onPressed: () => context.push('/settings'),
           ),
         ],
       ),
@@ -497,19 +495,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         _buildMenuItem(
           context,
-          icon: Icons.language_outlined,
-          title: l10n.language,
-          subtitle: LanguageController.instance.value.languageCode == 'en'
-              ? l10n.english
-              : l10n.russian,
-          onTap: _showLanguagePicker,
-        ),
-        _buildMenuItem(
-          context,
-          icon: Icons.palette_outlined,
-          title: l10n.theme,
-          subtitle: _themeLabel(l10n),
-          onTap: _showThemePicker,
+          icon: Icons.settings_outlined,
+          title: l10n.settings,
+          onTap: () {
+            context.push('/settings');
+          },
         ),
         const SizedBox(height: 24),
         OutlinedButton.icon(
@@ -642,101 +632,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  String _themeLabel(AppLocalizations l10n) {
-    switch (ThemeController.instance.value) {
-      case ThemeMode.light:
-        return l10n.themeModeLight;
-      case ThemeMode.dark:
-        return l10n.themeModeDark;
-      default:
-        return l10n.themeModeSystem;
-    }
-  }
-
-  Future<void> _showThemePicker() async {
-    final current = ThemeController.instance.value;
-    final selected = await showDialog<ThemeMode>(
-      context: context,
-      builder: (ctx) {
-        final l10n = AppLocalizations.of(ctx)!;
-        return SimpleDialog(
-          title: Text(l10n.themeTitle),
-          children: [
-            _themeOption(ctx, ThemeMode.system, l10n.themeModeSystem, current),
-            _themeOption(ctx, ThemeMode.light, l10n.themeModeLight, current),
-            _themeOption(ctx, ThemeMode.dark, l10n.themeModeDark, current),
-          ],
-        );
-      },
-    );
-    if (selected != null) {
-      await ThemeController.instance.setTheme(selected);
-      if (mounted) setState(() {});
-    }
-  }
-
-  Future<void> _showLanguagePicker() async {
-    final current = LanguageController.instance.value;
-    final selected = await showDialog<Locale>(
-      context: context,
-      builder: (ctx) {
-        final l10n = AppLocalizations.of(ctx)!;
-        return SimpleDialog(
-          title: Text(l10n.language),
-          children: [
-            _languageOption(ctx, const Locale('ru'), l10n.russian, current),
-            _languageOption(ctx, const Locale('en'), l10n.english, current),
-          ],
-        );
-      },
-    );
-    if (selected != null) {
-      await LanguageController.instance.setLanguage(selected);
-      if (mounted) setState(() {});
-    }
-  }
-
-  Widget _themeOption(BuildContext ctx, ThemeMode mode, String label,
-      ThemeMode current) {
-    return _optionRow(ctx, label, current == mode, () => Navigator.of(ctx).pop(mode));
-  }
-
-  Widget _languageOption(
-      BuildContext ctx, Locale locale, String label, Locale current) {
-    return _optionRow(ctx, label, current == locale,
-        () => Navigator.of(ctx).pop(locale));
-  }
-
-  Widget _optionRow(
-      BuildContext ctx, String label, bool selected, VoidCallback onTap) {
-    return SimpleDialogOption(
-      onPressed: onTap,
-      child: Row(
-        children: [
-          if (selected)
-            Icon(Icons.check, color: AppTheme.AccentInk)
-          else
-            const SizedBox(width: 24),
-          const SizedBox(width: 12),
-          Text(label),
-        ],
-      ),
-    );
-  }
-
-  void _showEditProfileSheet() async {
-    await showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.Surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => _EditProfileSheet(user: _user),
-    );
-    _loadProfile();
-  }
-
   void _showAvatarPicker() async {
     await showModalBottomSheet(
       context: context,
@@ -751,15 +646,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-class _EditProfileSheet extends StatefulWidget {
+class EditProfileSheet extends StatefulWidget {
   final User? user;
-  const _EditProfileSheet({this.user});
+  const EditProfileSheet({super.key, this.user});
 
   @override
-  State<_EditProfileSheet> createState() => _EditProfileSheetState();
+  State<EditProfileSheet> createState() => _EditProfileSheetState();
 }
 
-class _EditProfileSheetState extends State<_EditProfileSheet> {
+class _EditProfileSheetState extends State<EditProfileSheet> {
   late TextEditingController _nameController;
   late TextEditingController _usernameController;
   late TextEditingController _bioController;

@@ -759,5 +759,13 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settings": "Settings",
+  "dailyAsanaHint": "We send one asana per day to your Telegram bot",
+  "dailyAsanaEnable": "Daily mailing",
+  "dailyAsanaTime": "Time",
+  "dailyAsanaTimezone": "Time zone",
+  "dailyAsanaNotLinked": "Link Telegram in your profile to receive the mailing in the bot",
+  "dailyAsanaSaved": "Saved",
+  "dailyAsanaSaveFailed": "Could not save"
 }

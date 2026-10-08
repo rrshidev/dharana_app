@@ -149,6 +149,10 @@ class User {
   final int currentStreak;
   final String? lastPracticeAt;
   final String? createdAt;
+  final bool dailyAsanaEnabled;
+  final String? dailyAsanaTime;
+  final String? timezone;
+  final String? language;
 
   User({
     required this.id,
@@ -164,6 +168,10 @@ class User {
     this.currentStreak = 0,
     this.lastPracticeAt,
     this.createdAt,
+    this.dailyAsanaEnabled = false,
+    this.dailyAsanaTime,
+    this.timezone,
+    this.language,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -181,6 +189,10 @@ class User {
       currentStreak: json['current_streak'] ?? 0,
       lastPracticeAt: json['last_practice_at'],
       createdAt: json['created_at'],
+      dailyAsanaEnabled: json['daily_asana_enabled'] ?? false,
+      dailyAsanaTime: json['daily_asana_time'],
+      timezone: json['timezone'],
+      language: json['language'],
     );
   }
 }

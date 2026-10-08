@@ -70,11 +70,23 @@ class ApiClient {
     return resp.data as Map<String, dynamic>;
   }
 
-  Future<void> updateProfile({String? name, String? username, String? bio}) async {
+  Future<void> updateProfile({
+    String? name,
+    String? username,
+    String? bio,
+    bool? dailyAsanaEnabled,
+    String? dailyAsanaTime,
+    String? timezone,
+    String? language,
+  }) async {
     await _dio.patch('/profile', data: {
       if (name != null) 'name': name,
       if (username != null) 'username': username,
       if (bio != null) 'bio': bio,
+      if (dailyAsanaEnabled != null) 'daily_asana_enabled': dailyAsanaEnabled,
+      if (dailyAsanaTime != null) 'daily_asana_time': dailyAsanaTime,
+      if (timezone != null) 'timezone': timezone,
+      if (language != null) 'language': language,
     });
   }
 

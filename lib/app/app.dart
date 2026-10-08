@@ -29,6 +29,7 @@ import 'package:dharana_app/features/timer/screens/timer_setup_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_dashboard_screen.dart';
 import 'package:dharana_app/features/admin/screens/admin_user_detail_screen.dart';
 import 'package:dharana_app/features/profile/screens/practice_history_screen.dart';
+import 'package:dharana_app/features/profile/screens/settings_screen.dart';
 import 'package:dharana_app/features/subscription/screens/subscription_screen.dart';
 import 'package:dharana_app/features/notifications/screens/notifications_screen.dart';
 
@@ -141,6 +142,10 @@ class _DharanaAppState extends State<DharanaApp> {
       GoRoute(
         path: '/practice_history',
         builder: (context, state) => const PracticeHistoryScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
       ),
       GoRoute(
         path: '/subscription',
