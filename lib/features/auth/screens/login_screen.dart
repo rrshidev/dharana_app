@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:dharana_app/l10n/app_localizations.dart';
 import 'package:dharana_app/shared/widgets/social_button.dart';
 import 'package:dharana_app/shared/widgets/social_icon.dart';
+import 'package:dharana_app/shared/widgets/legal_footer.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -356,6 +357,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             : () => _loginWithProvider('yandex'),
                       ),
                     ],
+                    const SizedBox(height: 20),
+                    Text(
+                      l10n.socialLegalNote,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppTheme.TextSecondary,
+                        fontSize: 12,
+                        height: 1.45,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const LegalFooter(),
                     const SizedBox(height: 16),
                   ],
                 ),

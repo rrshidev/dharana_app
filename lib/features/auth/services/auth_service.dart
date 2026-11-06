@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/core/api/api_client.dart';
+import 'package:dharana_app/core/legal/legal_links.dart';
 import 'package:dharana_app/core/models/models.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
@@ -280,6 +281,10 @@ return base64Url.encode(digest).replaceAll('=', '');
       'email': email,
       'password': password,
       'name': name,
+      // Галочка согласия обязательна на экране регистрации; здесь фиксируем
+      // факт согласия и версию документов для API.
+      'consent': true,
+      'consent_version': LegalLinks.version,
     });
     final auth = AuthResponse.fromJson(response.data);
     await _api.saveToken(auth.accessToken);

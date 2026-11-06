@@ -495,6 +495,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         _buildMenuItem(
           context,
+          icon: Icons.info_outline,
+          title: l10n.aboutProject,
+          subtitle: l10n.aboutProjectSubtitle,
+          onTap: () {
+            context.push('/about');
+          },
+        ),
+        _buildMenuItem(
+          context,
           icon: Icons.settings_outlined,
           title: l10n.settings,
           onTap: () {

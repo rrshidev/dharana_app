@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:dharana_app/app/theme.dart';
+import 'package:dharana_app/core/legal/legal_links.dart';
 import 'package:dharana_app/features/auth/services/auth_service.dart';
 import 'package:dharana_app/l10n/app_localizations.dart';
+import 'package:dharana_app/shared/widgets/legal_footer.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,8 +20,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
+  late final TapGestureRecognizer _consentLinkRecognizer;
+  bool _consentAccepted = false;
   bool _isLoading = false;
   String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _consentLinkRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        if (mounted) {
+          LegalLinks.open(context, LegalLinks.consent(context));
+        }
+      };
+  }
 
   Future<void> _register() async {
     final l10n = AppLocalizations.of(context);
@@ -40,6 +56,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     if (password.length < 8) {
       setState(() => _error = l10n!.passwordTooShort);
+      return;
+    }
+    if (!_consentAccepted) {
+      setState(() => _error = l10n!.consentRequired);
       return;
     }
 
@@ -138,6 +158,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   prefixIcon: const Icon(Icons.lock_outline),
                 ),
               ),
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Checkbox(
+                      value: _consentAccepted,
+                      onChanged: (value) =>
+                          setState(() => _consentAccepted = value ?? false),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(text: l10n.registerConsentPrefix),
+                          TextSpan(
+                            text: l10n.personalDataConsent,
+                            style: TextStyle(
+                              color: AppTheme.AccentInk,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: _consentLinkRecognizer,
+                          ),
+                          TextSpan(text: l10n.registerConsentSuffix),
+                        ],
+                      ),
+                      style: TextStyle(
+                        color: AppTheme.TextSecondary,
+                        fontSize: 12,
+                        height: 1.45,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               if (_error != null) ...[
                 const SizedBox(height: 12),
                 Text(
@@ -179,6 +240,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 8),
+              const LegalFooter(),
             ],
           ),
         ),
@@ -188,6 +251,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    _consentLinkRecognizer.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
