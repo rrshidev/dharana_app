@@ -7,7 +7,7 @@ import 'package:dharana_app/l10n/app_localizations.dart';
 class LegalLinks {
   /// Версия документов, которую пользователь видит в приложении.
   /// Держим в синхроне с сайтом и API.
-  static const version = '1.0';
+  static const version = '1.1';
 
   static const privacyRu = 'https://dharana.ru/ru/privacy';
   static const privacyEn = 'https://dharana.ru/en/privacy';
