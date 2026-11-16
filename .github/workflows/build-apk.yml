@@ -23,6 +23,8 @@ on:
 # variables -> Actions -> Variables): YANDEX_CLIENT_ID, VK_CLIENT_ID. Без них
 # экран входа собирается БЕЗ кнопок этих провайдеров (случай 2026-10-05), поэтому
 # шаг ниже валит сборку, если переменных нет.
+# MAX_BOT_NAME — необязательная переменная: пока никнейм MAX-бота не выдан,
+# кнопка «Войти через MAX» просто не показывается в приложении.
 
 jobs:
   build:
@@ -38,10 +40,14 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      # Версия зафиксирована под локальную разработку. Во Flutter 3.50
+      # package:flutter/material.dart объявлен deprecated (замена —
+      # package:material_ui), и `flutter analyze` валит сборку на всём проекте.
+      # Поднимать вместе с миграцией на material_ui, а не вслепую.
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: 3.47.4
           cache: true
 
       - name: Install dependencies
@@ -72,6 +78,7 @@ jobs:
         env:
           YANDEX_CLIENT_ID: ${{ vars.YANDEX_CLIENT_ID }}
           VK_CLIENT_ID: ${{ vars.VK_CLIENT_ID }}
+          MAX_BOT_NAME: ${{ vars.MAX_BOT_NAME }}
         run: |
           set -euo pipefail
           flutter build apk --release \
@@ -79,12 +86,14 @@ jobs:
             --dart-define=API_BASE_URL=https://api.dharana.ru \
             --dart-define=SITE_BASE_URL=https://dharana.ru \
             --dart-define=YANDEX_CLIENT_ID="$YANDEX_CLIENT_ID" \
-            --dart-define=VK_CLIENT_ID="$VK_CLIENT_ID"
+            --dart-define=VK_CLIENT_ID="$VK_CLIENT_ID" \
+            --dart-define=MAX_BOT_NAME="$MAX_BOT_NAME"
 
       - name: Verify defines inside APK
         env:
           YANDEX_CLIENT_ID: ${{ vars.YANDEX_CLIENT_ID }}
           VK_CLIENT_ID: ${{ vars.VK_CLIENT_ID }}
+          MAX_BOT_NAME: ${{ vars.MAX_BOT_NAME }}
         run: |
           set -euo pipefail
           unzip -p build/app/outputs/flutter-apk/app-release.apk lib/arm64-v8a/libapp.so > /tmp/libapp.so
@@ -96,6 +105,10 @@ jobs:
               exit 1
             fi
           done
+          if [ -n "$MAX_BOT_NAME" ] && ! grep -qa "$MAX_BOT_NAME" /tmp/libapp.so; then
+            echo "::error::В APK нет '$MAX_BOT_NAME' — кнопка входа через MAX не появится"
+            exit 1
+          fi
 
       - name: Upload APK artifact (QA only, другой ключ подписи)
         uses: actions/upload-artifact@v4

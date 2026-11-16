@@ -3,6 +3,7 @@
 # приложение ходит на http://localhost:8000 и на реальном телефоне не работает —
 # ловушка 2026-09-26, опубликован был такой APK).
 # Без YandexClientId/VkClientId кнопок входа через провайдеров не будет.
+# MaxBotName (необязательно) включает кнопку входа через MAX-бота.
 # Использование:
 #   .\build_apk.ps1                      # release-APK, API = https://api.dharana.ru
 #   .\build_apk.ps1 -Debug               # debug-APK (быстрая отладка на устройстве)
@@ -18,6 +19,9 @@ param(
   # результат сборки). Android-клиент Яндекса выдан на платформу Android.
   [string]$YandexClientId = "514c76e5335f44d0b9aa9fd5335b3fbd",
   [string]$VkClientId = "54803294",
+  # Никнейм MAX-бота: пусто — кнопка «Войти через MAX» не показывается.
+  # Появится после верификации профиля на платформе MAX.
+  [string]$MaxBotName = "",
   [string]$SiteBaseUrl = "https://dharana.ru"
 )
 
@@ -95,6 +99,7 @@ $defines = @(
 )
 if ($YandexClientId) { $defines += "--dart-define=YANDEX_CLIENT_ID=$YandexClientId" }
 if ($VkClientId) { $defines += "--dart-define=VK_CLIENT_ID=$VkClientId" }
+if ($MaxBotName) { $defines += "--dart-define=MAX_BOT_NAME=$MaxBotName" }
 
 # Gradle пишет в stderr обычные предупреждения — при ErrorActionPreference=Stop
 # PowerShell 5.1 превращает их в NativeCommandError. На время сборки снижаем строгость.
@@ -113,7 +118,7 @@ if ($exitCode -ne 0) { Write-Error "Сборка завершилась с ош�
 
 $expectedHost = ([System.Uri]$ApiBaseUrl).Host
 Assert-ApkApiHost -Path $apk -ExpectedHost $expectedHost
-$requiredDefines = @($YandexClientId, $VkClientId) | Where-Object { $_ }
+$requiredDefines = @($YandexClientId, $VkClientId, $MaxBotName) | Where-Object { $_ }
 Assert-ApkDefines -Path $apk -Required @($requiredDefines)
 
 Write-Host "`nAPK готов: $apk`n" -ForegroundColor Green
