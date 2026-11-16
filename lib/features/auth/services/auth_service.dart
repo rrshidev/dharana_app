@@ -29,9 +29,16 @@ class AuthService {
   );
 
   // Client ID VK ID — задаётся при сборке: --dart-define=VK_CLIENT_ID=...
-  // Кнопка MAX использует тот же вход (отдельного OAuth у MAX нет).
   static const String vkClientId = String.fromEnvironment(
     'VK_CLIENT_ID',
+    defaultValue: '',
+  );
+
+  // Никнейм MAX-бота — задаётся при сборке: --dart-define=MAX_BOT_NAME=...
+  // Отдельного OAuth у MAX нет: вход идёт через мини-приложение бота, которое
+  // присылает подписанный initData. Пусто — кнопка MAX не показывается.
+  static const String maxBotName = String.fromEnvironment(
+    'MAX_BOT_NAME',
     defaultValue: '',
   );
 
@@ -39,6 +46,8 @@ class AuthService {
   /// иначе пользователь ждёт ошибки вместо входа.
   static bool isProviderConfigured(String provider) =>
       provider == 'vk' ? vkClientId.isNotEmpty : yandexClientId.isNotEmpty;
+
+  static bool get isMaxConfigured => maxBotName.isNotEmpty;
 
   /// Домен сайта: на нём живут и assetlinks.json для App Links, и веб-колбэки.
   static const String siteBase = String.fromEnvironment(
@@ -365,6 +374,64 @@ return base64Url.encode(digest).replaceAll('=', '');
     final auth = AuthResponse.fromJson(response.data);
     await _api.saveToken(auth.accessToken);
     return auth;
+  }
+
+  /// Создаёт сессию входа через мини-приложение MAX.
+  ///
+  /// Возвращает `deep_link` для открытия в MAX и `session_id` для поллинга.
+  /// Если пользователь уже авторизован, сессия работает как привязка MAX
+  /// к текущему профилю — токен уходит автоматически вместе с запросом.
+  Future<Map<String, dynamic>> createMaxSession() async {
+    final response = await _api.dio.post('/auth/max/session', data: {
+      'consent': true,
+      'consent_version': LegalLinks.version,
+    });
+    return response.data as Map<String, dynamic>;
+  }
+
+  /// Один запрос статуса сессии. При подтверждении отдаёт JWT.
+  Future<Map<String, dynamic>> pollMaxSession(String sessionId) async {
+    final response = await _api.dio.get('/auth/max/session/$sessionId');
+    return response.data as Map<String, dynamic>;
+  }
+
+  /// Ждёт подтверждения входа в MAX и сохраняет токен.
+  ///
+  /// Код в чат не приходит: мини-приложение подтверждает сессию подписанным
+  /// initData, а приложение забирает JWT поллингом. [isCancelled] позволяет
+  /// выйти из ожидания, когда пользователь закрыл диалог.
+  ///
+  /// Бросает `MAX_EXPIRED`, если сессия истекла, и `MAX_CANCELLED` при отмене.
+  Future<void> awaitMaxLogin(
+    String sessionId, {
+    Duration timeout = const Duration(minutes: 10),
+    Duration interval = const Duration(seconds: 2),
+    bool Function()? isCancelled,
+  }) async {
+    final deadline = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(deadline)) {
+      if (isCancelled?.call() ?? false) {
+        throw Exception('MAX_CANCELLED');
+      }
+
+      final data = await pollMaxSession(sessionId);
+      final status = data['status']?.toString();
+
+      if (status == 'confirmed') {
+        final token = data['access_token']?.toString();
+        if (token == null || token.isEmpty) {
+          throw Exception('MAX_NO_TOKEN');
+        }
+        await _api.saveToken(token);
+        return;
+      }
+      if (status == 'expired' || status == 'consumed') {
+        throw Exception('MAX_EXPIRED');
+      }
+
+      await Future<void>.delayed(interval);
+    }
+    throw Exception('MAX_EXPIRED');
   }
 
   Future<bool> requestPasswordReset(String email) async {

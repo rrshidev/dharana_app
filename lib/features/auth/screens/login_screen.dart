@@ -23,6 +23,10 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String? _error;
 
+  /// Поколение ожидания MAX: увеличиваем при отмене, чтобы старый поллинг
+  /// завершился, а его результат не применился к экрану.
+  int _maxPollToken = 0;
+
   Future<void> _login() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       setState(() => _error = AppLocalizations.of(context)!.fillAllFields);
@@ -66,8 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  /// Вход через провайдера с редиректом (Яндекс, VK/MAX): открываем браузер,
+  /// Вход через провайдера с редиректом (Яндекс, VK): открываем браузер,
   /// приложение получаем обратно через App Link — колбэк разбирает app.dart.
+  /// MAX сюда не относится: у него вход через мини-приложение бота.
   Future<void> _loginWithProvider(String provider) async {
     setState(() => _error = null);
     final l10n = AppLocalizations.of(context)!;
@@ -79,6 +84,97 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     } catch (e) {
       if (mounted) setState(() => _error = l10n.oauthFailed);
+    }
+  }
+
+  /// Вход через MAX: создаём сессию, открываем мини-приложение бота и ждём
+  /// подтверждения. Кода в чате нет — MAX запрещает авторизационные сообщения
+  /// через API (п. 1.5 Требований к содержанию и функциональности Приложений).
+  Future<void> _loginWithMax() async {
+    final l10n = AppLocalizations.of(context)!;
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    final pollToken = ++_maxPollToken;
+    bool cancelled() => pollToken != _maxPollToken;
+    var dialogOpen = false;
+
+    try {
+      final session = await _authService.createMaxSession();
+      final sessionId = session['session_id']?.toString() ?? '';
+      final deepLink = session['deep_link']?.toString() ?? '';
+      if (sessionId.isEmpty || deepLink.isEmpty) {
+        throw Exception('MAX_NO_SESSION');
+      }
+
+      final launched = await launchUrl(
+        Uri.parse(deepLink),
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched) throw Exception('MAX_LAUNCH_FAILED');
+      if (!mounted) return;
+
+      dialogOpen = true;
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          backgroundColor: AppTheme.Surface,
+          title: Text(l10n.loginWithMax),
+          content: Row(
+            children: [
+              const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  l10n.maxLoginWaiting,
+                  style: TextStyle(
+                    color: AppTheme.TextSecondary,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _maxPollToken++;
+                dialogOpen = false;
+                Navigator.of(ctx).pop();
+              },
+              child: Text(l10n.cancel),
+            ),
+          ],
+        ),
+      );
+
+      await _authService.awaitMaxLogin(sessionId, isCancelled: cancelled);
+      if (cancelled() || !mounted) return;
+      if (dialogOpen) {
+        Navigator.of(context, rootNavigator: true).pop();
+        dialogOpen = false;
+      }
+      context.go('/main');
+    } catch (e) {
+      if (dialogOpen && mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+        dialogOpen = false;
+      }
+      if (!mounted || cancelled()) return;
+      setState(() {
+        _error = e.toString().contains('MAX_EXPIRED')
+            ? l10n.maxLoginExpired
+            : l10n.maxLoginFailed;
+      });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -345,8 +441,16 @@ class _LoginScreenState extends State<LoginScreen> {
                             : () => _loginWithProvider('vk'),
                       ),
                     ],
-                    // MAX отдельного OAuth не имеет (это тот же вход VK ID).
-                    // Кнопку вернём вместе с ботом в MAX.
+                    // MAX: вход через мини-приложение бота. Кнопка появляется,
+                    // только если никнейм бота задан на сборке.
+                    if (AuthService.isMaxConfigured) ...[
+                      const SizedBox(height: 12),
+                      SocialButton(
+                        network: SocialNetwork.max,
+                        label: l10n.loginWithMax,
+                        onPressed: _isLoading ? null : _loginWithMax,
+                      ),
+                    ],
                     if (AuthService.isProviderConfigured('yandex')) ...[
                       const SizedBox(height: 12),
                       SocialButton(
