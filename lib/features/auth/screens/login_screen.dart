@@ -123,21 +123,38 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (ctx) => AlertDialog(
           backgroundColor: AppTheme.Surface,
           title: Text(l10n.loginWithMax),
-          content: Row(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  l10n.maxLoginWaiting,
-                  style: TextStyle(
-                    color: AppTheme.TextSecondary,
-                    fontSize: 13,
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
                   ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      l10n.maxLoginWaiting,
+                      style: TextStyle(
+                        color: AppTheme.TextSecondary,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Имя бота приходит из --dart-define=MAX_BOT_NAME, чтобы человек
+              // видел, в каком именно чате подтверждать вход.
+              Text(
+                '@${AuthService.maxBotName}',
+                style: TextStyle(
+                  color: AppTheme.TextSecondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
