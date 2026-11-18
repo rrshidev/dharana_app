@@ -446,6 +446,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: l10n.loginWithTelegram,
                       onPressed: _isLoading ? null : _loginWithTelegram,
                     ),
+                    // MAX: вход через мини-приложение бота. Кнопка появляется,
+                    // только если никнейм бота задан на сборке.
+                    if (AuthService.isMaxConfigured) ...[
+                      const SizedBox(height: 12),
+                      SocialButton(
+                        network: SocialNetwork.max,
+                        label: l10n.loginWithMax,
+                        onPressed: _isLoading ? null : _loginWithMax,
+                      ),
+                    ],
                     // Кнопки редирект-входа показываем, только если ключ
                     // провайдера реально задан на сборке.
                     if (AuthService.isProviderConfigured('vk')) ...[
@@ -456,16 +466,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: _isLoading
                             ? null
                             : () => _loginWithProvider('vk'),
-                      ),
-                    ],
-                    // MAX: вход через мини-приложение бота. Кнопка появляется,
-                    // только если никнейм бота задан на сборке.
-                    if (AuthService.isMaxConfigured) ...[
-                      const SizedBox(height: 12),
-                      SocialButton(
-                        network: SocialNetwork.max,
-                        label: l10n.loginWithMax,
-                        onPressed: _isLoading ? null : _loginWithMax,
                       ),
                     ],
                     if (AuthService.isProviderConfigured('yandex')) ...[
